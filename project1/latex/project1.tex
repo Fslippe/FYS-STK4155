@@ -1,0 +1,121 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{verbatim}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{subcaption}
+\usepackage{caption}
+\usepackage{hyperref}
+%\usepackage[a4paper, total={6in, 9in}]{geometry}
+\renewcommand{\figurename}{Figur}
+\renewcommand{\contentsname}{Innhold}
+\hypersetup{
+    colorlinks,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+\title{}
+
+\author{}
+\date{\today}
+\begin{document}
+\maketitle
+
+\section{}
+By assuming that the continous funcitiion $f(x)$ can be parametrized in terms of a polynomial of degree $n-1$ means that our datapoints can be described by the following expression:
+\begin{align*}
+  \boldsymbol{y} = \sum_{j=0}^{n-1}\beta_jx_i^j + \epsilon_i
+\end{align*}
+This is the same as the following matrix equation:
+\begin{align*}
+  \boldsymbol{y} = \boldsymbol{X}\boldsymbol{\beta} + \boldsymbol{\epsilon} = \boldsymbol{\tilde{y}} + \boldsymbol{\epsilon}
+\end{align*}
+This means that the elemnt $i$ is given by:
+\begin{align*}
+  y_i = \epsilon_i + \sum_j x_{ij}\beta_j
+\end{align*}
+The expactation value of the element $i$ in $\boldsymbol{y}$:
+\begin{align*}
+  E(y_i) = E(\epsilon_i + \sum_j x_{ij}\beta_j)
+\end{align*}
+Since we already know that $\boldsymbol{\epsilon}$ is normal distibuted with the expectation value 0 $E(\epsilon_i)=0$. This gives us:
+\begin{align*}
+  E(y_i) = E(\epsilon_i) + E(\sum_j x_{ij}\beta_j) = \sum_jE(x_{ij}\beta_j)
+\end{align*}
+$x_{ij}$ and $\beta_j$ are constants which have themselves as expectation value leaves us with:
+\begin{align*}
+    E(y_i) = \sum_jx_{ij}\beta_j = \boldsymbol{X_i}_*\boldsymbol{\beta}
+\end{align*}
+To find the variance we again recognize that $\boldsymbol{X}\boldsymbol{\beta}$ follow no distribution which leaves us with only the variance of $\boldsymbol{\epsilon}$ which is given as $\sigma^2$:
+\begin{align*}
+  \text{Var}(\boldsymbol{y}) = \text{Var}(\boldsymbol{X}\boldsymbol{\beta} + \boldsymbol{\epsilon}) = \text{Var}(\boldsymbol{\epsilon}) = \sigma^2
+\end{align*}
+$\boldsymbol{\tilde{y}}$ is defined through the minimization of the mean square error $(\boldsymbol{y} - \boldsymbol{\tilde{y}})^2$ which for $\boldsymbol{\tilde{y}} = \boldsymbol{X}\boldsymbol{\beta}$ translates to the minimization of the cost function:
+\begin{align*}
+  C(\boldsymbol{\beta}) = \frac{1}{ n}\{(\boldsymbol{y}- \boldsymbol{X}\boldsymbol{\beta}^T\boldsymbol{y}- \boldsymbol{X}\boldsymbol{\beta})\}
+\end{align*}
+Where we take the derivative with respect to $\boldsymbol{\beta}$ and solve where the derivative is 0 to find the minimum:
+\begin{align*}
+  \frac{\partial C(\boldsymbol{\beta})}{\partial \boldsymbol{\beta}} = \boldsymbol{X}^T (\boldsymbol{y}- \boldsymbol{X}\boldsymbol{\beta}) =0
+\end{align*}
+\begin{align*}
+  \boldsymbol{X}^T\boldsymbol{y} = \boldsymbol{X}^T \boldsymbol{X}\boldsymbol{\beta}
+\end{align*}
+We assume that $\boldsymbol{X}^T\boldsymbol{X}$ is invertible which gives us the the optimal $\boldsymbol{\beta}$:
+\begin{align*}
+  \boldsymbol{\tilde{\beta}} = (\boldsymbol{X}^T\boldsymbol{X})^{-1} \boldsymbol{X}^T\boldsymbol{y}
+\end{align*}
+We can now find the expectation value for the optimal $\boldsymbol{\tilde{\beta}}$:
+\begin{align*}
+  E(\boldsymbol{\tilde{\beta}}) &= E[(\boldsymbol{X}^T\boldsymbol{X})^{-1} \boldsymbol{X}^T\boldsymbol{y}] = E[(\boldsymbol{X}^T\boldsymbol{X})^{-1} \boldsymbol{X}^T(\boldsymbol{X}\boldsymbol{\beta} + \boldsymbol {\epsilon} )] \\
+  &=  (\boldsymbol{X}^T\boldsymbol{X})^{-1} \boldsymbol{X}^TE[(\boldsymbol{X}\boldsymbol{\beta} + \boldsymbol {\epsilon} )] \\ &= (\boldsymbol{X}^T\boldsymbol{X})^{-1} \boldsymbol{X}^T\boldsymbol{X}\boldsymbol{\beta} \\&=  \boldsymbol{\beta}
+\end{align*}
+Here we see that the expectation value of our optimal parameter is the parameter $\boldsymbol{\beta}$.
+
+We now find the variance of the optimal parameter:
+\begin{align*}
+  \text{Var}(\boldsymbol{\tilde{\beta}}) &= \text{Var}[(\boldsymbol{X}^T\boldsymbol{X})^{-1} \boldsymbol{X}^T(\boldsymbol{X}\boldsymbol{\beta} + \boldsymbol {\epsilon} )] \\
+  &= \text{Var}[(\boldsymbol{X}^T\boldsymbol{X})^{-1} \boldsymbol{X}^T\boldsymbol {\epsilon} ]
+\end{align*}
+For a matrix $A$ we have Var$(\boldsymbol{AX}+b) = \boldsymbol{A}\text{Var}(\boldsymbol{X})\boldsymbol{A}^T$ which gives us:
+\begin{align*}
+  \text{Var}(\boldsymbol{\tilde{\beta}})&=(\boldsymbol{X}^T\boldsymbol{X})^{-1}\boldsymbol{X}^T\text{Var}[ {\boldsymbol{\epsilon}} ]((\boldsymbol{X}^T\boldsymbol{X})^{-1})^T\boldsymbol{X} \\  &=
+  (\boldsymbol{X}^T\boldsymbol{X})^{-1}\boldsymbol{X}^T\text{Var}[ {\boldsymbol{\epsilon}} ](\boldsymbol{X}^T)^{-1}\boldsymbol{X}^{-1}\boldsymbol{X} \\&=
+   (\boldsymbol{X}^T\boldsymbol{X})^{-1}\text{Var}[ {\boldsymbol{\epsilon}} ]
+\end{align*}
+
+\section{}
+
+\end{document}
