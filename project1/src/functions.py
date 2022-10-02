@@ -4,17 +4,18 @@ from matplotlib.ticker import MaxNLocator
 from matplotlib import cm
 from matplotlib.ticker import LinearLocator, FormatStrFormatter
 import numpy as np
+from imageio import imread
 from random import random, seed
 from sklearn.metrics import mean_squared_error, r2_score, mean_squared_log_error, mean_absolute_error
-from sklearn.model_selection import train_test_split
-from sklearn.model_selection import KFold
+from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.model_selection import KFold, ShuffleSplit
 from sklearn.preprocessing import StandardScaler, PolynomialFeatures
 from sklearn.pipeline import make_pipeline
 from sklearn.linear_model import LinearRegression
 from sklearn.utils import resample
+from sklearn.linear_model import Lasso, Ridge
 
-
-def make_data(n, noise_std, seed=1):
+def make_data(n, noise_std, seed=1, terrain=False):
     """
     Make data z=f(x)+noise for n steps and normal distributed
     noise with standard deviation equal to noise_std
@@ -22,11 +23,11 @@ def make_data(n, noise_std, seed=1):
     np.random.seed(seed)
     x = np.linspace(0, 1, n+1)
     y = np.linspace(0, 1, n+1)
-    x, y = np.meshgrid(x,y)
+    x, y = np.meshgrid(x, y)
 
     noise = np.random.normal(0, noise_std, size=(n+1,n+1))
     z = FrankeFunction(x, y) + noise
-    return x, y, z.ravel()#.reshape((n+1)**2, 1)
+    return x, y, z.ravel()
 
 def FrankeFunction(x, y):
     term1 = 0.75*np.exp(-(0.25*(9*x-2)**2) - 0.25*((9*y-2)**2))
@@ -74,6 +75,35 @@ def OLS(X, z):
     beta = A @ X.T @ z
     return beta
 
+def ridge_regression(X, z, lamda):
+    """
+    Manual function for ridge regression to find beta
+    Takes in:
+    - X:        Design matrix of some degree
+    - z:        Matching dataset
+    - lamda:    chosen lamda for the Ridge regression
+    returns:
+    - beta
+    """
+    N = X.shape[1]
+    beta = np.linalg.pinv(X.T @ X + lamda*np.eye(N)) @ X.T @ z
+    return beta
+
+def lasso_regression(X, z, lamda, max_iter=int(1e3)):
+    """
+    Sklearns function for lasso regression to find beta
+    Takes in:
+    - X:        Design matrix of some degree
+    - z:        Matching dataset
+    - lamda:    chosen lamda for the lasso regression
+    returns:
+    - beta
+    """
+    X_train, X_test, z_train, z_test = train_test_split(X, z)
+    lasso = Lasso(lamda, tol=1e-2, max_iter=max_iter)
+    lasso.fit(X_train, z_train)
+    return lasso
+
 def MSE(data, model):
     """
     takes in actual data and modelled data to find
@@ -103,7 +133,6 @@ def plot_3D(x, y, z):
     ax = fig.gca(projection='3d')
     surf = ax.plot_surface(x, y, z, cmap=cm.coolwarm,linewidth=0, antialiased=False)
     # Customize the z axis.
-    ax.set_zlim(-0.10, 1.40)
     ax.zaxis.set_major_locator(LinearLocator(10))
     ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
     # Add a color bar which maps values to colors.
@@ -117,28 +146,21 @@ def bootstrap(X_train, X_test, z_train, z_test, n_B, method, lamda=1):
         #mean_scale(z_, X_)
         if method == "OLS":
             beta = OLS(X_, z_)
+            z_pred[:, i] = (X_test @ beta).ravel()
+
         if method == "RIDGE":
             beta = ridge_regression(X_, z_, lamda)
+            z_pred[:, i] = (X_test @ beta).ravel()
 
-        z_pred[:, i] = (X_test @ beta).ravel()
+        if method == "LASSO":
+            model = lasso_regression(X_, z_, lamda)
+            z_pred[:, i] = model.predict(X_test).ravel()
 
     return z_pred
 
-def ridge_regression(X, z, lamda):
-    """
-    Manual function for ridge regression
-    Takes in:
-    - X:        Design matrix of some degree
-    - z:        Matching dataset
-    - lamda:    chosen lamda for the Ridge regression
-    returns:
-    - beta
-    """
-    N = X.shape[1]
-    beta = np.linalg.pinv(X.T @ X + lamda*np.eye(N)) @ X.T @ z
-    return beta
 
-def cross_validation(X, z, k_folds, lamda, method, scale=False):
+
+def cross_validation(X, z, k_folds, lamda=0, method="RIDGE", max_iter=int(1e4), scale=False):
     """
     Manual algorithm for cross validation using chosen regression method
     to find MSE
@@ -151,9 +173,12 @@ def cross_validation(X, z, k_folds, lamda, method, scale=False):
     Returns:
     - MSE as a mean over the MSE returned by the cross validation function
     """
-    k_fold = KFold(n_splits = k_folds)
+
+    k_fold = KFold(n_splits = k_folds, shuffle=True)
+
+
     i = 0
-    MSE = np.zeros(k_folds)
+    mse = np.zeros(k_folds)
 
     for train_idx, test_idx in k_fold.split(X):
         X_train = X[train_idx, :]
@@ -163,25 +188,25 @@ def cross_validation(X, z, k_folds, lamda, method, scale=False):
 
         if scale == True:
             X_train -= np.mean(X_train, axis=0)
-            z_train_mean = np.mean(z_train)
-            z_train -= z_train_mean
-            X_test -= np.mean(X_train, axis=0)
+            X_test -= np.mean(X_test, axis=0)
+            z_train -= np.mean(z_train, axis=0)
+            z_test -= np.mean(z_test, axis=0)
 
-        else:
-            z_train_mean = 0
+        if method == "OLS":
+            beta = OLS(X_train, z_train)
+            z_pred = (X_test @ beta)
 
         if method == "RIDGE":
             beta = ridge_regression(X_train, z_train, lamda)
+            z_pred = (X_test @ beta)
 
-        zpredict = (X_test @ beta) + z_train_mean
-        MSE[i] = mean_squared_error(z_test, zpredict)
+        if method == "LASSO":
+            model = lasso_regression(X_train, z_train, lamda, max_iter)
+            z_pred = model.predict(X_test)
+
+        mse[i] = mean_squared_error(z_test, z_pred)
         i += 1
-
-    return np.mean(MSE)
-
-
-
-
+    return np.mean(mse)
 
 def MSE_R2_beta_degree(x, y, z, degree_max):
     """
@@ -202,7 +227,7 @@ def MSE_R2_beta_degree(x, y, z, degree_max):
     for degree in range(1, degree_max+1):
         X = design_matrix(x, y, degree)
         X_train, X_test, z_train, z_test = train_test_split(X, z, test_size=0.2)
-        X_train_scaled, X_train_mean, z_train_scaled, z_train_mean = mean_scaler(X_train, z_train)
+        X_train_scaled = X_train, X_train_mean, z_train_scaled, z_train_mean = mean_scaler(X_train, z_train)
         X_test_scaled = X_test - X_train_mean
 
         n_variables = int((degree+1)*(degree+2)/2)

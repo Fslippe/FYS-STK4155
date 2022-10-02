@@ -12,21 +12,23 @@ from sklearn.pipeline import make_pipeline
 from sklearn.linear_model import LinearRegression
 from functions import *
 
-def plot_train_test(train, test, ylabel):
+def plot_train_test(train, test, ylabel, save=False):
     """
     Comparing parameter found using test and train data
     Can be used for MSE and R2
     """
-    degree_array = np.arange(1, np.size(train)+1, 1)
+    degree_array = np.arange(1, np.size(train)+1)
     plt.figure().gca().xaxis.set_major_locator(MaxNLocator(integer=True))
     plt.plot(degree_array, train, label="train sample")
     plt.plot(degree_array, test, label="test sample")
     plt.legend()
     plt.xlabel("Degree of polynomial")
     plt.ylabel(ylabel)
+    if save:
+        plt.savefig(save, dpi=300, bbox_inches='tight')
     plt.show()
 
-def plot_MSE(MSE, save=False):
+def plot_MSE(MSE, save=False, savename="MSE_degree"):
     """
     Takes in and plotting MSE for chosen label and line type.
     Saving if save=True
@@ -38,7 +40,7 @@ def plot_MSE(MSE, save=False):
     plt.ylabel("MSE")
 
     if save==True:
-        plt.savefig("../figures/MSE_degree.png")
+        plt.savefig("../figures/%s.png" %(savename))
     plt.show()
 
 
@@ -109,7 +111,7 @@ def scaled_OLSprediction(X, z):
     Scales the data by subtracting the mean
     performs OLS and finding z using both train and test data
     """
-    X_train, X_test, z_train, z_test = train_test_split(X, z)
+    X_train, X_test, z_train, z_test = train_test_split(X, z, test_size=0.2)
     X_train_scaled = X_train - np.mean(X_train, axis=0)
     z_train_scaled = z_train - np.mean(z_train)
     X_test_scaled = X_test - np.mean(X_train, axis=0)
@@ -144,7 +146,6 @@ def MSE_R2(x, y, z, maxdegree):
         r2[degree-1] = R2(z_test, z_pred_OLS)
         r2_train[degree-1] = R2(z_train, z_pred_train_OLS)
 
-
     return mse, mse_train, r2, r2_train, beta_OLS
 
 def resample_MSE_R2(n, std, maxdegree, resamples):
@@ -156,9 +157,8 @@ def resample_MSE_R2(n, std, maxdegree, resamples):
     r2_re = np.zeros((resamples, maxdegree))
     mse_train_re = np.zeros((resamples, maxdegree))
     r2_train_re = np.zeros((resamples, maxdegree))
-
     for i in range(resamples):
-        x, y, z = make_data(n, std, seed = np.random.randint(100000))
+        x, y, z = make_data(n, std, seed = np.random.randint(10000))
         mse_re[i,:], mse_train_re[i,:], r2_re[i,:], r2_train_re[i,:], beta = MSE_R2(x, y, z, maxdegree)
 
     mse_re = np.mean(mse_re, axis=0)
@@ -185,7 +185,7 @@ def plot_beta_degree(beta):
 
 def main():
     degree = 5
-    n = 50
+    n = 30
     std = 0.2
     x, y, z = make_data(n, std)
     X = design_matrix(x, y, degree)
@@ -202,15 +202,19 @@ def main():
     plot_MSE(mse)
 
     #Plot of MSE for train and test prediction
-    maxdegree = 20
+    maxdegree = 17
     mse, mse_train, r2, r2_train, beta_OLS = MSE_R2(x, y, z, maxdegree)
-    plot_train_test(r2_train, r2, r"$R^2$")
-    plot_train_test(mse_train, mse, r"MSE")
+    plot_train_test(r2_train, r2, r"$R^2$", save="../figures/R2_train_test.png")
+    plot_train_test(mse_train, mse, r"MSE", save="../figures/MSE_train_test.png")
 
     #Resample of MSE and R2 to get a smooth plot
+    print("\n---RESAMPLE---")
     mse, mse_train, r2, r2_train = resample_MSE_R2(n, std, maxdegree, resamples=200)
-    plot_train_test(r2_train, r2, r"$R^2$")
-    plot_train_test(mse_train, mse, r"MSE")
+    plot_train_test(r2_train, r2, r"$R^2$", save="../figures/R2_train_test_resample.png")
+    plot_train_test(mse_train, mse, r"MSE", save="../figures/MSE_train_test_resample.png")
+
+    print("Degree with lowest MSE:", np.argmin(mse)+1)
+    print("MSE:", np.min(mse))
 
 if __name__ == '__main__':
     main()

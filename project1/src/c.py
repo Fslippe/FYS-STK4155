@@ -13,7 +13,7 @@ from sklearn.linear_model import LinearRegression
 from functions import *
 plt.rcParams.update({"font.size": 18})
 
-def bias_variance_tradeoff(n=22, std=0.2, maxdegree=15, n_B=100, plot=True, method="OLS", lamda=1):
+def bias_variance_tradeoff(n=22, std=0.2, maxdegree=15, n_B=100, plot=True, method="OLS", lamda=1, show=True, seed=np.random.randint(10000)):
     """
     Calculates the bias variance tradeoff using bootstrap and OLS
     Takes in
@@ -29,7 +29,7 @@ def bias_variance_tradeoff(n=22, std=0.2, maxdegree=15, n_B=100, plot=True, meth
     bias = np.zeros(maxdegree+1)
     variance = np.zeros(maxdegree+1)
     MSE = np.zeros(maxdegree+1)
-    x, y, z = make_data(n, std)
+    x, y, z = make_data(n, std, seed)
     n_B = 100
 
     for i in range(maxdegree+1):  # For increasing complexity
@@ -47,14 +47,15 @@ def bias_variance_tradeoff(n=22, std=0.2, maxdegree=15, n_B=100, plot=True, meth
         if method == "OLS":
             plt.title(r"$\sigma=$%.1f, $n=$%i" %(std, n))
         else:
-            plt.title(r"$\sigma=$%.1f,  $n=$%i,   $\lambda=$%.5f" %(std, n, lamda))
+            plt.title(r"$\sigma=$%.1f,  $n=$%i,   $\lambda=$%.2e" %(std, n, lamda))
         plt.plot(polydegree, MSE, "-o", label="Error")
         plt.plot(polydegree, bias, "-o", label="bias")
         plt.plot(polydegree, variance, "-o", label="Variance")
         plt.xlabel("Polynomial degree")
         plt.tight_layout(pad=1.1, w_pad=0.7, h_pad=0.2)
         plt.legend()
-        plt.show()
+        if show:
+            plt.show()
     else:
         return MSE, bias, variance
 
