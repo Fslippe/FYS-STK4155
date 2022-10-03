@@ -4,30 +4,25 @@ from c import bias_variance_tradeoff
 import matplotlib as mpl
 from matplotlib.cm import ScalarMappable
 import seaborn as sns
-
 plt.rcParams.update({"font.size": 15})
-#sns.set_style("whitegrid")
 
-def best_lamda_plot(k_folds = 10, n_lmb = 200):
-    """PLOTTING RESULTS FROM CROSS VALIDATION"""
-
-    degree = 6
-    n = 100
-    std = 0.2
-    lamda = np.logspace(-7, -1, n_lmb)
-    M_ridge = np.zeros(n_lmb)
-    M_OLS = np.zeros(n_lmb)
-    M_lasso = np.zeros(n_lmb)
-    lmb_min_lasso = cross_validation_lamda(n, std, k_folds, "LASSO", lamda, degree, savefig=False)
-    lmb_min_ridge = cross_validation_lamda(n, std, k_folds, "RIDGE", lamda, degree, savefig=False)
-    plt.savefig("../figures/lasso_ridge_mse_lambda.png", dpi=300, bbox_inches='tight')
-    plt.show()
-    return lamda_ridge, lamda_lasso
-
-def lamda_degree_MSE(x, y, z, method, std, n_B = 100, n_lmb = 50, maxdegree = 15, k_folds = 5, max_iter = 1000, save=True):
+def lamda_degree_MSE(x, y, z, method, std, n_lmb = 50, maxdegree = 20, k_folds = 5, max_iter = 100, save=True):
     """
     Function to find best degree and lambda parameter
     for the chosen regression method
+    takes in:
+    - x:                meshrgrid containing x-values
+    - y:                meshrgrid containing y-values
+    - z:                data
+    - method:           Regression method
+    - std:              standard deviation of noise added to data
+    - n_lmb (opt):      number of lambdas to test for logspace (-12, -1)
+    - maxdegree (opt):  maximum degree to test the regression
+    - k_folds (opt):    number of kfolds for cross validation method
+    - max_iter (opt):   maximum number of iterations used for lasso prediction
+    - save (opt):       if true saves ploted heatmap.
+    returns:
+    - optimal lamda, degree and the mse for
     """
 
     degree = np.arange(1, maxdegree+1)
@@ -50,6 +45,7 @@ def lamda_degree_MSE(x, y, z, method, std, n_B = 100, n_lmb = 50, maxdegree = 15
             mse[i] = cross_validation(X, z, k_folds, method=method)
 
     argmin = np.unravel_index(np.argmin(mse), mse.shape)
+
     print("---%s---" %(method))
     print("Degree of lowest MSE for %i kfolds" %(k_folds), degree[argmin])
     plt.figure().gca().xaxis.set_major_locator(MaxNLocator(integer=True))
@@ -70,43 +66,122 @@ def lamda_degree_MSE(x, y, z, method, std, n_B = 100, n_lmb = 50, maxdegree = 15
         plt.legend()
 
     plt.xlabel("Degree")
-
     plt.grid(True)
 
     if save:
         plt.savefig("../figures/best_lambda_%s_0%i.png" %(method, std*10), dpi=300, bbox_inches='tight')
     plt.show()
 
-    return lamda[argmin], degree[argmin], mse[argmin]
+    if method == "OLS":
+        return lamda[0], degree[argmin], mse[argmin]
+    else:
+        return lamda[argmin], degree[argmin], mse[argmin]
+
+
+def compare_3d(x, y, z, noise, deg_ols, lmb_ridge, deg_ridge, lmb_lasso, deg_lasso, name_add="franke", std=1, mean=0):
+    """
+    Plots 3D surface for OLS, RIDGE and LASSO regression for the chosen degrees
+    and lambdas. Saves the files giving a total of 6 plots.
+    takes in:
+    - x:            meshrgrid containing x-values
+    - y:            meshrgrid containing y-values
+    - z:            data with added noise
+    - noise:        added noise of data
+    - deg_...:      Degrees to plot for the different regressions
+    - lmb_...:      Lambdas to use for plot for lasso and ridge
+    - name_add:     string to add at end of saved filenames
+    - std (opt):    std used for standard scale of z
+    - mean (opt):   mean used for standard scale of z
+
+    plots:
+    - 6 plots with surfaces.
+    Test and train data, true data and, ridge, ols and lasso regressions
+    """
+    z_true = (z*std + mean  - noise.ravel())
+    x_train, x_test, y_train, y_test, z_train, z_test = train_test_split(x.ravel(), y.ravel(), z, test_size=0.2)
+
+    X_train = design_matrix(x_train, y_train, deg_ridge)
+    X_test = design_matrix(x_test, y_test, deg_ridge)
+    beta = ridge_regression(X_train, z_train, lmb_ridge)
+    z_pred_ridge = (X_test @ beta)*std + mean
+
+    X_train = design_matrix(x_train, y_train, deg_lasso)
+    X_test = design_matrix(x_test, y_test, deg_lasso)
+    lasso = lasso_regression(X_train, z_train, lmb_lasso, max_iter=int(1e3), tol=1e-4)
+    z_pred_lasso = lasso.predict(X_test)*std + mean
+
+    X_train = design_matrix(x_train, y_train, deg_ols)
+    X_test = design_matrix(x_test, y_test, deg_ols)
+    beta = OLS(X_train, z_train)
+    z_pred_OLS =  (X_test @ beta)*std + mean
+
+    plot_3d_trisurf(x_test, y_test, z_test*std + mean , azim=50, title="Test data")
+    plt.savefig("../figures/test_data_%s.png" %(name_add), dpi=300, bbox_inches='tight')
+    plot_3d_trisurf(x_train, y_train, z_train*std + mean , azim=50, title="Train data")
+    plt.savefig("../figures/train_data_%s.png" %(name_add), dpi=300, bbox_inches='tight')
+    plot_3d_trisurf(x.ravel(), y.ravel(), z_true, azim=50, title="Actual data")
+    plt.savefig("../figures/actual_data_%s.png" %(name_add), dpi=300, bbox_inches='tight')
+    plot_3d_trisurf(x_test, y_test, z_pred_ridge, azim=50, title="Ridge predict")
+    plt.savefig("../figures/ridge_pred_%s.png" %(name_add), dpi=300, bbox_inches='tight')
+    plot_3d_trisurf(x_test, y_test, z_pred_lasso, azim=50, title="Lasso predict")
+    plt.savefig("../figures/lasso_pred_%s.png" %(name_add), dpi=300, bbox_inches='tight')
+    plot_3d_trisurf(x_test, y_test, z_pred_OLS, azim=50, title="OLS predict")
+    plt.savefig("../figures/ols_pred_%s.png" %(name_add), dpi=300, bbox_inches='tight')
+
+    plt.show()
+
 
 def main():
     degree = 6
     n = 22
-    std = 0.2
+    std = 0.5
     maxdegree = 15
 
     n = 50
     x, y, z = make_data(n, std, seed=200)
 
-    lmb, deg, mse = lamda_degree_MSE(x, y, z, "OLS", std, save=True)
-    #lmb_ridge, deg_ridge, mse_ridge = lamda_degree_MSE("RIDGE", std)
+    #lmb, deg, mse = lamda_degree_MSE(x, y, z, "OLS", std, save=False)
+    #lmb_ridge, deg_ridge, mse_ridge = lamda_degree_MSE(x, y, z, "RIDGE", std, save=True)
+    #lmb_ridge, deg_ridge, mse_ridge = lamda_degree_MSE(x, y, z, "LASSO", std, save=True)
+
     #lmb_lasso, deg_lasso, mse_lasso = lamda_degree_MSE("LASSO", std)
-    lmb_ridge = 1.21e-4
-    lmb_lasso = 1.53e-5
-    x, y, z = make_data(n, std, seed=100)#np.random.randint(101))
-    X = design_matrix(x, y, degree)
+    n = 50
+    std = 0.5
+    x, y, z = make_data(n, std, seed=200)
+    np.random.seed(200)
+    noise = np.random.normal(0, std, size=(n+1,n+1))
+    lmb_ridge_5 = 1.21e-4
+    deg_ridge_5 = 5
+    lmb_lasso_5 = 1.53e-5
+    deg_lasso_5 = 12
+    deg_ols_5 = 6
+
+    lmb_ridge_2 = 8.69e-8
+    deg_ridge_2 = 10
+    lmb_lasso_2 = 5.43e-6
+    deg_lasso_2 = 19
+    deg_ols_2 = 8
+
+    compare_3d(x, y, z, noise, deg_ols_5, lmb_ridge_5, deg_ridge_5, lmb_lasso_5, deg_lasso_5, name_add="franke_5")
+    std = 0.5
+    x, y, z = make_data(n, std, seed=200)
+    np.random.seed(200)
+    noise = np.random.normal(0, std, size=(n+1,n+1))
+    #compare_3d(x, y, z, noise, deg_ols_2, lmb_ridge_2, deg_ridge_2, lmb_lasso_2, deg_lasso_2, name_add="franke_2")
+
+
+    """BIAS VARIANCE TRADEOFF FOR BEST LAMDA"""
+    #x, y, z = make_data(n, std, seed=100)#np.random.randint(101))
+    #X = design_matrix(x, y, degree, deg_ols, lmb_ridge, deg_ridge, lmb_lasso, deg_lasso)
     #bias_variance_tradeoff(n, std, maxdegree, method="RIDGE", lamda=lmb_ridge, show=False)
     #plt.savefig("../figures/bias_variance_best_ridge_05.png", dpi=300, bbox_inches='tight')
-    bias_variance_tradeoff(n, std, maxdegree, method="OLS",show=False)
-    plt.savefig("../figures/bias_variance_ols_05.png", dpi=300, bbox_inches='tight')
+    #bias_variance_tradeoff(n, std, maxdegree, method="OLS",show=False)
+    #plt.savefig("../figures/bias_variance_ols_05.png", dpi=300, bbox_inches='tight')
 
     #bias_variance_tradeoff(n, std, maxdegree, method="LASSO", lamda=lmb_lasso,show=False)
     #plt.savefig("../figures/bias_variance_best_lasso_05.png", dpi=300, bbox_inches='tight')
 
 
-    #lamda_ridge, lamda_lasso = best_lamda_plot()
-    lamda_ridge = 9.771241535346501e-06 #Values taken from print when running best_lamda_plot
-    lamda_lasso = 0.0006747544053110693
     #bias_variance_tradeoff(n, std, maxdegree, method="RIDGE", lamda=lamda_ridge)
     #bias_variance_tradeoff(n, std, maxdegree, method="LASSO", lamda=lamda_lasso)
 

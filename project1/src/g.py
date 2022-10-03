@@ -7,7 +7,8 @@ import numpy as np
 from numpy.random import normal, uniform
 from functions import *
 from b import *
-from f import lamda_degree_MSE
+from f import *
+from e import bias_variance_lamda
 
 def standard_scale(X, z):
     """
@@ -60,85 +61,54 @@ def MSE_R2_2(x, y, z, maxdegree, scaler, method):
 
     return mse, r2
 
-def plot_3d_trisurf(x, y, z, scale_std=1, scale_mean=0, savename=None):
-    fig = plt.figure()
-    ax = fig.gca(projection='3d')
-    surf = ax.plot_trisurf(x, y, z*scale_std + scale_mean, cmap=cm.coolwarm, linewidth=0.2, antialiased=False)
-    ax.zaxis.set_major_formatter(FormatStrFormatter("%i"))
-    ax.set_xlabel(r"$x$")
-    ax.set_ylabel(r"$y$")
-    ax.set_ylabel(r"$y$")
-    ax.view_init(azim=110)
-
-    fig.colorbar(surf, shrink=0.5, aspect=5)
-    plt.tight_layout(pad=1.5, w_pad=0.7, h_pad=0.2)
-    if savename != None:
-        plt.savefig("../figures/%s.png" %(savename))
-
 # Load the terrain
 def main():
     terrain = imread('../data/SRTM_data_Norway_1.tif')
 
     n = 100
     std = 0.2
-    degree = 50 # polynomial order
+    degree = 17 # polynomial order
     maxdegree = 25
     terrain = terrain[100:n+1+100,100:n+1+100]
-    print(np.mean(terrain))
+    np.random.seed(200)
     noise = np.random.normal(0, std, size=(n+1,n+1))
     x, y, z = make_data(n, std)
-    z = (terrain + noise*100).ravel()
-    #mse, r2 = MSE_R2_2(x, y, z, maxdegree, scaler, method)
+    z = (terrain + noise*np.mean(terrain)).ravel()
+    mean_scale = np.mean(z)
+    std_scale = np.std(z)
+    z_scaled = (z - mean_scale)/std_scale
+
+    #mse, r2 = MSE_R2_2(x, y, z, maxdegree, "STANDARD", "OLS")
     #plot_MSE(mse)
     #plot_R2(r2)
-    method = "OLS"
-
-    scaler = StandardScaler()
-    x_train, x_test, y_train, y_test, z_train, z_test = train_test_split(x.ravel(), y.ravel(), z)
-    X_train = design_matrix(x_train, y_train, degree)
-    X_test = design_matrix(x_test, y_test, degree)
-
-    scaler.fit(X_train)
-    #X_train = scaler.transform(X_train)
-    z_train = (z_train - np.mean(z_train)) / np.std(z_train)
-    z_test = (z_test - np.mean(z_train)) / np.std(z_train)
-    #X_test = scaler.transform(X_test)
 
 
-    x, y, z = make_data(n, std)
-    z = (z - np.mean(z))/np.std(z)
+    #lamda_degree_MSE(x, y, z_scaled, "OLS", std, n_lmb = 10, maxdegree = maxdegree, k_folds = 5, max_iter = 100, save=True)
+    #lamda_degree_MSE(x, y, z_scaled, "RIDGE", std, n_lmb = 10, maxdegree = maxdegree, k_folds = 5, max_iter = 100, save=True)
+    #lamda_degree_MSE(x, y, z_scaled, "LASSO", std, n_lmb = 10, maxdegree = maxdegree, k_folds = 5, max_iter = 100, save=True)
 
-    #lamda_degree_MSE(x, y, z, "OLS", std, n_B = 100, n_lmb = 20, maxdegree = maxdegree, k_folds = 5, max_iter = 1000, save=False)
-    if method == "OLS":
-        beta = OLS(X_train, z_train)
-        z_pred = beta @ X_test.T
-    plot_3d_trisurf(x_test, y_test, z_pred, np.std(z_test), np.mean(z_test))
-    x, y, z = make_data(n, std)
-    print(np.shape(x))
-    print(np.shape(y))
+    #for std 0.2
+    lmb_ridge = 4.83e-4
+    deg_ridge = 18
+    lmb_lasso = 2.07e-10
+    deg_lasso = 17
+    deg_ols = 11
 
-    plot_3D(x, y, terrain)
+    #for std 0.05
+    lmb_ridge = 1.67e-11
+    deg_ridge = 16
+    lmb_lasso = 2.15e-5
+    deg_lasso = 21
+    deg_ols = 19
+    print("\nMAX NOISE ADDED TO ONE DATAPOINT:", np.max(noise*np.mean(terrain)))
+    #compare_3d(x, y, z_scaled, noise*np.mean(terrain), deg_ols, lmb_ridge, deg_ridge, lmb_lasso, deg_lasso, name_add="real", std=std_scale, mean=mean_scale)
+    lamda = np.logspace(2, 2, 1)
+    n_B = 20
+    bias_variance_lamda(n, std, maxdegree, n_B, "RIDGE", lamda, "real", False, x, y, z_scaled)
+    plt.show()
+    bias_variance_lamda(n, std, maxdegree, n_B, "LASSO", lamda, "real", False, x, y, z_scaled)
     plt.show()
 
-    #X_test = design_matrix(x_test, y_test, degree)
-
-
-    #X_train, X_test_tmp, z_train, z_test_tmp = standard_scale(X_train, z_train)
-    #X_train, X_test_tmp, z_train, z_test_tmp = standard_scale(X_test, z_test)
-
-
-    #beta = OLS(X_train, z_train)
-    #z_pred = X_test @ beta
-
-    #compare_scale(X, z)
-    #MSE(z_test, z_)
-    #mse, mse_train, r2, r2_train, beta_OLS = MSE_R2(x, y, z, maxdegree)
-    #plot_train_test(mse_train, mse, "mse")
-
-    # Show the terrain
-    #x, y, z = make_data(44, std)
-
-    #ax.view_init(azim=70)
 
 
 if __name__ == '__main__':

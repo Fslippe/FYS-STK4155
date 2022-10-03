@@ -2,7 +2,7 @@ from functions import *
 from c import bias_variance_tradeoff
 from d import sklearn_cross_validation
 
-def bias_variance_lamda(n, std, maxdegree, n_B, method, lamda):
+def bias_variance_lamda(n, std, maxdegree, n_B, method, lamda, name_add="", franke=True, x=None, y=None, z=None):
     """
     runs biass variance tradeoff for chosen method for different lamdas
     """
@@ -14,16 +14,18 @@ def bias_variance_lamda(n, std, maxdegree, n_B, method, lamda):
 
     poly = np.arange(0, maxdegree+1)
     for lmb in lamda:
-        #bias_variance_tradeoff(n=n, std=std, maxdegree=maxdegree, n_B=n_B, plot=True, method=method, lamda=lmb)
+        mse[i], bias[i], variance[i] =  bias_variance_tradeoff(franke, x, y, z, n=n, std=std, maxdegree=maxdegree, n_B=n_B, plot=False, method=method, lamda=lmb, seed=100)
+        plt.figure()
+        plt.title("%s Tradeoff for $\lambda=$ %.0e" %(method, lmb))
+        plt.plot(poly, bias[i], label="Bias")
+        plt.plot(poly, mse[i], label="mse")
+        plt.plot(poly, variance[i], label="variance")
+        plt.xlabel("Polynomial degree")
+        plt.legend()
+        plt.savefig("../figures/tradeoff_%s_%.0e%s.png" %(method, lmb, name_add), dpi=300, bbox_inches="tight")
 
-        mse[i], bias[i], variance[i] =  bias_variance_tradeoff(n=n, std=std, maxdegree=maxdegree, n_B=n_B, plot=False, method=method, lamda=lmb)
-        print(mse[i])
-        plt.plot(poly, bias[i], "--", label="Bias")
-        plt.plot(poly, mse[i], "-", label="mse")
-        plt.plot(poly, variance[i], "-", label="variance")
+        #plt.show()
         i +=1
-
-    plt.show()
 
 def cross_validation_lamda(n, std, k_folds, method, lamda, degree=5, savefig=False):
     x, y, z = make_data(n, std, seed=100)
@@ -53,7 +55,7 @@ def cross_validation_lamda(n, std, k_folds, method, lamda, degree=5, savefig=Fal
     plt.xscale("log")
     plt.legend()
     if savefig == True:
-        plt.savefig("../figures/cross_val_lambda_ridge.png", dpi=300, bbox_inches='tight')
+        plt.savefig("../figures/cross_val_lambda_ridge.png", dpi=300, bbox_inches="tight")
     return lamda[argmin]
 
 def main():
@@ -62,16 +64,14 @@ def main():
     maxdegree = 15
     n_B = 100
     method = "RIDGE"
-    lamda = np.logspace(-4, 1, 3)
-    k_folds = 10
+    lamda = np.logspace(-6, -1, 6)
+    k_folds = 5
     bias_variance_lamda(n, std, maxdegree, n_B, method, lamda)
-    for degree in range(6, 11):
-        lamda = np.logspace(-6.5, -3.5, 100)
-        lmb_min = cross_validation_lamda(n, std, k_folds, method, lamda, degree=degree)
-        lamda = np.logspace(-4.5, 0.5, 100)
-    plt.legend(loc="upper right")
-    plt.savefig("../figures/cross_val_lambda_ridge_deg_6-10.png", dpi=300, bbox_inches='tight')
     plt.show()
+    method = "LASSO"
+    lamda = np.logspace(-6, -1, 6)
+    k_folds = 5
+    bias_variance_lamda(n, std, maxdegree, n_B, method, lamda)
 
     #cross_validation_lamda(n, std, k_folds, method, lamda, degree=10)
 

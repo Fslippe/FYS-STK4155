@@ -1,0 +1,9 @@
+[0] Config.pm:304> INFO - This is Biber 2.14 (beta)
+[0] Config.pm:307> INFO - Logfile is 'project1.blg'
+[39] biber:322> INFO - === Mon Oct  3, 2022, 17:22:30
+[49] Biber.pm:415> INFO - Reading 'project1.bcf'
+[84] Biber.pm:943> INFO - Found 0 citekeys in bib section 0
+[88] Utils.pm:293> WARN - The file 'project1.bcf' does not contain any citations!
+[91] bbl.pm:652> INFO - Writing 'project1.bbl' with encoding 'UTF-8'
+[92] bbl.pm:755> INFO - Output to project1.bbl
+[92] Biber.pm:128> INFO - WARNINGS: 1

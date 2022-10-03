@@ -14,6 +14,7 @@ from sklearn.pipeline import make_pipeline
 from sklearn.linear_model import LinearRegression
 from sklearn.utils import resample
 from sklearn.linear_model import Lasso, Ridge
+plt.rcParams.update({"font.size": 15})
 
 def make_data(n, noise_std, seed=1, terrain=False):
     """
@@ -89,7 +90,7 @@ def ridge_regression(X, z, lamda):
     beta = np.linalg.pinv(X.T @ X + lamda*np.eye(N)) @ X.T @ z
     return beta
 
-def lasso_regression(X, z, lamda, max_iter=int(1e3)):
+def lasso_regression(X, z, lamda, max_iter=int(1e3), tol=1e-2):
     """
     Sklearns function for lasso regression to find beta
     Takes in:
@@ -99,9 +100,8 @@ def lasso_regression(X, z, lamda, max_iter=int(1e3)):
     returns:
     - beta
     """
-    X_train, X_test, z_train, z_test = train_test_split(X, z)
-    lasso = Lasso(lamda, tol=1e-2, max_iter=max_iter)
-    lasso.fit(X_train, z_train)
+    lasso = Lasso(lamda, tol=tol, max_iter=max_iter)
+    lasso.fit(X, z)
     return lasso
 
 def MSE(data, model):
@@ -138,6 +138,23 @@ def plot_3D(x, y, z):
     # Add a color bar which maps values to colors.
     fig.colorbar(surf, shrink=0.5, aspect=5)
     plt.show()
+
+def plot_3d_trisurf(x, y, z, scale_std=1, scale_mean=0, savename=None, azim=110, title=""):
+    fig = plt.figure()
+    ax = fig.gca(projection='3d')
+    plt.title(title)
+    surf = ax.plot_trisurf(x, y, z*scale_std + scale_mean, cmap=cm.coolwarm, linewidth=0.2, antialiased=False)
+    ax.zaxis.set_major_formatter(FormatStrFormatter("%.1f"))
+    ax.set_xlabel(r"$x$")
+    ax.set_ylabel(r"$y$")
+    ax.set_ylabel(r"$y$")
+    ax.view_init(azim=azim)
+
+    fig.colorbar(surf, shrink=0.5, aspect=5)
+    plt.tight_layout(pad=1.5, w_pad=0.7, h_pad=0.2)
+    if savename != None:
+        plt.savefig("../figures/%s.png" %(savename))
+
 
 def bootstrap(X_train, X_test, z_train, z_test, n_B, method, lamda=1):
     z_pred = np.zeros((len(z_test), n_B))
