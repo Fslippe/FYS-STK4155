@@ -160,7 +160,6 @@ def bootstrap(X_train, X_test, z_train, z_test, n_B, method, lamda=1):
     z_pred = np.zeros((len(z_test), n_B))
     for i in range(n_B):
         X_, z_ = resample(X_train, z_train)
-        #mean_scale(z_, X_)
         if method == "OLS":
             beta = OLS(X_, z_)
             z_pred[:, i] = (X_test @ beta).ravel()
@@ -192,7 +191,6 @@ def cross_validation(X, z, k_folds, lamda=0, method="RIDGE", max_iter=int(1e4), 
     """
 
     k_fold = KFold(n_splits = k_folds, shuffle=True)
-
 
     i = 0
     mse = np.zeros(k_folds)

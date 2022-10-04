@@ -11,9 +11,9 @@ from sklearn.preprocessing import StandardScaler, PolynomialFeatures
 from sklearn.pipeline import make_pipeline
 from sklearn.linear_model import LinearRegression
 from functions import *
-plt.rcParams.update({"font.size": 18})
+plt.rcParams.update({"font.size": 16})
 
-def bias_variance_tradeoff(franke=True, x=None, y=None, z=None, n=22, std=0.2, maxdegree=15, n_B=100, plot=True, method="OLS", lamda=1, show=True, seed=np.random.randint(10000)):
+def bias_variance_tradeoff(franke=True, x=None, y=None, z=None, n=22, std=0.2, maxdegree=15, n_B=100, plot=True, method="OLS", lamda=1, show=True, seed=np.random.randint(10000), save=False):
     """
     Calculates the bias variance tradeoff using bootstrap and OLS
     Takes in
@@ -25,8 +25,6 @@ def bias_variance_tradeoff(franke=True, x=None, y=None, z=None, n=22, std=0.2, m
     Generates a plot showing the tradeoff
     """
     polydegree = np.arange(0, maxdegree+1)
-
-
     bias = np.zeros(maxdegree+1)
     variance = np.zeros(maxdegree+1)
     MSE = np.zeros(maxdegree+1)
@@ -34,12 +32,15 @@ def bias_variance_tradeoff(franke=True, x=None, y=None, z=None, n=22, std=0.2, m
     if franke:
         x, y, z = make_data(n, std, seed)
 
+    else:
+        std = 0
+
     for i in range(maxdegree+1):  # For increasing complexity
         X = design_matrix(x, y, i)
         X_train, X_test, z_train, z_test = train_test_split(X, z, test_size=0.2)
         z_pred = bootstrap(X_train, X_test, z_train, z_test, n_B, method=method, lamda=lamda)
 
-        bias[i] = np.mean((z_test - np.mean(z_pred, axis=1, keepdims=True).T)**2)
+        bias[i] = np.mean((z_test - np.mean(z_pred, axis=1, keepdims=True).T)**2) - std**2
         variance[i] = np.mean(np.var(z_pred, axis=1))
         MSE[i] = np.mean(np.mean((z_test - z_pred.T)**2, axis=1, keepdims=True))
 
@@ -55,6 +56,8 @@ def bias_variance_tradeoff(franke=True, x=None, y=None, z=None, n=22, std=0.2, m
         plt.xlabel("Polynomial degree")
         plt.tight_layout(pad=1.1, w_pad=0.7, h_pad=0.2)
         plt.legend()
+        if save != False:
+            plt.savefig("../figures/%s.png" %(save), dpi=300, bbox_inches="tight")
         if show:
             plt.show()
     else:
@@ -64,6 +67,6 @@ def main():
     n = 22
     std = 0.2
     maxdegree = 15
-    bias_variance_tradeoff(n, std, maxdegree, method="OLS")
+    bias_variance_tradeoff(n=n, std=std, maxdegree=maxdegree, method="OLS")
 if __name__ == '__main__':
     main()

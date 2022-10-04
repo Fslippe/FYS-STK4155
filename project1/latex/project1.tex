@@ -1,4 +1,4 @@
-\documentclass[norsk,a4paper,11pt]{scrartcl}
+\documentclass[12pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
 \usepackage{graphicx}
@@ -7,11 +7,20 @@
 \usepackage{float}
 \usepackage{xcolor}
 \usepackage{subcaption}
+\usepackage[english]{babel}
 \usepackage{caption}
 \usepackage{hyperref}
-%\usepackage[a4paper, total={6in, 9in}]{geometry}
-\renewcommand{\figurename}{Figur}
-\renewcommand{\contentsname}{Innhold}
+\usepackage{biblatex}
+\addbibresource{report.bib}
+\usepackage{setspace}
+\usepackage{wrapfig}
+\usepackage{lipsum}
+\usepackage{amssymb}
+\linespread{1.25}
+\usepackage[a4paper, total={6in, 9in}]{geometry}
+\DeclareMathOperator*{\E}{\mathbb{E}}
+
+
 \hypersetup{
     colorlinks,
     linkcolor={red!50!black},
@@ -146,7 +155,51 @@ A central part of regression analysis is to scale and split our data to avoid bo
 To avoid overfitting we perform a 80-20 percent split into train and test data. We use the train data to train the model or in other words find the $\beta$ parameters. To predict we use the trained model together with the test data which leaves us with a more generalized prediction not only working for the data we have at hand, but also other data coming from the same source. This can be explained by for example a model trained so well with a design matrix $\boldsymbol{X}$ of an infinite degree that its prediction follows every noisy outlier. This woulds match the data at hand very well and give us an extremly low MSE, but give us high MSE for new data which were not used to train the model. To test this we look at both MSE and R squared for predictions for $\boldsymbol{X}$ of different degrees using only train data compared to predictions made using both train and test data.
 
 \subsection{Mean squared error and R squared}
-For different design matrices $X$ with different polynomial degrees we can calculate the mean squared error and R squared
+For different design matrices $X$ with different polynomial degrees we can calculate the mean squared error and R squared. This is done using the following equations where we define $z$ as our test data containing $n+1$ points.
+\begin{align*}
+  MSE(\boldsymbol{z}, \boldsymbol{\tilde{z}}) = \frac{1}{n }\sum_{i=0}^{n}(z_i- \tilde{z}_i)^2
+\end{align*}
+\begin{align*}
+  R^2(\boldsymbol{z}, \boldsymbol{\tilde{z}}) = 1 - \frac{\sum_{i=0}^{n}(z_i- \tilde{z}_i)^2}{\sum_{i=0}^{n}(z_i- \bar{z}_i)^2}
+\end{align*}
+For the mean value:
+\begin{align*}
+  \bar{z} = \frac{1}{n }\sum_{i=0}^{n}z_i
+\end{align*}
+
+\subsection{Bias-variance trade-off}
+To study the bias-variance trade-off we first implement the bootstrap resampling technique. This is done by resampling our train data $n_B$ times with replacement. That means we gain $n_B$ new samples that may be unique but still only contain values from the original sample. This in turn is used to compute our predictions leaving us with a total of $n_B$ different predictions. This can be used to study the bias and variance of the predictions.
+
+By looking back at the cost function which is minimized in order to find our optimal parameters $\boldsymbol{\beta}$ we can derive an expression for the bias and variance.
+\begin{align*}
+  C(\boldsymbol{X}, \boldsymbol{\beta}) = \frac{1 }{n }\sum_ {i=0}^{n-1}(z_i - \tilde{z}_i)^2 = \E[(\boldsymbol{z}- \boldsymbol{\tilde{z}})^2]
+\end{align*}
+By the definition of our data $z = f +\epsilon$ we rewrite the costfunction:
+\begin{align*}
+  \E[(\boldsymbol{z}- \boldsymbol{\tilde{z}})^2] &= \E[(f + \epsilon - \tilde{z} + \E[\tilde{z}]- \E[\tilde{z}])^2] \\                                             &= \E[f^2 + \epsilon^2 + \tilde{z}^2 + 2\E[\tilde{z}]^2 \\
+                                                 &+ 2f\epsilon + 2f\tilde{z} + 2f\E[\tilde{z}] - 2f\E[\tilde{z}]\\
+                                                 &+ 2\epsilon\tilde{z} + 2\epsilon \E[\tilde{z}] - 2\epsilon \E[\tilde{z}]\\
+                                                 &+ 2\tilde{z}\E[\tilde{z}] - 2\tilde{z}\E[\tilde{z}] -2\E[\tilde{z}]^2]\\
+                                                 &= \E[(f-\E[\Tilde{z}])^2] + \E[\epsilon^2] + \E[( \E[\Tilde{z}] - \Tilde{z} )^2] \\
+                                                 &+ 2(f-\E[\tilde{z}])\E[\epsilon]+2\E[\epsilon]\E[(\E[\tilde{z}]-\tilde{z} )] \\
+                                                &+ 2(f-\E[\tilde{z}])\E[( \E[\tilde{z}] - \tilde{z} )]
+\end{align*}
+By using that $\epsilon \sim N(0,1)$ we have $\E[\epsilon] = 0$ and Var$[\epsilon] = \E[\epsilon^2]- \E[\epsilon]^2 = \E[\epsilon^2]=\sigma^2$ from this we get:
+\begin{align*}
+  \E[(\boldsymbol{z}- \boldsymbol{\tilde{z}})^2] &=\E[(f -\E[\tilde{z}])^2] +\E[( \tilde{z} -\E[\tilde{z}])^2]  + \sigma^2+ 2(f-\E[\tilde{z}])\E[\E[\tilde{z}] -\tilde{z}]\\
+  &=\E[(f -\E[\tilde{z}])^2]  + \E[( \tilde{z} -\E[\tilde{z}])^2]+\sigma^2\\
+  &=\E[(z - \epsilon -\E[\tilde{z}])^2] + \E[( \tilde{z} -\E[\tilde{z}])^2]+\sigma^2 \\
+  &=\E[(z  -\E[\tilde{z}])^2] + \E[\epsilon^2-2z\epsilon + 2\epsilon\E[\tilde{z}]]+ \E[( \tilde{z} -\E[\tilde{z}])^2] +\sigma^2 \\
+  &= \E[(\text{Bias}[\tilde{y}])^2] + \E[(\tilde{z} -\E[\tilde{z}])^2] +\sigma^2\\
+\end{align*}
+Here we have the expectation value of the bias which is the bias itself, while we rewrite the second term in terms of a sum:
+\begin{align*}
+  (\text{Bias}[\tilde{y}])^2 + \frac{1}{n}\sum_i(\tilde{z} -\E[\tilde{z}])^2 +\sigma^2 \\
+  = (\text{Bias}[\tilde{y}])^2 \quad + \quad \text{var}[\tilde{f}] \quad +  \sigma^2
+\end{align*}
+
+\subsection{Cross validation}
+To futher investigate our model we implement the cross validation resampling method. Togther with the already implemented bootstrap method we now have a possibility to optimize our predictions by chosing a design matrix that reduces our models mean squared errors. The cross validation method takes in data and splits it up in $k$ equaly sized folds where one fold is used as test data while the rest is used as train data. A mean squared error is then computed before the model reruns with another fold as test data. This process happens over and over until all the $k$-folds have been used as test data. This gives a total of $k$ iterations. 
 
 \section{Results}
 \section{Discussion}
