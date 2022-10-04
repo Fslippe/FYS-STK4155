@@ -1,4 +1,4 @@
-\documentclass[norsk,a4paper,12pt]{scrartcl}
+\documentclass[norsk,a4paper,11pt]{scrartcl}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
 \usepackage{graphicx}
@@ -52,54 +52,76 @@
 \date{\today}
 \begin{document}
 \maketitle
-
-\section{}
-By assuming that the continous funcitiion $f(x)$ can be parametrized in terms of a polynomial of degree $n-1$ means that our datapoints can be described by the following expression:
+\begin{abstract}
+  Abstract
+\end{abstract}
+\tableofcontents
+\section{Introduction}
+In this project we will study the Franke function and real topography data by using regression analysis and resampling methods. These are both two dimensional systems which gives us a way of generalizing our functions to work for both. We will use ordinary least squares, ridge and lasso regression in our study of our data and do comparisons to try finding the optimal model for the different datasets.
+\section{Method}
+Our fist step is to set up our data for analysis. We start by implementing the Franke function which is a sum of four exponentials:
 \begin{align*}
-  \boldsymbol{y} = \sum_{j=0}^{n-1}\beta_jx_i^j + \epsilon_i
+  f(x,y) &= \frac{3}{4 }\exp\left(- \frac{(9x -2 )^2}{4} - \frac{(9y-2)^2}{4}\right) +\frac{3}{4}\exp{\left(-\frac{(9x+1)^2}{49}- \frac{(9y+1)}{10}\right)} \\
+&+\frac{1}{2}\exp{\left(-\frac{(9x-7)^2}{4} - \frac{(9y-3)^2}{4}\right)} -\frac{1}{5}\exp{\left( -(9x-4)^2 - (9y-7)^2\right) }
+\end{align*}
+By using this function we generate our data by using ($n+1\times n+1$) points in a meshgrid for $x$ and $y$ in the interval [0,1]. This gives us a function value of ($n+1 \times n+1$) to which we add a stochastic noise $\epsilon \sim N(0,\sigma^2)$ for a chosen standard deviation $\sigma$. This leaves us with our data described by the franke function plus some noise $\epsilon$:
+\begin{align*}
+  \boldsymbol{z} = f(\boldsymbol{x}) + \boldsymbol{\epsilon}
+\end{align*}
+This can also be assumed of some real data, for the assumtion of the existence of a continous function $f$ and normal distributed error $\epsilon$.
+
+The ordinary least squares gives us an aproximation to the above equation where we minimize $(\boldsymbol{z} - \boldsymbol{\tilde{z}})^2$ to give us the matrix equation:
+\begin{align*}
+  \boldsymbol{\tilde{z}} = \boldsymbol{X}\boldsymbol{\beta}
+\end{align*}
+for a chosen design matrix $\boldsymbol{X}$ of some degree $n$.
+
+This approximation gives us a new way of describing our dataset in terms of $\boldsymbol{\tilde{z}}$ instead of $f(\boldsymbol{x})$.
+\begin{align*}
+  \boldsymbol{z} = \sum_{j=0}^{n-1}\beta_jx_i^j + \epsilon_i
 \end{align*}
 This is the same as the following matrix equation:
 \begin{align*}
-  \boldsymbol{y} = \boldsymbol{X}\boldsymbol{\beta} + \boldsymbol{\epsilon} = \boldsymbol{\tilde{y}} + \boldsymbol{\epsilon}
+  \boldsymbol{z} = \boldsymbol{X}\boldsymbol{\beta} + \boldsymbol{\epsilon} = \boldsymbol{\tilde{z}} + \boldsymbol{\epsilon}
 \end{align*}
 This means that the elemnt $i$ is given by:
 \begin{align*}
-  y_i = \epsilon_i + \sum_j x_{ij}\beta_j
+  z_i = \epsilon_i + \sum_j x_{ij}\beta_j
 \end{align*}
-The expactation value of the element $i$ in $\boldsymbol{y}$:
+and the expectation value of the element $i$ in $\boldsymbol{z}$:
 \begin{align*}
-  E(y_i) = E(\epsilon_i + \sum_j x_{ij}\beta_j)
+  E(z_i) = E(\epsilon_i + \sum_j x_{ij}\beta_j)
 \end{align*}
-Since we already know that $\boldsymbol{\epsilon}$ is normal distibuted with the expectation value 0 $E(\epsilon_i)=0$. This gives us:
+Since we already know or have assumed that $\boldsymbol{\epsilon}$ is normal distibuted with the expectation value 0 $E(\epsilon_i)=0$, this gives us:
 \begin{align*}
-  E(y_i) = E(\epsilon_i) + E(\sum_j x_{ij}\beta_j) = \sum_jE(x_{ij}\beta_j)
+  E(z_i) = E(\epsilon_i) + E(\sum_j x_{ij}\beta_j) = \sum_jE(x_{ij}\beta_j)
 \end{align*}
-$x_{ij}$ and $\beta_j$ are constants which have themselves as expectation value leaves us with:
+$x_{ij}$ and $\beta_j$ are values and not distrubutions which means they have themselves as expectation values:
 \begin{align*}
-    E(y_i) = \sum_jx_{ij}\beta_j = \boldsymbol{X_i}_*\boldsymbol{\beta}
+    E(z_i) = \sum_jx_{ij}\beta_j = \boldsymbol{X_i}_*\boldsymbol{\beta}
 \end{align*}
-To find the variance we again recognize that $\boldsymbol{X}\boldsymbol{\beta}$ follow no distribution which leaves us with only the variance of $\boldsymbol{\epsilon}$ which is given as $\sigma^2$:
+To find the variance we again recognize that $\boldsymbol{X}\boldsymbol{\beta}$ follow no distribution which leaves us with the variance of $\boldsymbol{z}$ equaling the variance of $\boldsymbol{\epsilon}$ which is given as $\sigma^2$:
 \begin{align*}
-  \text{Var}(\boldsymbol{y}) = \text{Var}(\boldsymbol{X}\boldsymbol{\beta} + \boldsymbol{\epsilon}) = \text{Var}(\boldsymbol{\epsilon}) = \sigma^2
+  \text{Var}(\boldsymbol{z}) = \text{Var}(\boldsymbol{X}\boldsymbol{\beta} + \boldsymbol{\epsilon}) = \text{Var}(\boldsymbol{\epsilon}) = \sigma^2
 \end{align*}
-$\boldsymbol{\tilde{y}}$ is defined through the minimization of the mean square error $(\boldsymbol{y} - \boldsymbol{\tilde{y}})^2$ which for $\boldsymbol{\tilde{y}} = \boldsymbol{X}\boldsymbol{\beta}$ translates to the minimization of the cost function:
+$\boldsymbol{\tilde{z}}$ is defined through the minimization of the mean square error $(\boldsymbol{z} - \boldsymbol{\tilde{z}})^2$ which for $\boldsymbol{\tilde{z}} = \boldsymbol{X}\boldsymbol{\beta}$ translates to the minimization of the cost function:
 \begin{align*}
-  C(\boldsymbol{\beta}) = \frac{1}{ n}\{(\boldsymbol{y}- \boldsymbol{X}\boldsymbol{\beta}^T\boldsymbol{y}- \boldsymbol{X}\boldsymbol{\beta})\}
+  C(\boldsymbol{\beta}) = \frac{1}{ n}\{(\boldsymbol{z}- \boldsymbol{X}\boldsymbol{\beta}^T\boldsymbol{z}- \boldsymbol{X}\boldsymbol{\beta})\}
 \end{align*}
 Where we take the derivative with respect to $\boldsymbol{\beta}$ and solve where the derivative is 0 to find the minimum:
 \begin{align*}
-  \frac{\partial C(\boldsymbol{\beta})}{\partial \boldsymbol{\beta}} = \boldsymbol{X}^T (\boldsymbol{y}- \boldsymbol{X}\boldsymbol{\beta}) =0
+  \frac{\partial C(\boldsymbol{\beta})}{\partial \boldsymbol{\beta}} = \boldsymbol{X}^T (\boldsymbol{z}- \boldsymbol{X}\boldsymbol{\beta}) =0
 \end{align*}
 \begin{align*}
-  \boldsymbol{X}^T\boldsymbol{y} = \boldsymbol{X}^T \boldsymbol{X}\boldsymbol{\beta}
+  \boldsymbol{X}^T\boldsymbol{z} = \boldsymbol{X}^T \boldsymbol{X}\boldsymbol{\beta}
 \end{align*}
 We assume that $\boldsymbol{X}^T\boldsymbol{X}$ is invertible which gives us the the optimal $\boldsymbol{\beta}$:
 \begin{align*}
-  \boldsymbol{\tilde{\beta}} = (\boldsymbol{X}^T\boldsymbol{X})^{-1} \boldsymbol{X}^T\boldsymbol{y}
+  \boldsymbol{\tilde{\beta}} = (\boldsymbol{X}^T\boldsymbol{X})^{-1} \boldsymbol{X}^T\boldsymbol{z}
 \end{align*}
 We can now find the expectation value for the optimal $\boldsymbol{\tilde{\beta}}$:
 \begin{align*}
-  E(\boldsymbol{\tilde{\beta}}) &= E[(\boldsymbol{X}^T\boldsymbol{X})^{-1} \boldsymbol{X}^T\boldsymbol{y}] = E[(\boldsymbol{X}^T\boldsymbol{X})^{-1} \boldsymbol{X}^T(\boldsymbol{X}\boldsymbol{\beta} + \boldsymbol {\epsilon} )] \\
+  E(\boldsymbol{\tilde{\beta}}) &= E[(\boldsymbol{X}^T\boldsymbol{X})^{-1} \boldsymbol{X}^T\boldsymbol{z}] = E[(\boldsymbol{X}^T\boldsymbol{X})^{-1} \boldsymbol{X}^T(\boldsymbol{X}\boldsymbol{\beta} + \boldsymbol {\epsilon} )] \\
   &=  (\boldsymbol{X}^T\boldsymbol{X})^{-1} \boldsymbol{X}^TE[(\boldsymbol{X}\boldsymbol{\beta} + \boldsymbol {\epsilon} )] \\ &= (\boldsymbol{X}^T\boldsymbol{X})^{-1} \boldsymbol{X}^T\boldsymbol{X}\boldsymbol{\beta} \\&=  \boldsymbol{\beta}
 \end{align*}
 Here we see that the expectation value of our optimal parameter is the parameter $\boldsymbol{\beta}$.
@@ -115,6 +137,18 @@ For a matrix $A$ we have Var$(\boldsymbol{AX}+b) = \boldsymbol{A}\text{Var}(\bol
   (\boldsymbol{X}^T\boldsymbol{X})^{-1}\boldsymbol{X}^T\text{Var}[ {\boldsymbol{\epsilon}} ](\boldsymbol{X}^T)^{-1}\boldsymbol{X}^{-1}\boldsymbol{X} \\&=
    (\boldsymbol{X}^T\boldsymbol{X})^{-1}\text{Var}[ {\boldsymbol{\epsilon}} ]
 \end{align*}
+
+This we can use to compute the optimal $\beta$ and in turn give us a OLS prediction for our real function $f$.
+
+\subsection{Splitting of data}
+
+
+\subsection{Mean squared error and R squared}
+For different design matrices $X$ with different polynomial degrees we can calculate the mean squared error and R squared
+
+\section{Results}
+\section{Discussion}
+\section{Conclusion}
 
 \section{}
 
