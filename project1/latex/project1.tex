@@ -140,8 +140,10 @@ For a matrix $A$ we have Var$(\boldsymbol{AX}+b) = \boldsymbol{A}\text{Var}(\bol
 
 This we can use to compute the optimal $\beta$ and in turn give us a OLS prediction for our real function $f$.
 
-\subsection{Splitting of data}
+\subsection{Splitting and scaling of data}
+A central part of regression analysis is to scale and split our data to avoid both overfitting and avoid the MSE to contain the intercept. In our case of the Franke function we have $x,y \in [0,1]$ and follwing $z$ data on the same order which may indicate that a scaling is unessecary. This expectation comes from that our data does not include any extreme values of any other order that may greatly negativly incluence our predictors. In other words scaling of data is normaly what we do to get the data as equal to each other as our Franke data already is. To test if this expectation is valid, we test this and compare our non-scaled data to mean scaled data where we have subtracted the mean.
 
+To avoid overfitting we perform a 80-20 percent split into train and test data. We use the train data to train the model or in other words find the $\beta$ parameters. To predict we use the trained model together with the test data which leaves us with a more generalized prediction not only working for the data we have at hand, but also other data coming from the same source. This can be explained by for example a model trained so well with a design matrix $\boldsymbol{X}$ of an infinite degree that its prediction follows every noisy outlier. This woulds match the data at hand very well and give us an extremly low MSE, but give us high MSE for new data which were not used to train the model. To test this we look at both MSE and R squared for predictions for $\boldsymbol{X}$ of different degrees using only train data compared to predictions made using both train and test data.
 
 \subsection{Mean squared error and R squared}
 For different design matrices $X$ with different polynomial degrees we can calculate the mean squared error and R squared
