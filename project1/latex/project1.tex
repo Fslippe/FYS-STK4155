@@ -188,15 +188,23 @@ By using that $\epsilon \sim N(0,1)$ we have $\E[\epsilon] = 0$ and Var$[\epsilo
 \begin{align*}
   \E[(\boldsymbol{z}- \boldsymbol{\tilde{z}})^2] &=\E[(f -\E[\tilde{z}])^2] +\E[( \tilde{z} -\E[\tilde{z}])^2]  + \sigma^2+ 2(f-\E[\tilde{z}])\E[\E[\tilde{z}] -\tilde{z}]\\
   &=\E[(f -\E[\tilde{z}])^2]  + \E[( \tilde{z} -\E[\tilde{z}])^2]+\sigma^2\\
-  &=\E[(z - \epsilon -\E[\tilde{z}])^2] + \E[( \tilde{z} -\E[\tilde{z}])^2]+\sigma^2 \\
-  &=\E[(z  -\E[\tilde{z}])^2] + \E[\epsilon^2-2z\epsilon + 2\epsilon\E[\tilde{z}]]+ \E[( \tilde{z} -\E[\tilde{z}])^2] +\sigma^2 \\
-  &= \E[(\text{Bias}[\tilde{y}])^2] + \E[(\tilde{z} -\E[\tilde{z}])^2] +\sigma^2\\
+  &= \E[(f -\E[\tilde{z}])^2]  + \text{var}[\tilde{f}] + \sigma^2
 \end{align*}
-Here we have the expectation value of the bias which is the bias itself, while we rewrite the second term in terms of a sum:
+We see that the first term is (Bias$[\tilde{f}])^2$ but we are left with a problem to compute it because $f$ is unknown. To be able to find the bias we look at the computeable $E[(y - \E[\tilde{y}])^2]$ and the relation $z= f + \epsilon$:
 \begin{align*}
-  (\text{Bias}[\tilde{y}])^2 + \frac{1}{n}\sum_i(\tilde{z} -\E[\tilde{z}])^2 +\sigma^2 \\
-  = (\text{Bias}[\tilde{y}])^2 \quad + \quad \text{var}[\tilde{f}] \quad +  \sigma^2
+  E[(y - \E[\tilde{y}])^2] &= \E[(\epsilon + f - \E[\tilde{y}])^2] \\
+                           &= \E[\epsilon^2] + \E[(f- \E[\tilde{y}])^2] + \E[-2\epsilon(f- \E[\tilde{y}])] \\
 \end{align*}
+We recognize once again that we can remove terms that have $\epsilon$ in them from $\E[\epsilon] = 0$ giving us:
+\begin{align*}
+  \E[(f- \E[\tilde{y}])^2] =   E[(y - \E[\tilde{y}])^2] - \sigma^2
+\end{align*}
+And we end up with the the realtion:
+\begin{align*}
+  \E[(\boldsymbol{z}- \boldsymbol{\tilde{z}})^2] &= \text{Bias}[\tilde{f}] + \text{var}{\tilde{f}} + \sigma^2\\
+   &=   (\text{Bias}[\tilde{y}] - \sigma^2) + \text{var}[\tilde{f}] + \sigma^2
+\end{align*}
+In other words we compute the correct bias for our models by subtracting the variance of our noise.
 
 \subsection{Cross validation}
 To futher investigate our model we implement the cross validation resampling method. Togther with the already implemented bootstrap method we now have a possibility to optimize our predictions by chosing a design matrix that reduces our models mean squared errors. The cross validation method takes in data and splits it up in $k$ equaly sized sets where one set is used as test data while the rest is used as train data. For every fold a mean squared error is then computed before the model reruns with another set as test data. This process happens over and over until all $k$ sets have been used as test data. This gives a total of $k$ folds. Since our data is ordered and not chaotic we shuffle it before the splits are performed. We can see why this is neccesary in the $k$-fold visualization in figure \ref{fig:k_fold} where we would without a shuffle have $x,y$ an $z$ not representative of the whole dataset but rather small intervals of values. We can imagine how not shuffling the data would have consequences on a extreme case where the first split of the first $k$-fold in the figure below only contained values around 0 while the rest contained values around 1. That would leave us with high computed mean squared erros for especially some of the folds which would in turn give us bad predictions for the MSE.
@@ -212,9 +220,229 @@ To futher investigate our model we implement the cross validation resampling met
 To get the best possible predictions of our datasets we also implement lasso and ridge regression. These two methods are unlike OLS, dependent on a regularization parameter $\lambda$ where we have to compute which value that optimizes these two models. Similar to OLS we perform cross validation to find which degree of design matrix reduces the mean squared error of our predictions, only that we for ridge and lasso find the best $\lambda$ at the same time. This is because we for one degree would have one optimal $\lambda$ and for another degree have another. We therefore compute one cross validation for different values of $\lambda$ parameters for each degree. The degree and $\lambda$ giving the smallest MSE is then used for futher predictions
 
 \subsection{Study of topography data}
-
-
+After studying the franke function with added noise we look at real topography data from the mountains close to Stavanger in Norway. We perform the same analysis as we did with the Franke function except that we now assume that our data already contain some noise $\epsilon \sim N(0, \sigma^2)$ with an unknown standard deviation $\sigma$. We first standard scale our data by subtracting the mean and dividing by the standard deviation computed from the data:
+\begin{align*}
+  z_{scaled} = \frac{z-\bar{z}}{\hat{\sigma}_z}
+\end{align*}
+Our regression analysis will then be used to try to compute how the topography at the location actualy looks. Since the imported data includes  $3601 \times1801$ datapoints which would require more powerful hardware or atleast take a significant time to analyze, we choose an interesting location of indexes 100 to 141 in both directions and slice the data for every second index. That means we are left with input data of lower resoulution, but at the same time it enables us to do an analysis over a greater area.
 \section{Results}
+\subsection{Franke funtion}
+\subsubsection{OLS scaling of data}
+We first look if there is a need of scaling our data or not. As seen in figure \ref{fig:compare_scale} we have plotted the absoulute difference between the computed MSE and $R^2$ for different polynomial degrees. We see that the difference is so small especially for the
+\ref{fig:r2_mse_5} we see them both plotted for design matrices up to a degree of 5 for $n=30$ steps and $\sigma=0.2$.
+\begin{figure}[H]
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/compare_scale_mse.png}
+    \caption{$MSE$}
+    \label{fig:}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/compare_scale_r2.png}
+    \caption{$R^2$}
+    \label{fig:}
+  \end{subfigure}
+  \caption{Comparison of MSE and $R^2$ between scaled and non-scaled data}
+  \label{fig:compare_scale}
+\end{figure}
+We see that the difference between the scaled and non-scaled data are so small especially for lower polynomial degrees which indicate that scaling of our data is unnecesary.
+
+\subsubsection{OLS MSE and $R^2$}
+
+We continue with our non-scaled data and look at how the mean square error and R squared behave for design matrices of different degrees. Underneeth in figure \ref{fig:r2_mse_5} we see them both plotted for design matrices up to a degree of 5 for $n=30$ steps and $\sigma=0.2$.
+\begin{figure}[H]
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/mse_ols_5.png}
+    \caption{$MSE$}
+    \label{fig:}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/r2_ols_5.png}
+    \caption{$R^2$}
+    \label{fig:}
+  \end{subfigure}
+  \caption{plots of MSE and $R^2$ for the franke function for an error $\epsilon \sim N(0, \sigma^2)$ with $\sigma=0.2$ and 31 points in each direction}
+  \label{fig:r2_mse_5}
+\end{figure}
+Above in figure \ref{fig:r2_mse_5} we see a clear reduction in MSE for an increase in polynomial degree of the design matrix. For $R^2$ we see increasing values for higher degrees, with degree 5 giving us the lowest MSE and highest $R^2$ indicating degree 5 being the most optimal degree.
+
+We continue to look into MSE and $R^2$ but now comparing the use of train or test data in the prediction of $z$. We continue using $n=30$ steps and $\sigma=0.2$. In figure \ref{fig:train_test} we see a single run and the following MSE and $R^2$ while we in figure \ref{fig:train_test_resample} see a plot of a resample of the noise data giving us 100 unique datasets to take the mean of.
+\begin{figure}[H]
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/mse_train_test.png}
+    \caption{$MSE$}
+    \label{fig:}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/r2_train_test.png}
+    \caption{$R^2$}
+    \label{fig:}
+  \end{subfigure}
+  \caption{MSE and $R^2$ computed from both the train and test sample}
+  \label{fig:train_test}
+\end{figure}
+Above we see that both the MSE and $R^2$ from the test sample seem to start deviating from the train sample at degrees higher than 5 which indicates overfitting for greater degrees.
+\begin{figure}[H]
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/MSE_train_test_resample.png}
+    \caption{$MSE$}
+    \label{fig:train_test_resample_mse}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/R2_train_test_resample.png}
+    \caption{$R^2$}
+    \label{fig:}
+  \end{subfigure}
+  \caption{An average of MSE and $R^2$ computed from both the train and test sample over 100 unique samples}
+  \label{fig:train_test_resample}
+\end{figure}
+Above in figure \ref{fig:train_test_resample} we get a smoother plot showing the smallest MSE obtained from a degree of 6 indicating this being the best polynomial degree for OLS regression of the franke function. The $R^2$ show the same tendency but looks like having the greatest values at a degree of 8.
+
+\subsubsection{OLS variation of $\beta$ paramers}
+
+To see how the $\beta$ parameters variate from different choices of degrees we plot them for a degree up to 5 indicated in figure \ref{fig:beta} below:
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.7\textwidth]{../figures/beta_degree.png}
+  \caption{}
+  \label{fig:beta}
+\end{figure}
+We see an increase in distance between the $\beta$ parameteres for an increasing polynomial degree. When we at the same time look at table \ref{tab:beta} we see that the parameters for a degree of 5 come with great variance. This is especially true for parameters of index in the interval [6,14] which we also see in figure \ref{fig:beta} have larger values than the rest. This may be an indication of overfitting, but looking back at our resampled train test MSE plot in figure \ref{fig:train_test_resample_mse} we see that we for a degree of 5 have lower MSE than larger polynomial degrees.
+
+\begin{table}[H]
+  \caption{Variance of the $\beta$ parameters for test and train data for a design matrix of polynomial degree 5. Calculated by $Var(\boldsymbol{\beta}) = diag(\sigma^2(X^T X)^{-1}$)}
+  \label{tab:beta}
+  \centering
+  \begin{tabular}{|c|c|c|}
+    \hline
+    $\boldsymbol{\beta}$ &\textbf{Test data} & \textbf{Train data} \\\hline
+    $\beta_{0}$ & 0.04 & 0.01 \\
+    $\beta_{1}$ & 5.22 & 1.31 \\
+    $\beta_{2}$ & 6.00 & 1.27 \\
+    $\beta_{3}$ & 139.88 & 31.56 \\
+    $\beta_{4}$ & 90.01 & 19.04 \\
+    $\beta_{5}$ & 149.50 & 31.37 \\
+    $\beta_{6}$ & 723.58 & 162.55 \\
+    $\beta_{7}$ & 364.34 & 90.68 \\
+    $\beta_{8}$ & 555.61 & 83.97 \\
+    $\beta_{9}$ & 787.29 & 163.88 \\
+    $\beta_{10}$ & 794.84 & 179.33 \\
+    $\beta_{11}$ & 521.51 & 104.67 \\
+    $\beta_{12}$ & 424.30 & 88.62 \\
+    $\beta_{13}$ & 625.04 & 98.00 \\
+    $\beta_{14}$ & 880.18 & 180.91 \\
+    $\beta_{15}$ & 122.43 & 27.74 \\
+    $\beta_{16}$ & 102.30 & 20.80 \\
+    $\beta_{17}$ & 80.15 & 19.80 \\
+    $\beta_{18}$ & 108.00 & 19.14 \\
+    $\beta_{19}$ & 105.44 & 20.14 \\
+    $\beta_{20}$ & 134.90 & 27.84 \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\subsubsection{OLS bias variance tradeoff}
+
+To futher analyze our models dependence on polynomial degree we have a plot of the bias variance tradeoff in figure \ref{fig:bias_variance} for a degree up to 15 using $n=22$ steps and a noise standard deviation of $\sigma=0.2$.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.7\textwidth]{../figures/bias_variance_tradeoff.png}
+  \caption{The bias variance tradeoff for the Franke function using 100 bootstrap iteration together with $n=22$ steps and a noise standard deviation of $\sigma=0.2$}
+  \label{fig:bias_variance}
+\end{figure}
+We se above in figure \ref{fig:bias_variance} areas of both high variance and low bias and low variance and relative high bias. We also see that the area of lowest MSE for a degree of 6 is where both the bias and variance together is at their lowest. A futher increase in polynomial degree gives mostly a variance dominated error contribution while we at lower polynomial degrees see that the bias is what contributes the most to the error. When we look at figure \ref{fig:bias_variance_100} we see another trend especially for higher polynomial degrees. Here the variance stays low which may together with the low mse indicate that we dont as easy overfit our data when we have more of it at hand.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.7\textwidth]{../figures/bias_variance_100.png}
+  \caption{The bias variance tradeoff for the Franke function using 100 bootstrap iteration together with $n=100$ steps and a noise standard deviation of $\sigma=0.2$}
+  \label{fig:bias_variance_100}
+\end{figure}
+\subsubsection{OLS cross validation}
+From the implementation of cross validation we get the following comparison plot in figure \ref{fig:cv_comp} for data with $n=30$ steps and $\sigma=0.2$ for 100 bootstrap iterations compared to cross validation of both 5 and 10 $k$-folds:
+\begin{figure}[H]
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/boot_cv_comp_OLS_100_5.png}
+    \caption{5 $k$-folds}
+    \label{fig:train_test_resample_mse}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/boot_cv_comp_OLS_100_10.png}
+    \caption{10 $k$-folds}
+    \label{fig:}
+  \end{subfigure}
+  \caption{A comparison between bootstrap and cross validation for datasets with $n=30$ steps, noise standard deviation $\sigma=0.2$ and 100 bootstrap iterations}
+  \label{fig:cv_comp}
+\end{figure}
+We see different results for bootstrap and cross validation for both 5 and 10 $k$-folds. The difference between the $k$-folds are quite small, but the difference from the bootstrap is for some polynomial degrees higher than others. Underneeth in figure \ref{fig:cv_comp_01} we see a comparison for the same amount of data only with an error standard deviation of $\sigma=0.1$ instead of 0.2:
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.7\textwidth]{../figures/boot_cv_comp_01.png}
+  \caption{A comparison between bootstrap and cross validation for datasets with $n=30$ steps, noise standard deviation $\sigma=0.1$ and 100 bootstrap iterations}
+  \label{fig:cv_comp_01}
+\end{figure}
+We see above in figure \ref{fig:cv_comp_01} that the bootstrap gives more similar results to the cross validation method for a lower noise standard deviation. At the same time we see the same trend for the bootstrap with lower MSE values around a degree of 6 and 12 while it still gives higher MSE for around a degree of 10 and above 13.
+
+We continue using the cross validation method to compute for which degree we get the lowest mean squared errors. As we see under in figure \ref{fig:best_OLS}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.7\textwidth]{../figures/best_lambda_OLS_02_franke.png}
+  \caption{Cross validation to find which polynomial degree gives the lowest MSE for data with $n=30$ steps and noise standard deviation $\sigma=0.2$}
+  \label{fig:best_OLS}
+\end{figure}
+
+Above in figure \ref{fig:best_OLS} we see similar to figure \ref{fig:cv_comp} That we for a degree of 6 minimize the MSE for OLS regression. This means that if we want to compute the best possible prediction $\tilde{z}$ we should use a design matrix of degree 6.
+
+\subsubsection{Ridge and Lasso bias variance tradeoff}
+In the same way as for ordinary least squares we look at the bias variance tradeoff, only that we now have another parameter $\lambda$ that influences the tradeoff. Under in figure \ref{fig:ridge_tradeoff} we see the tradeoff for different choices of $\lambda$
+\begin{figure}[H]
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/tradeoff_RIDGE_1e-03.png}
+    \caption{}
+    \label{fig:}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/tradeoff_RIDGE_1e-04.png}
+    \caption{}
+    \label{fig:}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/tradeoff_RIDGE_1e-05.png}
+    \caption{}
+    \label{fig:}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/tradeoff_RIDGE_1e-06.png}
+    \caption{}
+    \label{fig:}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/tradeoff_RIDGE_1e-07.png}
+    \caption{}
+    \label{fig:}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/tradeoff_RIDGE_1e-08.png}
+    \caption{}
+    \label{fig:}
+  \end{subfigure}
+  \caption{}
+  \label{fig:ridge_}
+\end{figure}
 \section{Discussion}
 \section{Conclusion}
 

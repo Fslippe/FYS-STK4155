@@ -6,7 +6,7 @@ from matplotlib.cm import ScalarMappable
 import seaborn as sns
 plt.rcParams.update({"font.size": 15})
 
-def lamda_degree_MSE(x, y, z, method, std, n_lmb = 50, maxdegree = 20, k_folds = 5, max_iter = 100, save=True, lmb_min=-12, lmb_max=-1):
+def lamda_degree_MSE(x, y, z, method, std, n_lmb = 50, maxdegree = 15, k_folds = 5, max_iter = 100, save=True, lmb_min=-12, lmb_max=-1):
     """
     Function to find best degree and lambda parameter
     for the chosen regression method
@@ -133,42 +133,26 @@ def compare_3d(x, y, z, noise, deg_ols, lmb_ridge, deg_ridge, lmb_lasso, deg_las
 
 def main():
     degree = 6
-    n = 22
-    std = 0.5
+    n = 30
+    std = 0.2
     maxdegree = 15
-
-    n = 50
-    x, y, z = make_data(n, std, seed=200)
-
-    #lmb, deg, mse = lamda_degree_MSE(x, y, z, "OLS", std, save=False)
-    #lmb_ridge, deg_ridge, mse_ridge = lamda_degree_MSE(x, y, z, "RIDGE", std, save=True)
-    #lmb_ridge, deg_ridge, mse_ridge = lamda_degree_MSE(x, y, z, "LASSO", std, save=True)
-
-    #lmb_lasso, deg_lasso, mse_lasso = lamda_degree_MSE("LASSO", std)
-    n = 50
-    std = 0.5
     x, y, z = make_data(n, std, seed=200)
     np.random.seed(200)
     noise = np.random.normal(0, std, size=(n+1,n+1))
-    lmb_ridge_5 = 1.21e-4
-    deg_ridge_5 = 5
-    lmb_lasso_5 = 1.53e-5
-    deg_lasso_5 = 12
-    deg_ols_5 = 6
 
-    lmb_ridge_2 = 8.69e-8
-    deg_ridge_2 = 10
-    lmb_lasso_2 = 5.43e-6
-    deg_lasso_2 = 19
-    deg_ols_2 = 8
+    run_best_lambda_plots = False
+    if run_best_lambda_plots:
+        lmb, deg, mse = lamda_degree_MSE(x, y, z, "OLS", std, save=True, maxdegree=15)
+        lmb_ridge, deg_ridge, mse_ridge = lamda_degree_MSE(x, y, z, "RIDGE", std, save=True, maxdegree=15, lmb_min =-10, n_lmb=30)
+        lmb_lasso, deg_lasso, mse_lasso = lamda_degree_MSE(x, y, z, "LASSO", std, save=True, maxdegree=20, lmb_min =-12, n_lmb=30)
 
-    compare_3d(x, y, z, noise, deg_ols_5, lmb_ridge_5, deg_ridge_5, lmb_lasso_5, deg_lasso_5, name_add="franke_5")
-    std = 0.5
-    x, y, z = make_data(n, std, seed=200)
-    np.random.seed(200)
-    noise = np.random.normal(0, std, size=(n+1,n+1))
-    #compare_3d(x, y, z, noise, deg_ols_2, lmb_ridge_2, deg_ridge_2, lmb_lasso_2, deg_lasso_2, name_add="franke_2")
+    lmb_ridge = 3.039195382313195e-08
+    deg_ridge = 6
+    lmb_lasso = 8.531678524172797e-08
+    deg_lasso = 18
+    deg_ols = 6
 
+    compare_3d(x, y, z, noise, deg_ols, lmb_ridge, deg_ridge, lmb_lasso, deg_lasso, name_add="franke_2")
 
     """BIAS VARIANCE TRADEOFF FOR BEST LAMDA"""
     #x, y, z = make_data(n, std, seed=100)#np.random.randint(101))

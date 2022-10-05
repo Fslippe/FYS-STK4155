@@ -14,7 +14,7 @@ from sklearn.pipeline import make_pipeline
 from sklearn.linear_model import LinearRegression
 from sklearn.utils import resample
 from sklearn.linear_model import Lasso, Ridge
-plt.rcParams.update({"font.size": 15})
+plt.rcParams.update({"font.size": 14})
 
 def make_data(n, noise_std, seed=1, terrain=False):
     """

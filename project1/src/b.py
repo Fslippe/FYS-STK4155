@@ -24,11 +24,12 @@ def plot_train_test(train, test, ylabel, save=False):
     plt.legend()
     plt.xlabel("Degree of polynomial")
     plt.ylabel(ylabel)
-    if save:
-        plt.savefig(save, dpi=300, bbox_inches='tight')
+    if save != False:
+        print("Saving")
+        plt.savefig("../figures/%s.png" %(save), dpi=300, bbox_inches='tight')
     plt.show()
 
-def plot_MSE(MSE, save=False, savename="MSE_degree"):
+def plot_MSE(MSE, save=False):
     """
     Takes in and plotting MSE for chosen label and line type.
     Saving if save=True
@@ -39,8 +40,9 @@ def plot_MSE(MSE, save=False, savename="MSE_degree"):
     plt.xlabel("Degree of polynomial")
     plt.ylabel("MSE")
 
-    if save==True:
-        plt.savefig("../figures/%s.png" %(savename))
+    if save != False:
+        print("Saving")
+        plt.savefig("../figures/%s.png" %(save), dpi=300, bbox_inches="tight")
     plt.show()
 
 
@@ -55,56 +57,61 @@ def plot_R2(R2, save=False):
     plt.xlabel("Degree of polynomial")
     plt.ylabel("$R^2$")
 
-    if save==True:
-        plt.savefig("../figures/R2_degree.png")
+    if save != False:
+        print("Saving")
+        plt.savefig("../figures/%s.png" %(save), dpi=300, bbox_inches="tight")
     plt.show()
 
-
-def plot_beta_degree(beta_degree):
-    """
-    Plotting how the different betas change by increasing the polynomial degree
-    """
-    degree_array = np.arange(1, np.size(beta_degree, axis=0)+1, 1)
-    plt.figure().gca().xaxis.set_major_locator(MaxNLocator(integer=True))
-    plt.plot(degree_array, beta_degree)
-    plt.xlabel("Degree of polynomial")
-    plt.ylabel("Values of parameters beta")
-    plt.show()
 
 def compare_scale(X, z):
     """
     Comparing MSE and R2 between scaled and non scaled data
     Data is scaled by subtracting mean
     """
-    #Splitting data in train and test
-    X_train, X_test, z_train, z_test = train_test_split(X, z)
+    x, y, z = make_data(30, 0.2, seed=200)
 
-    #Non-scaled prediction
-    beta_OLS = OLS(X_train, z_train)
-    z_pred_OLS = (X_test @ beta_OLS)
-    MSE_OLS = MSE(z_test, z_pred_OLS)
-    R2_OLS = R2(z_test, z_pred_OLS)
+    MSE_OLS = np.zeros(11)
+    MSE_OLS_scaled = np.zeros(11)
+    R2_OLS_scaled = np.zeros(11)
+    R2_OLS = np.zeros(11)
 
-    #scaled prediction
-    X_train_scaled = X_train - np.mean(X_train, axis=0)
-    z_train_scaled = z_train - np.mean(z_train)
-    X_test_scaled = X_test - np.mean(X_train, axis=0)
+    for degree in range(11):
+        X = design_matrix(x, y, degree)
+        #Splitting data in train and test
+        X_train, X_test, z_train, z_test = train_test_split(X, z)
 
-    beta_OLS = OLS(X_train_scaled, z_train_scaled)
-    z_pred_OLS = (X_test_scaled @ beta_OLS) + np.mean(z_train)
-    MSE_OLS_scaled = MSE(z_test, z_pred_OLS)
-    R2_OLS_scaled = R2(z_test, z_pred_OLS)
+        #Non-scaled prediction
+        beta_OLS = OLS(X_train, z_train)
+        z_pred_OLS = (X_test @ beta_OLS)
+        MSE_OLS[degree] = MSE(z_test, z_pred_OLS)
+        R2_OLS[degree] = R2(z_test, z_pred_OLS)
 
-    print("---MSE---")
-    print("Non-scaled MSE:", MSE_OLS)
-    print("Scaled MSE:", MSE_OLS_scaled)
-    print("MSE diff:", abs(MSE_OLS - MSE_OLS_scaled))
-    print("\n---R2---")
-    print("Non-scaled R2:", R2_OLS)
-    print("Scaled R2:", R2_OLS_scaled)
-    print("R2 diff:", abs(R2_OLS - R2_OLS_scaled))
+        #scaled prediction
+        X_train_scaled = X_train - np.mean(X_train, axis=0)
+        z_train_scaled = z_train - np.mean(z_train)
+        X_test_scaled = X_test - np.mean(X_train, axis=0)
 
-def scaled_OLSprediction(X, z):
+        beta_OLS = OLS(X_train_scaled, z_train_scaled)
+        z_pred_OLS = (X_test_scaled @ beta_OLS) + np.mean(z_train)
+        MSE_OLS_scaled[degree] = MSE(z_test, z_pred_OLS)
+        R2_OLS_scaled[degree] = R2(z_test, z_pred_OLS)
+
+    plt.plot(np.arange(0,11), abs(MSE_OLS - MSE_OLS_scaled))
+    plt.xlabel("Polynomial degree")
+    plt.ylabel(r"$abs(MSE - MSE_{scaled})$")
+    plt.yscale("log")
+    plt.savefig("../figures/compare_scale_mse.png", dpi=300, bbox_inches="tight")
+    plt.show()
+    plt.plot(np.arange(0,11), abs(R2_OLS - R2_OLS_scaled))
+    plt.xlabel("Polynomial degree")
+    plt.ylabel(r"$abs(R^2 - R^2_{scaled})$")
+    plt.yscale("log")
+
+    plt.savefig("../figures/compare_scale_r2.png", dpi=300, bbox_inches="tight")
+    plt.show()
+
+
+def scaled_OLSprediction(X, z, var_beta=False):
     """
     Takes in design matrix X and data z
     Performs a split in train and test data
@@ -120,7 +127,13 @@ def scaled_OLSprediction(X, z):
     z_pred_OLS = (X_test_scaled @ beta_OLS) + np.mean(z_train)
     z_pred_train_OLS = (X_train_scaled @ beta_OLS) + np.mean(z_train)
 
-    return z_test, z_train, z_pred_OLS, z_pred_train_OLS, beta_OLS
+    if var_beta:
+        var_test = np.diag(np.linalg.pinv(X_test.T @ X_test))*0.2**2
+        var_train = np.diag(np.linalg.pinv(X_train.T @ X_train))*0.2**2
+        return z_test, z_train, z_pred_OLS, z_pred_train_OLS, beta_OLS, var_test, var_train
+    else:
+        return z_test, z_train, z_pred_OLS, z_pred_train_OLS, beta_OLS
+
 
 def MSE_R2(x, y, z, maxdegree):
     """
@@ -140,13 +153,17 @@ def MSE_R2(x, y, z, maxdegree):
     for degree in range(1, maxdegree+1):
         n = int((degree+1)*(degree+2)/2)
         X = design_matrix(x, y, degree)
-        z_test, z_train, z_pred_OLS, z_pred_train_OLS, beta_OLS[degree-1, :n] = scaled_OLSprediction(X, z)
+        if degree == 5:
+            z_test, z_train, z_pred_OLS, z_pred_train_OLS, beta_OLS[degree-1, :n], var_test, var_train = scaled_OLSprediction(X, z, var_beta=True)
+        else:
+            z_test, z_train, z_pred_OLS, z_pred_train_OLS, beta_OLS[degree-1, :n] = scaled_OLSprediction(X, z)
+
         mse[degree-1] = MSE(z_test, z_pred_OLS)
         mse_train[degree-1] = MSE(z_train, z_pred_train_OLS)
         r2[degree-1] = R2(z_test, z_pred_OLS)
         r2_train[degree-1] = R2(z_train, z_pred_train_OLS)
 
-    return mse, mse_train, r2, r2_train, beta_OLS
+    return mse, mse_train, r2, r2_train, beta_OLS, var_test, var_train
 
 def resample_MSE_R2(n, std, maxdegree, resamples):
     """
@@ -168,7 +185,7 @@ def resample_MSE_R2(n, std, maxdegree, resamples):
 
     return mse_re, mse_train_re, r2_re, r2_train_re
 
-def plot_beta_degree(beta):
+def plot_beta_degree(beta, save=False):
     """
     plotting betas for different choises of polynomial degrees
     """
@@ -178,8 +195,10 @@ def plot_beta_degree(beta):
         plt.plot(np.arange(0, len(beta[i])), beta[i], "--")
     plt.ylabel(r"$\beta_j$")
     plt.xlabel("$j $")
-    plt.legend()
-    plt.savefig("../figures/beta_degree.png")
+    plt.legend(loc="upper right")
+    if save != False:
+        print("Saving")
+        plt.savefig("../figures/%s.png" %(save), dpi=300, bbox_inches="tight")
     plt.show()
 
 
@@ -187,31 +206,34 @@ def main():
     degree = 5
     n = 30
     std = 0.2
-    x, y, z = make_data(n, std)
+    x, y, z = make_data(n, std, seed=200)
     X = design_matrix(x, y, degree)
-
+    print(np.shape(z))
     #comparing MSE and R2 of scaled and non-scaled data
     compare_scale(X, z)
 
     #MSE and R2 as functions of poly degree
     maxdegree = 5
-    mse, mse_train, r2, r2_train, beta_OLS = MSE_R2(x, y, z, maxdegree)
-    plot_beta_degree(beta_OLS)
+    mse, mse_train, r2, r2_train, beta_OLS, var_test, var_train = MSE_R2(x, y, z, maxdegree)
+    plot_beta_degree(beta_OLS, save="beta_degree")
+    for i in range(len(var_test)):
+        print(r"$\beta_{%i}$ & %.2f & %.2f \\" %(i,( var_test[i]), (var_train[i])))
 
-    plot_R2(r2)
-    plot_MSE(mse)
+
+    plot_R2(r2, save="r2_ols_5")
+    plot_MSE(mse, save="mse_ols_5")
 
     #Plot of MSE for train and test prediction
     maxdegree = 17
     mse, mse_train, r2, r2_train, beta_OLS = MSE_R2(x, y, z, maxdegree)
-    plot_train_test(r2_train, r2, r"$R^2$", save="../figures/R2_train_test.png")
-    plot_train_test(mse_train, mse, r"MSE", save="../figures/MSE_train_test.png")
+    plot_train_test(r2_train, r2, r"$R^2$", save="R2_train_test")
+    plot_train_test(mse_train, mse, r"MSE", save="MSE_train_test")
 
     #Resample of MSE and R2 to get a smooth plot
     print("\n---RESAMPLE---")
     mse, mse_train, r2, r2_train = resample_MSE_R2(n, std, maxdegree, resamples=200)
-    plot_train_test(r2_train, r2, r"$R^2$", save="../figures/R2_train_test_resample.png")
-    plot_train_test(mse_train, mse, r"MSE", save="../figures/MSE_train_test_resample.png")
+    plot_train_test(r2_train, r2, r"$R^2$", save="R2_train_test_resample")
+    plot_train_test(mse_train, mse, r"MSE", save="MSE_train_test_resample")
 
     print("Degree with lowest MSE:", np.argmin(mse)+1)
     print("MSE:", np.min(mse))

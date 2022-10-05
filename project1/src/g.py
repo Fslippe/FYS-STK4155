@@ -64,11 +64,10 @@ def MSE_R2_2(x, y, z, maxdegree, scaler, method):
 # Load the terrain
 def main():
     terrain = imread('../data/SRTM_data_Norway_1.tif')
-
+    print(np.shape(terrain))
     n = 20
     n_skip = 2
     std = 0
-    degree = 17 # polynomial order
     maxdegree = 25
     terrain = terrain[100:n*n_skip+1+100,100:n*n_skip+1+100][1::n_skip]
     np.random.seed(200)
@@ -85,12 +84,12 @@ def main():
     #plot_MSE(mse)
     #plot_R2(r2)
 
-    run_best_lambda = False
+    run_best_lambda = True
 
     if run_best_lambda:
-        lmb_ols, deg_ols, mse_ols = lamda_degree_MSE(x, y, z_scaled, "OLS", std, n_lmb = 1, maxdegree = maxdegree, k_folds = 5, max_iter = 100, save=True)
-        lmb_ridge, deg_ridge, mse_ridge = lamda_degree_MSE(x, y, z_scaled, "RIDGE", std, n_lmb = 20, maxdegree = maxdegree, k_folds = 5, max_iter = 100, save=True, lmb_min=-13, lmb_max=-3)
-        lmb_lasso, deg_lasso, mse_lasso = lamda_degree_MSE(x, y, z_scaled, "LASSO", std, n_lmb = 20, maxdegree = maxdegree, k_folds = 5, max_iter = 100, save=True, lmb_min=-13, lmb_max=-3)
+        lmb_ols, deg_ols, mse_ols = lamda_degree_MSE(x, y, z_scaled, "OLS", std, n_lmb = 1, maxdegree = maxdegree, k_folds = 5, max_iter = 100, save=False)
+        lmb_ridge, deg_ridge, mse_ridge = lamda_degree_MSE(x, y, z_scaled, "RIDGE", std, n_lmb = 20, maxdegree = maxdegree, k_folds = 5, max_iter = 100, save=False, lmb_min=-13, lmb_max=-3)
+        lmb_lasso, deg_lasso, mse_lasso = lamda_degree_MSE(x, y, z_scaled, "LASSO", std, n_lmb = 20, maxdegree = maxdegree, k_folds = 5, max_iter = 100, save=False, lmb_min=-13, lmb_max=-3)
         print("OLS:", lmb_ols, deg_ols, mse_ols)
         print("RIDGE:", lmb_ridge, deg_ridge, mse_ridge)
         print("LASSO:", lmb_lasso, deg_lasso, mse_lasso)
@@ -108,7 +107,7 @@ def main():
         deg_lasso = 22
         mse_lasso = 0.11060598506946814
 
-    compare_3d(x, y, z_scaled, 0, deg_ols, lmb_ridge, deg_ridge, lmb_lasso, deg_lasso, name_add="test", std=std_scale, mean=mean_scale)
+    compare_3d(x, y, z_scaled, 0, deg_ols, lmb_ridge, deg_ridge, lmb_lasso, deg_lasso, name_add="test_2", std=std_scale, mean=mean_scale)
 
     lamda = np.logspace(2, 2, 1)
     n_B = 20

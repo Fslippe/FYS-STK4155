@@ -14,19 +14,18 @@ def bias_variance_lamda(n, std, maxdegree, n_B, method, lamda, name_add="", fran
 
     poly = np.arange(0, maxdegree+1)
     for lmb in lamda:
-        mse[i], bias[i], variance[i] =  bias_variance_tradeoff(franke, x, y, z, n=n, std=std, maxdegree=maxdegree, n_B=n_B, plot=False, method=method, lamda=lmb, seed=100)
-        plt.figure()
+        mse[i], bias[i], variance[i] =  bias_variance_tradeoff(franke, x, y, z, n=n, std=std, maxdegree=maxdegree, n_B=n_B, plot=False, method=method, lamda=lmb, seed=200)
+        plt.figure().gca().xaxis.set_major_locator(MaxNLocator(integer=True))
         plt.title("%s Tradeoff for $\lambda=$ %.0e" %(method, lmb))
-        plt.plot(poly, bias[i], label="Bias")
         plt.plot(poly, mse[i], label="mse")
+        plt.plot(poly, bias[i], label=r"Bias$^2$")
         plt.plot(poly, variance[i], label="variance")
         plt.xlabel("Polynomial degree")
         plt.legend()
         plt.savefig("../figures/tradeoff_%s_%.0e%s.png" %(method, lmb, name_add), dpi=300, bbox_inches="tight")
 
-        #plt.show()
         i +=1
-
+    print(np.min(bias))
 def cross_validation_lamda(n, std, k_folds, method, lamda, degree=5, savefig=False):
     x, y, z = make_data(n, std, seed=100)
     X = design_matrix(x, y, degree)
@@ -59,19 +58,20 @@ def cross_validation_lamda(n, std, k_folds, method, lamda, degree=5, savefig=Fal
     return lamda[argmin]
 
 def main():
-    n = 15
+    n = 30
     std = 0.2
     maxdegree = 15
     n_B = 100
     method = "RIDGE"
-    lamda = np.logspace(-6, -1, 6)
+    lamda = np.logspace(-10, -5, 6)
     k_folds = 5
     bias_variance_lamda(n, std, maxdegree, n_B, method, lamda)
     plt.show()
     method = "LASSO"
-    lamda = np.logspace(-6, -1, 6)
+    lamda = np.logspace(-14, -8, 6)
     k_folds = 5
     bias_variance_lamda(n, std, maxdegree, n_B, method, lamda)
+    plt.show()
 
     #cross_validation_lamda(n, std, k_folds, method, lamda, degree=10)
 

@@ -1,7 +1,7 @@
 \boolfalse {citerequest}\boolfalse {citetracker}\boolfalse {pagetracker}\boolfalse {backtracker}\relax 
 \babel@toc {english}{}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {1}Introduction}{1}{section.1}%
+\contentsline {section}{\numberline {1}Introduction}{2}{section.1}%
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {2}Method}{2}{section.2}%
 \defcounter {refsection}{0}\relax 
@@ -13,14 +13,28 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {2.4}Cross validation}{7}{subsection.2.4}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.5}Study of $\lambda $ dependence for ridge and lasso regression}{7}{subsection.2.5}%
+\contentsline {subsection}{\numberline {2.5}Study of $\lambda $ dependence for ridge and lasso regression}{8}{subsection.2.5}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {2.6}Study of topography data}{8}{subsection.2.6}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {3}Results}{8}{section.3}%
+\contentsline {section}{\numberline {3}Results}{9}{section.3}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {4}Discussion}{8}{section.4}%
+\contentsline {subsection}{\numberline {3.1}Franke funtion}{9}{subsection.3.1}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {5}Conclusion}{8}{section.5}%
+\contentsline {subsubsection}{\numberline {3.1.1}OLS scaling of data}{9}{subsubsection.3.1.1}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {6}}{8}{section.6}%
+\contentsline {subsubsection}{\numberline {3.1.2}OLS MSE and $R^2$}{10}{subsubsection.3.1.2}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {3.1.3}OLS variation of $\beta $ paramers}{12}{subsubsection.3.1.3}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {3.1.4}OLS bias variance tradeoff}{13}{subsubsection.3.1.4}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {3.1.5}OLS cross validation}{15}{subsubsection.3.1.5}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {3.1.6}Ridge and Lasso bias variance tradeoff}{17}{subsubsection.3.1.6}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {4}Discussion}{19}{section.4}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {5}Conclusion}{19}{section.5}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {6}}{19}{section.6}%

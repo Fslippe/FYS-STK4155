@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2022.8.24)  5 OCT 2022 10:47
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2022.8.24)  6 OCT 2022 00:18
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -563,7 +563,92 @@ Package biblatex Warning: 'babel/polyglossia' detected but 'csquotes' missing.
 
 \@quotelevel=\count413
 \@quotereset=\count414
-(./project1.aux)
+(./project1.aux
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:train_test_resample_mse' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:train_test_resample_mse' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:' multiply defined.
+
+)
 \openout1 = `project1.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 62.
@@ -687,53 +772,240 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
  [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2] [3] [4] [5]
-<../figures/cv_kfold.png, id=99, 433.62pt x 216.81pt>
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2] [3] [4] [5] [6]
+<../figures/cv_kfold.png, id=139, 433.62pt x 216.81pt>
 File: ../figures/cv_kfold.png Graphic file (type png)
 <use ../figures/cv_kfold.png>
-Package pdftex.def Info: ../figures/cv_kfold.png  used on input line 205.
+Package pdftex.def Info: ../figures/cv_kfold.png  used on input line 213.
 (pdftex.def)             Requested size: 303.53267pt x 151.77257pt.
- [6]
+ [7]
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 211.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\lambda' on input line 211.
+(hyperref)                removing `math shift' on input line 219.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 211.
+(hyperref)                removing `\lambda' on input line 219.
 
-[7 <../figures/cv_kfold.png (PNG copy)>]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 223.
- [8]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 223.
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 219.
+
+[8 <../figures/cv_kfold.png (PNG copy)>]
+<../figures/compare_scale_mse.png, id=155, 436.7517pt x 319.9152pt>
+File: ../figures/compare_scale_mse.png Graphic file (type png)
+<use ../figures/compare_scale_mse.png>
+Package pdftex.def Info: ../figures/compare_scale_mse.png  used on input line 236.
+(pdftex.def)             Requested size: 216.81pt x 158.81004pt.
+<../figures/compare_scale_r2.png, id=157, 440.1243pt x 319.9152pt>
+File: ../figures/compare_scale_r2.png Graphic file (type png)
+<use ../figures/compare_scale_r2.png>
+Package pdftex.def Info: ../figures/compare_scale_r2.png  used on input line 242.
+(pdftex.def)             Requested size: 216.81pt x 157.59454pt.
+
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 234--246
+[]$[]$ $[]$ 
+ []
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 251.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `superscript' on input line 251.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 251.
+
+<../figures/mse_ols_5.png, id=159, 437.9562pt x 319.9152pt>
+File: ../figures/mse_ols_5.png Graphic file (type png)
+<use ../figures/mse_ols_5.png>
+Package pdftex.def Info: ../figures/mse_ols_5.png  used on input line 257.
+(pdftex.def)             Requested size: 216.81pt x 158.37071pt.
+<../figures/r2_ols_5.png, id=160, 429.0429pt x 319.9152pt>
+File: ../figures/r2_ols_5.png Graphic file (type png)
+<use ../figures/r2_ols_5.png>
+Package pdftex.def Info: ../figures/r2_ols_5.png  used on input line 263.
+(pdftex.def)             Requested size: 216.81pt x 161.66573pt.
+
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 255--267
+[]$[]$ $[]$ 
+ []
+
+[9 <../figures/compare_scale_mse.png> <../figures/compare_scale_r2.png>]
+<../figures/mse_train_test.png, id=174, 437.9562pt x 319.9152pt>
+File: ../figures/mse_train_test.png Graphic file (type png)
+<use ../figures/mse_train_test.png>
+Package pdftex.def Info: ../figures/mse_train_test.png  used on input line 276.
+(pdftex.def)             Requested size: 216.81pt x 158.37071pt.
+<../figures/r2_train_test.png, id=175, 429.0429pt x 319.9152pt>
+File: ../figures/r2_train_test.png Graphic file (type png)
+<use ../figures/r2_train_test.png>
+Package pdftex.def Info: ../figures/r2_train_test.png  used on input line 282.
+(pdftex.def)             Requested size: 216.81pt x 161.66573pt.
+
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 274--286
+[]$[]$ $[]$ 
+ []
+
+[10 <../figures/mse_ols_5.png> <../figures/r2_ols_5.png>]
+<../figures/MSE_train_test_resample.png, id=184, 437.9562pt x 319.9152pt>
+File: ../figures/MSE_train_test_resample.png Graphic file (type png)
+<use ../figures/MSE_train_test_resample.png>
+Package pdftex.def Info: ../figures/MSE_train_test_resample.png  used on input line 293.
+(pdftex.def)             Requested size: 216.81pt x 158.37071pt.
+<../figures/R2_train_test_resample.png, id=185, 429.0429pt x 319.9152pt>
+File: ../figures/R2_train_test_resample.png Graphic file (type png)
+<use ../figures/R2_train_test_resample.png>
+Package pdftex.def Info: ../figures/R2_train_test_resample.png  used on input line 299.
+(pdftex.def)             Requested size: 216.81pt x 161.66573pt.
+
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 291--303
+[]$[]$ $[]$ 
+ []
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 308.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\beta' on input line 308.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 308.
+
+<../figures/beta_degree.png, id=188, 438.438pt x 322.0833pt>
+File: ../figures/beta_degree.png Graphic file (type png)
+<use ../figures/beta_degree.png>
+Package pdftex.def Info: ../figures/beta_degree.png  used on input line 313.
+(pdftex.def)             Requested size: 303.53267pt x 222.99455pt.
+[11 <../figures/MSE_train_test.png> <../figures/R2_train_test.png> <../figures/MSE_train_test_resample.png> <../figures/R2_train_test_resample.png>] [12 <../figures/beta_degree.png>]
+<../figures/bias_variance_tradeoff.png, id=209, 441.3288pt x 328.3467pt>
+File: ../figures/bias_variance_tradeoff.png Graphic file (type png)
+<use ../figures/bias_variance_tradeoff.png>
+Package pdftex.def Info: ../figures/bias_variance_tradeoff.png  used on input line 356.
+(pdftex.def)             Requested size: 303.53267pt x 225.83298pt.
+ [13]
+<../figures/bias_variance_100.png, id=218, 441.3288pt x 328.3467pt>
+File: ../figures/bias_variance_100.png Graphic file (type png)
+<use ../figures/bias_variance_100.png>
+Package pdftex.def Info: ../figures/bias_variance_100.png  used on input line 363.
+(pdftex.def)             Requested size: 303.53267pt x 225.83298pt.
+ [14 <../figures/bias_variance_tradeoff.png>]
+<../figures/boot_cv_comp_OLS_100_5.png, id=226, 449.2785pt x 338.7054pt>
+File: ../figures/boot_cv_comp_OLS_100_5.png Graphic file (type png)
+<use ../figures/boot_cv_comp_OLS_100_5.png>
+Package pdftex.def Info: ../figures/boot_cv_comp_OLS_100_5.png  used on input line 372.
+(pdftex.def)             Requested size: 216.81pt x 163.45016pt.
+<../figures/boot_cv_comp_OLS_100_10.png, id=227, 454.5783pt x 338.7054pt>
+File: ../figures/boot_cv_comp_OLS_100_10.png Graphic file (type png)
+<use ../figures/boot_cv_comp_OLS_100_10.png>
+Package pdftex.def Info: ../figures/boot_cv_comp_OLS_100_10.png  used on input line 378.
+(pdftex.def)             Requested size: 216.81pt x 161.54826pt.
+
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 370--382
+[]$[]$ $[]$ 
+ []
+
+<../figures/boot_cv_comp_01.png, id=229, 454.5783pt x 338.7054pt>
+File: ../figures/boot_cv_comp_01.png Graphic file (type png)
+<use ../figures/boot_cv_comp_01.png>
+Package pdftex.def Info: ../figures/boot_cv_comp_01.png  used on input line 388.
+(pdftex.def)             Requested size: 303.53267pt x 226.16653pt.
+[15 <../figures/bias_variance_100.png> <../figures/boot_cv_comp_OLS_100_5.png> <../figures/boot_cv_comp_OLS_100_10.png>]
+<../figures/best_lambda_OLS_02_franke.png, id=239, 441.3288pt x 323.2878pt>
+File: ../figures/best_lambda_OLS_02_franke.png Graphic file (type png)
+<use ../figures/best_lambda_OLS_02_franke.png>
+Package pdftex.def Info: ../figures/best_lambda_OLS_02_franke.png  used on input line 397.
+(pdftex.def)             Requested size: 303.53267pt x 222.35353pt.
+ [16 <../figures/boot_cv_comp_01.png>]
+
+LaTeX Warning: Reference `fig:ridge_tradeoff' on page 17 undefined on input line 405.
+
+<../figures/tradeoff_RIDGE_1e-03.png, id=249, 415.5525pt x 344.9688pt>
+File: ../figures/tradeoff_RIDGE_1e-03.png Graphic file (type png)
+<use ../figures/tradeoff_RIDGE_1e-03.png>
+Package pdftex.def Info: ../figures/tradeoff_RIDGE_1e-03.png  used on input line 409.
+(pdftex.def)             Requested size: 216.81pt x 179.98486pt.
+<../figures/tradeoff_RIDGE_1e-04.png, id=250, 415.5525pt x 344.9688pt>
+File: ../figures/tradeoff_RIDGE_1e-04.png Graphic file (type png)
+<use ../figures/tradeoff_RIDGE_1e-04.png>
+Package pdftex.def Info: ../figures/tradeoff_RIDGE_1e-04.png  used on input line 415.
+(pdftex.def)             Requested size: 216.81pt x 179.98486pt.
+<../figures/tradeoff_RIDGE_1e-05.png, id=251, 415.5525pt x 344.9688pt>
+File: ../figures/tradeoff_RIDGE_1e-05.png Graphic file (type png)
+<use ../figures/tradeoff_RIDGE_1e-05.png>
+Package pdftex.def Info: ../figures/tradeoff_RIDGE_1e-05.png  used on input line 421.
+(pdftex.def)             Requested size: 216.81pt x 179.98486pt.
+<../figures/tradeoff_RIDGE_1e-06.png, id=252, 415.5525pt x 344.9688pt>
+File: ../figures/tradeoff_RIDGE_1e-06.png Graphic file (type png)
+<use ../figures/tradeoff_RIDGE_1e-06.png>
+Package pdftex.def Info: ../figures/tradeoff_RIDGE_1e-06.png  used on input line 427.
+(pdftex.def)             Requested size: 216.81pt x 179.98486pt.
+<../figures/tradeoff_RIDGE_1e-07.png, id=253, 415.5525pt x 344.9688pt>
+File: ../figures/tradeoff_RIDGE_1e-07.png Graphic file (type png)
+<use ../figures/tradeoff_RIDGE_1e-07.png>
+Package pdftex.def Info: ../figures/tradeoff_RIDGE_1e-07.png  used on input line 433.
+(pdftex.def)             Requested size: 216.81pt x 179.98486pt.
+<../figures/tradeoff_RIDGE_1e-08.png, id=254, 415.5525pt x 344.9688pt>
+File: ../figures/tradeoff_RIDGE_1e-08.png Graphic file (type png)
+<use ../figures/tradeoff_RIDGE_1e-08.png>
+Package pdftex.def Info: ../figures/tradeoff_RIDGE_1e-08.png  used on input line 439.
+(pdftex.def)             Requested size: 216.81pt x 179.98486pt.
+
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 407--443
+[]$[]$ $[]$
+ []
+
+
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 407--443
+[]$ $[]$
+ []
+
+
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 407--443
+[]$ $[]$ 
+ []
+
+[17 <../figures/best_lambda_OLS_02_franke.png>]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 451.
+ [18 <../figures/tradeoff_RIDGE_1e-03.png> <../figures/tradeoff_RIDGE_1e-04.png> <../figures/tradeoff_RIDGE_1e-05.png> <../figures/tradeoff_RIDGE_1e-06.png> <../figures/tradeoff_RIDGE_1e-07.png> <../figures/tradeoff_RIDGE_1e-08.png>] [19]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 451.
  (./project1.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 223.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 223.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 451.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 451.
 Package rerunfilecheck Info: File `project1.out' has not changed.
-(rerunfilecheck)             Checksum: 21BA50772B4A5498F51403574E135082;730.
+(rerunfilecheck)             Checksum: B747A75989C26B301E0CC08E8AE6083E;1300.
+
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: There were multiply-defined labels.
+
 Package logreq Info: Writing requests to 'project1.run.xml'.
 \openout1 = `project1.run.xml'.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 223.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 451.
  ) 
 Here is how much of TeX's memory you used:
- 17802 strings out of 481239
- 301819 string characters out of 5920377
- 1068851 words of memory out of 5000000
- 32798 multiletter control sequences out of 15000+600000
- 544340 words of font info for 69 fonts, out of 8000000 for 9000
+ 17995 strings out of 481239
+ 307201 string characters out of 5920377
+ 1068648 words of memory out of 5000000
+ 32940 multiletter control sequences out of 15000+600000
+ 545588 words of font info for 74 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 48i,13n,56p,1357b,1707s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmib8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public
-/amsfonts/symbols/msbm10.pfb>
-Output written on project1.pdf (8 pages, 159339 bytes).
+ 48i,14n,56p,1357b,1707s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmib8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public
+/amsfonts/cm/cmtt12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on project1.pdf (19 pages, 2509359 bytes).
 PDF statistics:
- 171 PDF objects out of 1000 (max. 8388607)
- 143 compressed objects within 2 object streams
- 23 named destinations out of 1000 (max. 500000)
- 102 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 339 PDF objects out of 1000 (max. 8388607)
+ 256 compressed objects within 3 object streams
+ 53 named destinations out of 1000 (max. 500000)
+ 263 words of extra memory for PDF output out of 10000 (max. 10000000)
 

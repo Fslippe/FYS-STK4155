@@ -13,7 +13,7 @@ from sklearn.linear_model import LinearRegression
 from functions import *
 plt.rcParams.update({"font.size": 16})
 
-def bias_variance_tradeoff(franke=True, x=None, y=None, z=None, n=22, std=0.2, maxdegree=15, n_B=100, plot=True, method="OLS", lamda=1, show=True, seed=np.random.randint(10000), save=False):
+def bias_variance_tradeoff(franke=True, x=None, y=None, z=None, n=22, std=0.2, maxdegree=15, n_B=100, plot=True, method="OLS", lamda=1, show=True, seed=200, save=False):
     """
     Calculates the bias variance tradeoff using bootstrap and OLS
     Takes in
@@ -41,9 +41,8 @@ def bias_variance_tradeoff(franke=True, x=None, y=None, z=None, n=22, std=0.2, m
         z_pred = bootstrap(X_train, X_test, z_train, z_test, n_B, method=method, lamda=lamda)
 
         bias[i] = np.mean((z_test - np.mean(z_pred, axis=1, keepdims=True).T)**2) - std**2
-        variance[i] = np.mean(np.var(z_pred, axis=1))
+        variance[i] = np.mean((z_pred -  np.mean(z_pred, axis=1, keepdims=True))**2)
         MSE[i] = np.mean(np.mean((z_test - z_pred.T)**2, axis=1, keepdims=True))
-
     if plot:
         plt.figure().gca().xaxis.set_major_locator(MaxNLocator(integer=True))
         if method == "OLS":
@@ -64,9 +63,13 @@ def bias_variance_tradeoff(franke=True, x=None, y=None, z=None, n=22, std=0.2, m
         return MSE, bias, variance
 
 def main():
-    n = 22
+    n = 30
     std = 0.2
     maxdegree = 15
-    bias_variance_tradeoff(n=n, std=std, maxdegree=maxdegree, method="OLS")
+    bias_variance_tradeoff(n=n, std=std, maxdegree=maxdegree, method="OLS", save="bias_variance_tradeoff")
+    n = 100
+    std = 0.2
+    maxdegree = 15
+    bias_variance_tradeoff(n=n, std=std, maxdegree=maxdegree, method="OLS", save="bias_variance_100")
 if __name__ == '__main__':
     main()
