@@ -13,10 +13,14 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {2.4}Cross validation}{7}{subsection.2.4}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {3}Results}{7}{section.3}%
+\contentsline {subsection}{\numberline {2.5}Study of $\lambda $ dependence for ridge and lasso regression}{7}{subsection.2.5}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {4}Discussion}{7}{section.4}%
+\contentsline {subsection}{\numberline {2.6}Study of topography data}{8}{subsection.2.6}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {5}Conclusion}{7}{section.5}%
+\contentsline {section}{\numberline {3}Results}{8}{section.3}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {6}}{7}{section.6}%
+\contentsline {section}{\numberline {4}Discussion}{8}{section.4}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {5}Conclusion}{8}{section.5}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {6}}{8}{section.6}%

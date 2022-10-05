@@ -6,7 +6,7 @@ from matplotlib.cm import ScalarMappable
 import seaborn as sns
 plt.rcParams.update({"font.size": 15})
 
-def lamda_degree_MSE(x, y, z, method, std, n_lmb = 50, maxdegree = 20, k_folds = 5, max_iter = 100, save=True):
+def lamda_degree_MSE(x, y, z, method, std, n_lmb = 50, maxdegree = 20, k_folds = 5, max_iter = 100, save=True, lmb_min=-12, lmb_max=-1):
     """
     Function to find best degree and lambda parameter
     for the chosen regression method
@@ -26,7 +26,7 @@ def lamda_degree_MSE(x, y, z, method, std, n_lmb = 50, maxdegree = 20, k_folds =
     """
 
     degree = np.arange(1, maxdegree+1)
-    lamda = np.logspace(-12, -1, n_lmb)
+    lamda = np.logspace(lmb_min, lmb_max, n_lmb)
 
     if method == "RIDGE" or method == "LASSO":
         degree, lamda = np.meshgrid(degree,lamda)
@@ -97,7 +97,7 @@ def compare_3d(x, y, z, noise, deg_ols, lmb_ridge, deg_ridge, lmb_lasso, deg_las
     - 6 plots with surfaces.
     Test and train data, true data and, ridge, ols and lasso regressions
     """
-    z_true = (z*std + mean  - noise.ravel())
+    z_true = (z*std + mean  - noise)
     x_train, x_test, y_train, y_test, z_train, z_test = train_test_split(x.ravel(), y.ravel(), z, test_size=0.2)
 
     X_train = design_matrix(x_train, y_train, deg_ridge)

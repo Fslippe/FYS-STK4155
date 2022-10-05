@@ -4,7 +4,9 @@
 \BOOKMARK [2][-]{subsection.2.2}{Mean squared error and R squared}{section.2}% 4
 \BOOKMARK [2][-]{subsection.2.3}{Bias-variance trade-off}{section.2}% 5
 \BOOKMARK [2][-]{subsection.2.4}{Cross validation}{section.2}% 6
-\BOOKMARK [1][-]{section.3}{Results}{}% 7
-\BOOKMARK [1][-]{section.4}{Discussion}{}% 8
-\BOOKMARK [1][-]{section.5}{Conclusion}{}% 9
-\BOOKMARK [1][-]{section.6}{}{}% 10
+\BOOKMARK [2][-]{subsection.2.5}{Study of \040dependence for ridge and lasso regression}{section.2}% 7
+\BOOKMARK [2][-]{subsection.2.6}{Study of topography data}{section.2}% 8
+\BOOKMARK [1][-]{section.3}{Results}{}% 9
+\BOOKMARK [1][-]{section.4}{Discussion}{}% 10
+\BOOKMARK [1][-]{section.5}{Conclusion}{}% 11
+\BOOKMARK [1][-]{section.6}{}{}% 12

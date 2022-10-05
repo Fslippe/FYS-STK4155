@@ -199,7 +199,20 @@ Here we have the expectation value of the bias which is the bias itself, while w
 \end{align*}
 
 \subsection{Cross validation}
-To futher investigate our model we implement the cross validation resampling method. Togther with the already implemented bootstrap method we now have a possibility to optimize our predictions by chosing a design matrix that reduces our models mean squared errors. The cross validation method takes in data and splits it up in $k$ equaly sized folds where one fold is used as test data while the rest is used as train data. A mean squared error is then computed before the model reruns with another fold as test data. This process happens over and over until all the $k$-folds have been used as test data. This gives a total of $k$ iterations. 
+To futher investigate our model we implement the cross validation resampling method. Togther with the already implemented bootstrap method we now have a possibility to optimize our predictions by chosing a design matrix that reduces our models mean squared errors. The cross validation method takes in data and splits it up in $k$ equaly sized sets where one set is used as test data while the rest is used as train data. For every fold a mean squared error is then computed before the model reruns with another set as test data. This process happens over and over until all $k$ sets have been used as test data. This gives a total of $k$ folds. Since our data is ordered and not chaotic we shuffle it before the splits are performed. We can see why this is neccesary in the $k$-fold visualization in figure \ref{fig:k_fold} where we would without a shuffle have $x,y$ an $z$ not representative of the whole dataset but rather small intervals of values. We can imagine how not shuffling the data would have consequences on a extreme case where the first split of the first $k$-fold in the figure below only contained values around 0 while the rest contained values around 1. That would leave us with high computed mean squared erros for especially some of the folds which would in turn give us bad predictions for the MSE.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.7\textwidth]{../figures/cv_kfold.png}
+  \caption{A visualization of the splits of the data performed in cross validation. Here we see 4 $k$-folds which gives a total of 4 splits and iterations. \\
+  \url{https://scikit-learn.org/stable/modules/cross_validation.html}}
+  \label{fig:k_fold}
+\end{figure}
+
+\subsection{Study of $\lambda$ dependence for ridge and lasso regression}
+To get the best possible predictions of our datasets we also implement lasso and ridge regression. These two methods are unlike OLS, dependent on a regularization parameter $\lambda$ where we have to compute which value that optimizes these two models. Similar to OLS we perform cross validation to find which degree of design matrix reduces the mean squared error of our predictions, only that we for ridge and lasso find the best $\lambda$ at the same time. This is because we for one degree would have one optimal $\lambda$ and for another degree have another. We therefore compute one cross validation for different values of $\lambda$ parameters for each degree. The degree and $\lambda$ giving the smallest MSE is then used for futher predictions
+
+\subsection{Study of topography data}
+
 
 \section{Results}
 \section{Discussion}

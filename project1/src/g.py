@@ -65,14 +65,17 @@ def MSE_R2_2(x, y, z, maxdegree, scaler, method):
 def main():
     terrain = imread('../data/SRTM_data_Norway_1.tif')
 
-    n = 100
-    std = 0.2
+    n = 20
+    n_skip = 2
+    std = 0
     degree = 17 # polynomial order
     maxdegree = 25
-    terrain = terrain[100:n+1+100,100:n+1+100]
+    terrain = terrain[100:n*n_skip+1+100,100:n*n_skip+1+100][1::n_skip]
     np.random.seed(200)
-    noise = np.random.normal(0, std, size=(n+1,n+1))
-    x, y, z = make_data(n, std)
+    noise = 0 #np.random.normal(0, std, size=(n+1,n+1))
+    x, y, z = make_data(n*n_skip, std)
+    x = x[1::n_skip]
+    y = y[1::n_skip]
     z = (terrain + noise*np.mean(terrain)).ravel()
     mean_scale = np.mean(z)
     std_scale = np.std(z)
@@ -82,26 +85,31 @@ def main():
     #plot_MSE(mse)
     #plot_R2(r2)
 
+    run_best_lambda = False
 
-    #lamda_degree_MSE(x, y, z_scaled, "OLS", std, n_lmb = 10, maxdegree = maxdegree, k_folds = 5, max_iter = 100, save=True)
-    #lamda_degree_MSE(x, y, z_scaled, "RIDGE", std, n_lmb = 10, maxdegree = maxdegree, k_folds = 5, max_iter = 100, save=True)
-    #lamda_degree_MSE(x, y, z_scaled, "LASSO", std, n_lmb = 10, maxdegree = maxdegree, k_folds = 5, max_iter = 100, save=True)
+    if run_best_lambda:
+        lmb_ols, deg_ols, mse_ols = lamda_degree_MSE(x, y, z_scaled, "OLS", std, n_lmb = 1, maxdegree = maxdegree, k_folds = 5, max_iter = 100, save=True)
+        lmb_ridge, deg_ridge, mse_ridge = lamda_degree_MSE(x, y, z_scaled, "RIDGE", std, n_lmb = 20, maxdegree = maxdegree, k_folds = 5, max_iter = 100, save=True, lmb_min=-13, lmb_max=-3)
+        lmb_lasso, deg_lasso, mse_lasso = lamda_degree_MSE(x, y, z_scaled, "LASSO", std, n_lmb = 20, maxdegree = maxdegree, k_folds = 5, max_iter = 100, save=True, lmb_min=-13, lmb_max=-3)
+        print("OLS:", lmb_ols, deg_ols, mse_ols)
+        print("RIDGE:", lmb_ridge, deg_ridge, mse_ridge)
+        print("LASSO:", lmb_lasso, deg_lasso, mse_lasso)
 
-    #for std 0.2
-    lmb_ridge = 4.83e-4
-    deg_ridge = 18
-    lmb_lasso = 2.07e-10
-    deg_lasso = 17
-    deg_ols = 11
+    else:
 
-    #for std 0.05
-    lmb_ridge = 1.67e-11
-    deg_ridge = 16
-    lmb_lasso = 2.15e-5
-    deg_lasso = 21
-    deg_ols = 19
-    print("\nMAX NOISE ADDED TO ONE DATAPOINT:", np.max(noise*np.mean(terrain)))
-    #compare_3d(x, y, z_scaled, noise*np.mean(terrain), deg_ols, lmb_ridge, deg_ridge, lmb_lasso, deg_lasso, name_add="real", std=std_scale, mean=mean_scale)
+        deg_ols = 19
+        mse_ols = 0.010703657377970114
+
+        lmb_ridge = 3.792690190732254e-12
+        deg_ridge = 20
+        mse_ridge = 0.009997042109663854
+
+        lmb_lasso = 1.6237767391887177e-09
+        deg_lasso = 22
+        mse_lasso = 0.11060598506946814
+
+    compare_3d(x, y, z_scaled, 0, deg_ols, lmb_ridge, deg_ridge, lmb_lasso, deg_lasso, name_add="test", std=std_scale, mean=mean_scale)
+
     lamda = np.logspace(2, 2, 1)
     n_B = 20
     bias_variance_lamda(n, std, maxdegree, n_B, "RIDGE", lamda, "real", False, x, y, z_scaled)
