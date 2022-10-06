@@ -138,13 +138,17 @@ def main():
     maxdegree = 15
     x, y, z = make_data(n, std, seed=200)
     np.random.seed(200)
-    noise = np.random.normal(0, std, size=(n+1,n+1))
+    noise = np.random.normal(0, std, size=(n+1,n+1)).ravel()
 
     run_best_lambda_plots = False
     if run_best_lambda_plots:
         lmb, deg, mse = lamda_degree_MSE(x, y, z, "OLS", std, save=True, maxdegree=15)
         lmb_ridge, deg_ridge, mse_ridge = lamda_degree_MSE(x, y, z, "RIDGE", std, save=True, maxdegree=15, lmb_min =-10, n_lmb=30)
-        lmb_lasso, deg_lasso, mse_lasso = lamda_degree_MSE(x, y, z, "LASSO", std, save=True, maxdegree=20, lmb_min =-12, n_lmb=30)
+        #lmb_lasso, deg_lasso, mse_lasso = lamda_degree_MSE(x, y, z, "LASSO", std, save=True, maxdegree=20, lmb_min =-12, n_lmb=30)
+
+        print("OLS:", lmb, deg, mse)
+        print("RIDGE:", lmb_ridge, deg_ridge, mse_ridge)
+        print("LASSO:", lmb_lasso, deg_lasso, mse_lasso)
 
     lmb_ridge = 3.039195382313195e-08
     deg_ridge = 6

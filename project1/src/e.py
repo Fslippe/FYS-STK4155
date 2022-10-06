@@ -60,17 +60,17 @@ def cross_validation_lamda(n, std, k_folds, method, lamda, degree=5, savefig=Fal
 def main():
     n = 30
     std = 0.2
-    maxdegree = 15
+    maxdegree = 20
     n_B = 100
     method = "RIDGE"
-    lamda = np.logspace(-10, -5, 6)
+    lamda = np.logspace(-12, -7, 6)
     k_folds = 5
     bias_variance_lamda(n, std, maxdegree, n_B, method, lamda)
     plt.show()
     method = "LASSO"
-    lamda = np.logspace(-14, -8, 6)
+    lamda = np.logspace(-13, -8, 6)
     k_folds = 5
-    bias_variance_lamda(n, std, maxdegree, n_B, method, lamda)
+    bias_variance_lamda(n, std, maxdegree, n_B, method, lamda, name_add="20")
     plt.show()
 
     #cross_validation_lamda(n, std, k_folds, method, lamda, degree=10)

@@ -69,6 +69,7 @@ def main():
     n_skip = 2
     std = 0
     maxdegree = 25
+    n_B = 100
     terrain = terrain[100:n*n_skip+1+100,100:n*n_skip+1+100][1::n_skip]
     np.random.seed(200)
     noise = 0 #np.random.normal(0, std, size=(n+1,n+1))
@@ -80,10 +81,20 @@ def main():
     std_scale = np.std(z)
     z_scaled = (z - mean_scale)/std_scale
 
-    #mse, r2 = MSE_R2_2(x, y, z, maxdegree, "STANDARD", "OLS")
-    #plot_MSE(mse)
-    #plot_R2(r2)
+    mse, r2 = MSE_R2_2(x, y, z, maxdegree, "STANDARD", "OLS")
+    #plot_MSE(mse, save="mse_deg_real")
+    #plot_R2(r2, save="r2_deg_real")
 
+    #bias_variance_tradeoff(franke=False, x=x, y=y, z=z_scaled, maxdegree=maxdegree, method="OLS", lamda=1, show=True, save="ols_real_tradeoff")
+    plt.show()
+    lamda = np.logspace(-13, -1, 4)
+
+    #bias_variance_lamda(n, std, maxdegree, n_B, "RIDGE", lamda, "real", False, x, y, z_scaled)
+    #plt.show()
+    lamda = np.logspace(-13, -1, 4)
+
+    bias_variance_lamda(n, std, maxdegree, n_B, "LASSO", lamda, "real", False, x, y, z_scaled)
+    plt.show()
     run_best_lambda = True
 
     if run_best_lambda:

@@ -13,7 +13,7 @@ from sklearn.linear_model import LinearRegression
 from functions import *
 plt.rcParams.update({"font.size": 16})
 
-def bias_variance_tradeoff(franke=True, x=None, y=None, z=None, n=22, std=0.2, maxdegree=15, n_B=100, plot=True, method="OLS", lamda=1, show=True, seed=200, save=False):
+def bias_variance_tradeoff(franke=True, x=None, y=None, z=None, n=22, std=0.2, mindegree=0, maxdegree=15, n_B=100, plot=True, method="OLS", lamda=1, show=True, seed=200, save=False):
     """
     Calculates the bias variance tradeoff using bootstrap and OLS
     Takes in
@@ -24,10 +24,10 @@ def bias_variance_tradeoff(franke=True, x=None, y=None, z=None, n=22, std=0.2, m
 
     Generates a plot showing the tradeoff
     """
-    polydegree = np.arange(0, maxdegree+1)
-    bias = np.zeros(maxdegree+1)
-    variance = np.zeros(maxdegree+1)
-    MSE = np.zeros(maxdegree+1)
+    polydegree = np.arange(mindegree, maxdegree+1)
+    bias = np.zeros(maxdegree+1- mindegree)
+    variance = np.zeros(maxdegree+1- mindegree)
+    MSE = np.zeros(maxdegree+1- mindegree)
 
     if franke:
         x, y, z = make_data(n, std, seed)
@@ -35,7 +35,7 @@ def bias_variance_tradeoff(franke=True, x=None, y=None, z=None, n=22, std=0.2, m
     else:
         std = 0
 
-    for i in range(maxdegree+1):  # For increasing complexity
+    for i in range(maxdegree+1 - mindegree):  # For increasing complexity
         X = design_matrix(x, y, i)
         X_train, X_test, z_train, z_test = train_test_split(X, z, test_size=0.2)
         z_pred = bootstrap(X_train, X_test, z_train, z_test, n_B, method=method, lamda=lamda)
@@ -45,10 +45,11 @@ def bias_variance_tradeoff(franke=True, x=None, y=None, z=None, n=22, std=0.2, m
         MSE[i] = np.mean(np.mean((z_test - z_pred.T)**2, axis=1, keepdims=True))
     if plot:
         plt.figure().gca().xaxis.set_major_locator(MaxNLocator(integer=True))
-        if method == "OLS":
-            plt.title(r"$\sigma=$%.1f, $n=$%i" %(std, n))
-        else:
-            plt.title(r"$\sigma=$%.1f,  $n=$%i,   $\lambda=$%.2e" %(std, n, lamda))
+        if franke:
+            if method == "OLS":
+                plt.title(r"$\sigma=$%.1f, $n=$%i" %(std, n))
+            else:
+                plt.title(r"$\sigma=$%.1f,  $n=$%i,   $\lambda=$%.2e" %(std, n, lamda))
         plt.plot(polydegree, MSE, "-o", label="Error")
         plt.plot(polydegree, bias, "-o", label="bias")
         plt.plot(polydegree, variance, "-o", label="Variance")

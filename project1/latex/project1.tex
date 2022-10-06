@@ -55,15 +55,15 @@
 }
 
 \lstset{style=mystyle}
-\title{}
-
-\author{}
+\title{Project 1\\ Regression analysis and resampling methods}
+\author{Filip Severin von der Lippe}
 \date{\today}
 \begin{document}
 \maketitle
 \begin{abstract}
   Abstract
 \end{abstract}
+\newpage
 \tableofcontents
 \section{Introduction}
 In this project we will study the Franke function and real topography data by using regression analysis and resampling methods. These are both two dimensional systems which gives us a way of generalizing our functions to work for both. We will use ordinary least squares, ridge and lasso regression in our study of our data and do comparisons to try finding the optimal model for the different datasets.
@@ -402,46 +402,280 @@ We continue using the cross validation method to compute for which degree we get
 Above in figure \ref{fig:best_OLS} we see similar to figure \ref{fig:cv_comp} That we for a degree of 6 minimize the MSE for OLS regression. This means that if we want to compute the best possible prediction $\tilde{z}$ we should use a design matrix of degree 6.
 
 \subsubsection{Ridge and Lasso bias variance tradeoff}
-In the same way as for ordinary least squares we look at the bias variance tradeoff, only that we now have another parameter $\lambda$ that influences the tradeoff. Under in figure \ref{fig:ridge_tradeoff} we see the tradeoff for different choices of $\lambda$
+In the same way as for ordinary least squares we look at the bias variance tradeoff, only that we now have another parameter $\lambda$ that influences the tradeoff. Under in figure \ref{fig:ridge_tradeoff} and figure \ref{fig:lasso_tradeoff} we see the tradeoff for different choices of $\lambda$ for both Ridge and Lasso regression
 \begin{figure}[H]
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{../figures/tradeoff_RIDGE_1e-03.png}
-    \caption{}
-    \label{fig:}
-  \end{subfigure}
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{../figures/tradeoff_RIDGE_1e-04.png}
-    \caption{}
-    \label{fig:}
-  \end{subfigure}
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{../figures/tradeoff_RIDGE_1e-05.png}
-    \caption{}
-    \label{fig:}
-  \end{subfigure}
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{../figures/tradeoff_RIDGE_1e-06.png}
-    \caption{}
-    \label{fig:}
-  \end{subfigure}
   \begin{subfigure}{.5\textwidth}
     \centering
     \includegraphics[width=\textwidth]{../figures/tradeoff_RIDGE_1e-07.png}
     \caption{}
-    \label{fig:}
+    \label{fig:l_1e-07}
   \end{subfigure}
   \begin{subfigure}{.5\textwidth}
     \centering
     \includegraphics[width=\textwidth]{../figures/tradeoff_RIDGE_1e-08.png}
     \caption{}
+    \label{fig:l_1e-08}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/tradeoff_RIDGE_1e-09.png}
+    \caption{}
+    \label{fig:l_1e-09}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/tradeoff_RIDGE_1e-10.png}
+    \caption{}
+    \label{fig:l_1e-10}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/tradeoff_RIDGE_1e-11.png}
+    \caption{}
+    \label{fig:l_1e-11}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/tradeoff_RIDGE_1e-12.png}
+    \caption{}
+    \label{fig:l_1e-12}
+  \end{subfigure}
+  \caption{Bias variance tradeoff for different choices of lambda using Ridge regression for data with $n=30$ steps and noise standard deviation of $\sigma=0.2$}
+  \label{fig:ridge_tradeoff}
+\end{figure}
+\begin{figure}[H]
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/tradeoff_LASSO_1e-08.png}
+    \caption{}
+    \label{fig:l_1e-08}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/tradeoff_LASSO_1e-09.png}
+    \caption{}
+    \label{fig:l_1e-09}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/tradeoff_LASSO_1e-10.png}
+    \caption{}
+    \label{fig:l_1e-10}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/tradeoff_LASSO_1e-11.png}
+    \caption{}
+    \label{fig:l_1e-1}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/tradeoff_LASSO_1e-12.png}
+    \caption{}
+    \label{fig:l_1e-12}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/tradeoff_LASSO_1e-13.png}
+    \caption{}
+    \label{fig:l_1e-13}
+  \end{subfigure}
+  \caption{Bias variance tradeoff for different choices of lambda using Lasso regression for data with $n=30$ steps and noise standard deviation of $\sigma=0.2$}
+  \label{fig:lasso_tradeoff}
+\end{figure}
+When comparing the two above figures (\ref{fig:ridge_tradeoff} and \ref{fig:lasso_tradeoff}) of the bias variance tradeoff with the tradeoff for OLS in figure \ref{fig:bias_variance} we see that ridge and lasso are much less prone to a fast increasing variance for higher degrees. It is also clear that the lasso regression is even better at keeping the variance down than the ridge regression even for smaller $\lambda$ parameters. It is in other words clear that the dampning parameter $\lambda$ does a great job of reducing overfiting for both ridge and lasso regression.
+
+\subsubsection{Finding best models}
+We continue with analyzing the error of our models dependency of polynomial degree and choice of the parameter $\lambda$. To best show this for lasso and ridge regression a heatmap is shown in figure \ref{fig:heat_franke} below where cross validation with 5 $k$-folds has been used. Here we have polynomial degree on the x-axis and $\lambda$ on the y-axis togethere with the MSE in color following the colorbar to the right of the figures.
+\begin{figure}[H]
+
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/best_lambda_RIDGE_02.png}
+    \caption{Ridge regression}
     \label{fig:}
   \end{subfigure}
-  \caption{}
-  \label{fig:ridge_}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/best_lambda_LASSO_02.png}
+    \caption{Lasso regression}
+    \label{fig:}
+  \end{subfigure}
+  \caption{Heatmap of MSE for different choices of polynomial degree and $\lambda$. Here we have used cross validation with 5$k$-folds for data with $n=30$ steps and noise standard deviation of $\sigma=0.2$}
+  \label{fig:heat_franke}
+\end{figure}
+above in figure \ref{fig:heat_franke} we see a clear dependency of both $\lambda$ and polynomial degree for both ridge and lasso regression. Ridge aquires lower MSE for lower degrees than lasso which needs to be plotted up to a degree of 20 to finds an optimal degree of 18. MSE in the ridge plot is variating more when changing $\lambda$ than what we see for the lasso method. This corresponds to what we saw in the bias variance tradeoff in figure \ref{fig:ridge_tradeoff} and \ref{fig:lasso_tradeoff} where we saw almost no change for the lasso tradeoff for a changing $\lambda$. This together with figure \ref{fig:best_OLS} have given us a way of finding which model gives the most optimal results. This is shown in table \ref{tab:best_comp}.
+\begin{table}
+  \centering
+  \caption{Table of best parameters and the following MSE for OLS, Ridge and Lasso regression}
+  \label{tab:best_comp}
+  \begin{tabular}{|c||c|c|c|}
+    \hline
+    Method & $\lambda$ & Degree & $MSE$ \\
+    \hline
+    OLS &  & 6 & 0.0393 \\
+    \hline
+    RIDGE & $3.04\times10^{-8}$ & 6 & 0.0394 \\
+    \hline
+    LASSO & $8.53\times10^{-8}$ & 18 & 0.042 \\
+    \hline
+  \end{tabular}
+\end{table}
+We see from table \ref{tab:best_comp} very close results, espceially between OLS and Ridge regression. OLS beats Ridge with a slightly lower MSE while Lasso is still a bit behind them both.
+\subsubsection{Prediction plots}
+We use the results from table \ref{tab:best_comp} to show the predictions of our models in figure \ref{fig:pred_franke} below.
+\begin{figure}[H]
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/actual_data_franke_2.png}
+    \caption{Franke function}
+    \label{fig:pred_real}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/train_data_franke_2.png}
+    \caption{Train data from function data with added noise}
+    \label{fig:pred_train}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/test_data_franke_2.png}
+    \caption{Test data from function data with added noise}
+    \label{fig:pred_test}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/ols_pred_franke_2.png}
+    \caption{OLS prediction}
+    \label{fig:pred_ols}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/ridge_pred_franke_2.png}
+    \caption{Ridge prediction}
+    \label{fig:pred_ridge}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/lasso_pred_franke_2.png}
+    \caption{Lasso prediction}
+    \label{fig:pred_lasso}
+  \end{subfigure}
+  \caption{Plot of the true Franke function together with our train and test data, and our predictions for our optimal parameters shown in table \ref{tab:best_comp} }
+  \label{fig:pred_franke}
+\end{figure}
+We see that our predictions follow the general trend of the franke function shown in figure \ref{fig:pred_real}. We see small differences between the 3 different predictions \ref{fig:pred_ols}, \ref{fig:pred_ridge}, and \ref{fig:pred_lasso}, but it remains hard to tell which does the best prediction without looking at table \ref{tab:best_comp}. Our plots are also quite choppy as a result of the small test sample. Here we have again used $n=30$ steps and a standard deviation of $\sigma=0.2$ which leaves us with an even smaller test sample and following resuoulution in our prediction plots.
+\subsection{Topography data}
+We now look at real topography data and begin seeing how our predictions react to design matrices of different plynomial degree. We see in figure \ref{fig:mse_r2_real}
+\begin{figure}[H]
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/mse_deg_real.png}
+    \caption{}
+    \label{fig:}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/r2_deg_real.png}
+    \caption{}
+    \label{fig:}
+  \end{subfigure}
+  \caption{MSE and $R^2$ as a function of polynomial degree for OLS predction. Here we are using indexes of [100:141] where every second index are skipped.}
+  \label{fig:mse_r2_real}
+\end{figure}
+We see what seems like overfitting happining around a degree of 22 which is alot higher than what we saw for the franke function. This indicates that we need a more advanced function to describe our data.
+
+\subsubsection{Bias variance tradeoff}
+We perform the bias variance tradeoff for the three methods for a degree up to 25, and for ridge and lasso also different $\lambda$ parameters. OLS in figure \ref{fig:tradeoff_real}, Ridge in figure \ref{fig:ridge_tradeoff_real} and Lasso in figure \ref{fig:lasso_tradeoff_real}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.5\textwidth]{../figures/ols_real_tradeoff.png}
+  \caption{Bias variance tradeoff for the OLS method}
+  \label{fig:tradeoff_real}
+\end{figure}
+
+\begin{figure}[H]
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/tradeoff_RIDGE_1e-01real.png}
+    \caption{}
+    \label{fig:}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/tradeoff_RIDGE_1e-05real.png}
+    \caption{}
+    \label{fig:}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/tradeoff_RIDGE_1e-09real.png}
+    \caption{}
+    \label{fig:}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/tradeoff_RIDGE_1e-13real.png}
+    \caption{}
+    \label{fig:}
+  \end{subfigure}
+  \caption{Bias variance tradeoff for different choices of lambda using Ridge regression}
+  \label{fig:ridge_tradeoff_real}
+\end{figure}
+
+\begin{figure}[H]
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/tradeoff_LASSO_1e-01real.png}
+    \caption{}
+    \label{fig:}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/tradeoff_LASSO_1e-05real.png}
+    \caption{}
+    \label{fig:}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/tradeoff_LASSO_1e-09real.png}
+    \caption{}
+    \label{fig:}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/tradeoff_LASSO_1e-13real.png}
+    \caption{}
+    \label{fig:}
+  \end{subfigure}
+  \caption{Bias variance tradeoff for different choices of lambda using Ridge regression}
+  \label{fig:lasso_tradeoff_real}
+\end{figure}
+We see that OLS keeps a low variance until a degree of 19 while the bias generally stays low for degrees of around 8 and above. For Ridge and Lasso we see the same trend as for OLS with a decreasing bias for greater degrees. On the other hand we do not notice any significant increase in the variance for both lasso and Ridge which more clearly can be seen in the OLS tradeoff. We also see that both Lasso and Ridge keeps a low variance up to a degree of 25 for different values of $\lambda$ which means that the bias has the main responsibility for the MSE of these models.
+
+\subsection{Finding best models}
+
+\begin{figure}
+  \begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/best_lambda_OLS_00.png}
+    \caption{}
+    \label{fig:}
+  \end{subfigure}\\[1ex]
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/best_lambda_RIDGE_00.png}
+    \caption{}
+    \label{fig:}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/best_lambda_LASSO_00.png}
+    \caption{}
+    \label{fig:}
+  \end{subfigure}
+  \caption{Heatmap of MSE for different choices of polynomial degree and $\lambda$. Here we have used cross validation with 5$k$-folds for data of indexes [100:141] where every second index is skipped}
+  \label{fig:heat_real}
 \end{figure}
 \section{Discussion}
 \section{Conclusion}

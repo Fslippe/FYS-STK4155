@@ -90,7 +90,7 @@ def ridge_regression(X, z, lamda):
     beta = np.linalg.pinv(X.T @ X + lamda*np.eye(N)) @ X.T @ z
     return beta
 
-def lasso_regression(X, z, lamda, max_iter=int(1e3), tol=1e-2):
+def lasso_regression(X, z, lamda, max_iter=int(1e2), tol=1e-2):
     """
     Sklearns function for lasso regression to find beta
     Takes in:

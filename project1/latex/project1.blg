@@ -1,9 +1,5 @@
 [0] Config.pm:304> INFO - This is Biber 2.14 (beta)
 [0] Config.pm:307> INFO - Logfile is 'project1.blg'
-[43] biber:322> INFO - === Wed Oct  5, 2022, 21:18:34
-[51] Biber.pm:415> INFO - Reading 'project1.bcf'
-[90] Biber.pm:943> INFO - Found 0 citekeys in bib section 0
-[94] Utils.pm:293> WARN - The file 'project1.bcf' does not contain any citations!
-[99] bbl.pm:652> INFO - Writing 'project1.bbl' with encoding 'UTF-8'
-[99] bbl.pm:755> INFO - Output to project1.bbl
-[99] Biber.pm:128> INFO - WARNINGS: 1
+[36] biber:322> INFO - === Thu Oct  6, 2022, 14:22:03
+[43] Utils.pm:309> ERROR - project1.bcf is malformed, last biblatex run probably failed. Deleted project1.bbl
+[43] Biber.pm:132> INFO - ERRORS: 1
