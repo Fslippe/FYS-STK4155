@@ -16,15 +16,14 @@
 \BOOKMARK [3][-]{subsubsection.3.1.6}{Ridge and Lasso bias variance tradeoff}{subsection.3.1}% 16
 \BOOKMARK [3][-]{subsubsection.3.1.7}{Finding best models}{subsection.3.1}% 17
 \BOOKMARK [3][-]{subsubsection.3.1.8}{Prediction plots}{subsection.3.1}% 18
-\BOOKMARK [2][-]{subsection.3.2}{Topography data}{section.3}% 19
-\BOOKMARK [3][-]{subsubsection.3.2.1}{Bias variance tradeoff}{subsection.3.2}% 20
-\BOOKMARK [2][-]{subsection.3.3}{Finding best models}{section.3}% 21
-\BOOKMARK [3][-]{subsubsection.3.3.1}{Predictions}{subsection.3.3}% 22
-\BOOKMARK [1][-]{section.4}{Discussion}{}% 23
-\BOOKMARK [2][-]{subsection.4.1}{Scaling of data}{section.4}% 24
-\BOOKMARK [2][-]{subsection.4.2}{Splitting of data and overfitting}{section.4}% 25
-\BOOKMARK [2][-]{subsection.4.3}{Comparison of bootstrap and cross validation}{section.4}% 26
-\BOOKMARK [2][-]{subsection.4.4}{Choice of \040parameters}{section.4}% 27
-\BOOKMARK [2][-]{subsection.4.5}{Bias variance tradeoff}{section.4}% 28
-\BOOKMARK [1][-]{section.5}{Conclusion}{}% 29
-\BOOKMARK [1][-]{section.6}{}{}% 30
+\BOOKMARK [3][-]{subsubsection.3.1.9}{Bias variance tradeoff}{subsection.3.1}% 19
+\BOOKMARK [2][-]{subsection.3.2}{Finding best models}{section.3}% 20
+\BOOKMARK [3][-]{subsubsection.3.2.1}{Predictions}{subsection.3.2}% 21
+\BOOKMARK [1][-]{section.4}{Discussion}{}% 22
+\BOOKMARK [2][-]{subsection.4.1}{Scaling of data}{section.4}% 23
+\BOOKMARK [2][-]{subsection.4.2}{Splitting of data and overfitting}{section.4}% 24
+\BOOKMARK [2][-]{subsection.4.3}{Comparison of bootstrap and cross validation}{section.4}% 25
+\BOOKMARK [2][-]{subsection.4.4}{Choice of \040parameters}{section.4}% 26
+\BOOKMARK [2][-]{subsection.4.5}{Predictions}{section.4}% 27
+\BOOKMARK [1][-]{section.5}{Conclusion}{}% 28
+\BOOKMARK [1][-]{section.6}{}{}% 29

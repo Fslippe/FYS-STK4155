@@ -130,33 +130,62 @@ def compare_3d(x, y, z, noise, deg_ols, lmb_ridge, deg_ridge, lmb_lasso, deg_las
 
     plt.show()
 
+def compare_beta_lambda(x, y, z, lamda):
+    X = design_matrix(x, y, 5)
+    beta_ridge = np.zeros((len(lamda), X.shape[1]))
+    beta_lasso = np.zeros((len(lamda), X.shape[1]))
+    i=0
+    for lmb in lamda:
+        beta_ridge[i] = ridge_regression(X, z, lmb)
+        beta_lasso[i] = lasso_regression(X, z, lmb, max_iter=10000).coef_
+        i +=1
+
+    plt.plot(lamda, beta_ridge)
+    plt.title(r"Ridge $\beta$ for degree of 5")
+    plt.xlabel(r"$\lambda$")
+    plt.xscale("log")
+    plt.savefig("../figures/ridge_beta.png", dpi=300, bbox_inches='tight')
+
+    plt.show()
+    plt.plot(lamda, beta_lasso)
+    plt.title(r"Lasso $\beta$ for degree of 5")
+    plt.xlabel(r"$\lambda$")
+    plt.xscale("log")
+    plt.savefig("../figures/lasso_beta.png", dpi=300, bbox_inches='tight')
+
+    plt.show()
 
 def main():
     degree = 6
-    n = 30
+    n = 200
     std = 0.2
     maxdegree = 15
     x, y, z = make_data(n, std, seed=200)
     np.random.seed(200)
     noise = np.random.normal(0, std, size=(n+1,n+1)).ravel()
 
+    #compare_beta_lambda(x, y, z, np.logspace(-10, 1, 100))
+
     run_best_lambda_plots = False
     if run_best_lambda_plots:
         lmb, deg, mse = lamda_degree_MSE(x, y, z, "OLS", std, save=True, maxdegree=15)
-        lmb_ridge, deg_ridge, mse_ridge = lamda_degree_MSE(x, y, z, "RIDGE", std, save=True, maxdegree=15, lmb_min =-10, n_lmb=30)
-        #lmb_lasso, deg_lasso, mse_lasso = lamda_degree_MSE(x, y, z, "LASSO", std, save=True, maxdegree=20, lmb_min =-12, n_lmb=30)
+        lmb_ridge, deg_ridge, mse_ridge = lamda_degree_MSE(x, y, z, "RIDGE", std, save=True, maxdegree=15, lmb_min =-8, n_lmb=30)
+        lmb_lasso, deg_lasso, mse_lasso = lamda_degree_MSE(x, y, z, "LASSO", std, save=True, maxdegree=20, lmb_min =-12, n_lmb=30, max_iter=1000)
 
         print("OLS:", lmb, deg, mse)
         print("RIDGE:", lmb_ridge, deg_ridge, mse_ridge)
         print("LASSO:", lmb_lasso, deg_lasso, mse_lasso)
 
-    lmb_ridge = 3.039195382313195e-08
-    deg_ridge = 6
-    lmb_lasso = 8.531678524172797e-08
-    deg_lasso = 18
+    lmb_ridge = 1.6102620275609392e-07
+    deg_ridge = 8
+    mse_ridge = 0.03902354229755195
+    lmb_lasso = 1.0826367338740564e-09
+    deg_lasso = 19
+    mse_lasso = 0.04242593103561867
     deg_ols = 6
+    mse_ols = 0.03930695369808278
 
-    compare_3d(x, y, z, noise, deg_ols, lmb_ridge, deg_ridge, lmb_lasso, deg_lasso, name_add="franke_2")
+    compare_3d(x, y, z, noise, deg_ols, lmb_ridge, deg_ridge, lmb_lasso, deg_lasso, name_add="franke_extra")
 
     """BIAS VARIANCE TRADEOFF FOR BEST LAMDA"""
     #x, y, z = make_data(n, std, seed=100)#np.random.randint(101))

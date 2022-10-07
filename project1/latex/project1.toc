@@ -33,30 +33,28 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{\numberline {3.1.6}Ridge and Lasso bias variance tradeoff}{19}{subsubsection.3.1.6}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\numberline {3.1.7}Finding best models}{22}{subsubsection.3.1.7}%
+\contentsline {subsubsection}{\numberline {3.1.7}Finding best models}{23}{subsubsection.3.1.7}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\numberline {3.1.8}Prediction plots}{23}{subsubsection.3.1.8}%
+\contentsline {subsubsection}{\numberline {3.1.8}Prediction plots}{24}{subsubsection.3.1.8}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.2}Topography data}{25}{subsection.3.2}%
+\contentsline {subsubsection}{\numberline {3.1.9}Bias variance tradeoff}{28}{subsubsection.3.1.9}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\numberline {3.2.1}Bias variance tradeoff}{25}{subsubsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2}Finding best models}{30}{subsection.3.2}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.3}Finding best models}{27}{subsection.3.3}%
+\contentsline {subsubsection}{\numberline {3.2.1}Predictions}{32}{subsubsection.3.2.1}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\numberline {3.3.1}Predictions}{29}{subsubsection.3.3.1}%
+\contentsline {section}{\numberline {4}Discussion}{35}{section.4}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {4}Discussion}{32}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Scaling of data}{35}{subsection.4.1}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.1}Scaling of data}{32}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Splitting of data and overfitting}{35}{subsection.4.2}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.2}Splitting of data and overfitting}{32}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Comparison of bootstrap and cross validation}{36}{subsection.4.3}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.3}Comparison of bootstrap and cross validation}{33}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Choice of $\lambda $ parameters}{36}{subsection.4.4}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.4}Choice of $\lambda $ parameters}{33}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}Predictions}{37}{subsection.4.5}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.5}Bias variance tradeoff}{34}{subsection.4.5}%
+\contentsline {section}{\numberline {5}Conclusion}{38}{section.5}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {5}Conclusion}{34}{section.5}%
-\defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {6}}{34}{section.6}%
+\contentsline {section}{\numberline {6}}{38}{section.6}%

@@ -233,7 +233,7 @@ To futher investigate our model we implement the cross validation resampling met
 \end{figure}
 
 \subsection{Study of $\lambda$ dependence for ridge and lasso regression}
-To get the best possible predictions of our datasets we also implement lasso and ridge regression. These two methods are unlike OLS, dependent on a regularization parameter $\lambda$ where we have to compute which value that optimizes these two models. Similar to OLS we perform cross validation to find which degree of design matrix reduces the mean squared error of our predictions, only that we for ridge and lasso find the best $\lambda$ at the same time. This is because we for one degree would have one optimal $\lambda$ and for another degree have another. We therefore compute one cross validation for different values of $\lambda$ parameters for each degree. The degree and $\lambda$ giving the smallest MSE is then used for futher predictions
+To get the best possible predictions of our datasets we also implement lasso and ridge regression. These two methods are unlike OLS, dependent on a regularization parameter $\lambda$ where we have to compute which value that optimizes these two models. Similar to OLS we perform cross validation to find which degree of design matrix reduces the mean squared error of our predictions, only that we for ridge and lasso find the best $\lambda$ at the same time. This is because we for one degree would have one optimal $\lambda$ and for another degree have another. We therefore compute one cross validation for different values of $\lambda$ parameters for each degree. The degree and $\lambda$ giving the smallest MSE is then used for futher predictions. We also look into how different choices of $\lambda$ influences our $\beta$ parameters by plotting the parameters for different $\lambda$ parameters for a chosen design matrix of degree 5 .
 
 \subsection{Study of topography data}
 After studying the franke function with added noise we look at real topography data from the mountains close to Stavanger in Norway. We perform the same analysis as we did with the Franke function except that we now assume that our data already contain some noise $\epsilon \sim N(0, \sigma^2)$ with an unknown standard deviation $\sigma$. We first standard scale our data by subtracting the mean and dividing by the standard deviation computed from the data:
@@ -418,6 +418,25 @@ We continue using the cross validation method to compute for which degree we get
 Above in figure \ref{fig:best_OLS} we see similar to figure \ref{fig:cv_comp} That we for a degree of 6 minimize the MSE for OLS regression. This means that if we want to compute the best possible prediction $\tilde{z}$ we should use a design matrix of degree 6.
 
 \subsubsection{Ridge and Lasso bias variance tradeoff}
+We look into the $\beta$ parameters reaction to different choices of $\lambda$ seen under in figure \ref{fig:beta_lambda_rl}.
+\begin{figure}[H]
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/ridge_beta.png}
+    \caption{Ridge}
+    \label{fig:}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/lasso_beta.png}
+    \caption{Lasso}
+    \label{fig:}
+  \end{subfigure}
+  \caption{A comparison on how $\lambda$ influences the $\beta$ values between Ridge and Lasso regression}
+  \label{fig:beta_lambda_rl}
+\end{figure}
+We see a clear correlation between the magnitude of $\beta$ and the size of $\lambda$. We can also see that Lasso more quickly reduces $\beta$ to 0 while Ridge seem to allow larger values of $\beta$ exist for a larger values of $\lambda$.
+
 In the same way as for ordinary least squares we look at the bias variance tradeoff, only that we now have another parameter $\lambda$ that influences the tradeoff. Under in figure \ref{fig:ridge_tradeoff} and figure \ref{fig:lasso_tradeoff} we see the tradeoff for different choices of $\lambda$ for both Ridge and Lasso regression
 \begin{figure}[H]
   \begin{subfigure}{.5\textwidth}
@@ -521,7 +540,7 @@ We continue with analyzing the error of our models dependency of polynomial degr
   \label{fig:heat_franke}
 \end{figure}
 above in figure \ref{fig:heat_franke} we see a clear dependency of both $\lambda$ and polynomial degree for both ridge and lasso regression. Ridge aquires lower MSE for lower degrees than lasso which needs to be plotted up to a degree of 20 to finds an optimal degree of 18. MSE in the ridge plot is variating more when changing $\lambda$ than what we see for the lasso method. This corresponds to what we saw in the bias variance tradeoff in figure \ref{fig:ridge_tradeoff} and \ref{fig:lasso_tradeoff} where we saw almost no change for the lasso tradeoff for a changing $\lambda$. This together with figure \ref{fig:best_OLS} have given us a way of finding which model gives the most optimal results. This is shown in table \ref{tab:best_comp}.
-\begin{table}
+\begin{table}[H]
   \centering
   \caption{Table of best parameters and the following MSE for OLS, Ridge and Lasso regression}
   \label{tab:best_comp}
@@ -531,13 +550,13 @@ above in figure \ref{fig:heat_franke} we see a clear dependency of both $\lambda
     \hline
     OLS &  & 6 & 0.0393 \\
     \hline
-    RIDGE & $3.04\times10^{-8}$ & 6 & 0.0394 \\
+    RIDGE & $1.61\times10^{-7}$ & 6 & 0.0390 \\
     \hline
-    LASSO & $8.53\times10^{-8}$ & 18 & 0.042 \\
+    LASSO & $8.53\times10^{-8}$ & 19 & 0.0424 \\
     \hline
   \end{tabular}
 \end{table}
-We see from table \ref{tab:best_comp} very close results, espceially between OLS and Ridge regression. OLS beats Ridge with a slightly lower MSE while Lasso is still a bit behind them both.
+We see from table \ref{tab:best_comp} very close results, espceially between OLS and Ridge regression. Ridge barely beats OLS with a slightly lower MSE while Lasso is still a bit behind them both.
 \subsubsection{Prediction plots}
 We use the results from table \ref{tab:best_comp} to show the predictions of our models in figure \ref{fig:pred_franke} below.
 \begin{figure}[H]
@@ -581,7 +600,50 @@ We use the results from table \ref{tab:best_comp} to show the predictions of our
   \label{fig:pred_franke}
 \end{figure}
 We see that our predictions follow the general trend of the franke function shown in figure \ref{fig:pred_real}. We see small differences between the 3 different predictions \ref{fig:pred_ols}, \ref{fig:pred_ridge}, and \ref{fig:pred_lasso}, but it remains hard to tell which does the best prediction without looking at table \ref{tab:best_comp}. Our plots are also quite choppy as a result of the small test sample. Here we have again used $n=30$ steps and a standard deviation of $\sigma=0.2$ which leaves us with an even smaller test sample and following resuoulution in our prediction plots.
-\subsection{Topography data}
+
+To gain a better understanding of how our models perform we make predictions using the parameters from \ref{tab:best_comp} just with a greater data sample with $n=200$ steps.
+\begin{figure}[H]
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/actual_data_franke_extra.png}
+    \caption{Franke function}
+    \label{fig:extra_pred_real}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/train_data_franke_extra.png}
+    \caption{Train data from function data with added noise}
+    \label{fig:extra_pred_train}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/test_data_franke_extra.png}
+    \caption{Test data from function data with added noise}
+    \label{fig:extra_pred_test}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/ols_pred_franke_extra.png}
+    \caption{OLS prediction}
+    \label{fig:extra_pred_ols}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/ridge_pred_franke_extra.png}
+    \caption{Ridge prediction}
+    \label{fig:extra_pred_ridge}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/lasso_pred_franke_extra.png}
+    \caption{Lasso prediction}
+    \label{fig:extra_pred_lasso}
+  \end{subfigure}
+  \caption{Plot of the true Franke function together with our train and test data, and our predictions for our optimal parameters shown in table \ref{tab:best_comp} using $n=200$ steps and $\sigma=0.2$ }
+  \label{fig:extra_pred_franke}
+\end{figure}
+Figure \ref{fig:extra_pred_franke} gives us a better visual understanding of our predictions.
+
 We now look at real topography data and begin seeing how our predictions react to design matrices of different plynomial degree. We see in figure \ref{fig:mse_r2_real}
 \begin{figure}[H]
   \begin{subfigure}{.5\textwidth}
@@ -791,7 +853,7 @@ From the best parameters we found in figure \ref{fig:heat_real} we do prediction
     \caption{Lasso prediction}
     \label{fig:real_pred_lasso}
   \end{subfigure}
-  \caption{Plot of the true Franke function together with our train and test data, and our predictions for our optimal parameters shown in table \ref{tab:best_comp_real}}
+  \caption{Plot of our data together with our train and test data, and our predictions for our optimal parameters shown in table \ref{tab:best_comp_real}. Here is our datasize larger than what shown in figure \ref{fig:pred_real_skip} but from the same source to give a better visual understanding of our predictions.}
   \label{fig:pred_real}
 \end{figure}
 As we can see in figure \ref{fig:pred_real_skip} we get for all the regression methods low resoulution results. We see that using terrain data without skipping every second index as shown in figure \ref{fig:pred_real} gives us higher resolution. This gives us the possibility to see a greater difference between the three models, where we for OLS and Ridge can see that the small bumps in the furhterst corner in \ref{fig:real_pred_real} predicts these while lasso smooths them out to one top as seen in \ref{fig:real_pred_lasso}.
@@ -805,19 +867,20 @@ As we saw in figure \ref{fig:train_test_resample_mse} and \ref{fig:train_test_re
 When we look at the bias variance tradeoff in figure \ref{fig:bias_variance} we see the same trend as in figure \ref{fig:train_test_resample_mse}. A lower MSE for around a degree of 6 and a following increase for higher and lower degrees. What is interesting here is that we gain an insight in what is causing the errors at different degrees. As we described earlier in the method part of this report, the MSE is a function of the bias, variance and the standard deviation of the noise. From this it is expected that the higher bias coming from the simplification of the model for lower degrees is the main contributer to the error, and following we see how the increase in polynomial degree causes an increase in variance. This is a sign of overfitting showing how our model varies by training it with different datasets.
 
 \subsection{Comparison of bootstrap and cross validation}
-In our comparison between bootstrap and cross validation in figure \ref{fig:cv_comp} we saw a trend of bootstrap giving lower MSE for lower polynomial degrees while cross validation gave us lower MSE for higher degrees. When we compare the two choices of $k$-folds we see a smoother plot for 10 $k$-folds and otherwisea slightly lower MSE for 10 $k$-folds than for 5 for higher degrees. This means that a higher choce of $k$-folds when performing an analysis of best polynomial degree, could change our results for an optimal model to one with higher variance and lower bias. When continuing our analysis we have used a $k$-fold of 5 which means our models would favor a higher bias and lower variance. This is often a usefull choice when we have limited data which is the case for us. At the same time has research sugested that more advanced models which would be considered overfitted, also has a high accuracy on test data (\url{https://www.pnas.org/doi/10.1073/pnas.1903070116}). This means that we are left with a hard choice when choosing the right amount of $k$-folds in our cross validation. 
-
+In our comparison between bootstrap and cross validation in figure \ref{fig:cv_comp}, we saw a trend of bootstrap giving lower MSE for lower polynomial degrees while cross validation gave us lower MSE for higher degrees. When we compare the two choices of $k$-folds we see a smoother plot for 10 $k$-folds and otherwisea slightly lower MSE for higher degrees. This means that a higher choce of $k$-folds when performing an analysis of best polynomial degree, could change our results for an optimal model to one with higher variance and lower bias. When continuing our analysis we have used a $k$-fold of 5 which means our models would favor a higher bias and lower variance. This is often a usefull choice when we have limited data which is the case for us. At the same time has research sugested that more advanced models which would be considered overfitted, also has a high accuracy on test data (\url{https://www.pnas.org/doi/10.1073/pnas.1903070116}). This means that we are always left with a hard choice when choosing the right amount of $k$-folds in our cross validation, which means this is an interesting topic for futher research.
 
 \subsection{Choice of $\lambda$ parameters}
-A futher inaccuracy in the results from our models may also have come from our choice of $\lambda$ parameters we tested for. Here is both the amount of parameters and the interval of parameteres we tested for a possible error to our methods. For example could a $\lambda$ we did not test for make the Lasso method the method with best predictions for the Franke function. This means that there are a great room for improvement in our choice of $\lambda$ parameters, but in the end will the right choice of $\lambda$ forever be a question while we will always be stricted on the computational power we have at hand.
+A futher inaccuracy in the results from our models may have come from our choice of $\lambda$ parameters we tested for. Here is both the amount of parameters and the interval of parameteres we tested for a possible error to our methods. For example could a $\lambda$ we did not test for make the Lasso method the method with best predictions for the Franke function. This means that there are a great room for improvement in our choice of $\lambda$ parameters, but in the end will the right choice of $\lambda$ forever be a question while we will always be stricted on the computational power we have at hand.
 
-\subsection{Bias variance tradeoff}
+\subsection{Predictions}
+For the Franke function we found that Ridge barely gave us the prediction with the lowest MSE right in front of OLS, which as disscussed earlier could have been the other way around if tested for different $\lambda$ parameters. We also saw in figure \ref{fig:heat_franke} that we have different axis of both $\lambda$ and polynomial degrees as a result of the Lasso regression generally requiring both lower values of $\lambda$ and higher polynomial degrees to do its best predictions. We saw this quite clear in figure \ref{fig:beta_lambda_rl}, and is a result of the Lasso method being more aggressive when regularizing the $\beta$ parameters by easily putting them to 0 in contridiction to Ridge which has its parameters following a function of $\lambda$. This means that we could have higher polynomial degrees because the parameters that for another method would get big, may for Lasso go towards 0. For Ridge it may go towards a small number but never 0. This means that overfitting would not happen as quick for higher polynomial degrees for the Lasso method.
 
+In \ref{fig:extra_pred_franke} we madde futher predictions on a new dataset starting with the optimal parameters found in table \ref{tab:best_comp} to get a better visual understanding of our predictions. Here we have not stored the beta parameters computed earlier for $n=30$ which means that new parameters have been computed. This is typically not what you would do in a real world scenario when you gain new data to test for. For this increase in steps to $n=200$ it would be beneficial of finding new optimal parameters which would because of an increase in sample size end up making better predictions. This plot does in other words not tell us anything special but rather show us that the parameters found in \ref{tab:best_comp} would give us a good understanding of where we should start with our analysis given a new and bigger dataset from the same source.
 
-
-
+What discusse above is also valid for our plot \ref{pred_real} which means these also are left as nice visualization of our predictions. Futhermore is our predictions in this case not made based on some function with some large noise. This means that our predictions may be worse than our initial data at describing the topography depending on how accurate our topography messurements are. For sea level height data messured by remote sensing it is found that uncertainties in messurements of local change in sea level height are as low as 0.062mm/year \url{https://doi.org/10.1038/s41597-020-00786-7} which leaves us to believe that similar surface height messurements of topography has an uncertainty of the same scale. This means that the predictions performed on our topography data serves only as a study of how different regression methods predicts and reacts to different input data. """""What woulds be interesting is to see if a trained model on one surface could help to make prediction on another where there is less available data or of lower quality"""""
 
 \section{Conclusion}
+In total just a method study
 \begin{itemize}
   \item få orden på hvordan bootstrap fungerer
   \item trene på et område og predikere et annet
