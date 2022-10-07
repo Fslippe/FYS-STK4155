@@ -51,14 +51,14 @@ def compare_crossval_bootstrap(x, y, z, maxdegree, k_folds, n_B, method, lamda=1
     plt.plot(poly, mse_B, label="Bootstrap")
     plt.plot(poly, mse_cv, label="Cross validation")
     plt.legend()
-    #plt.savefig("../figures/boot_cv_comp_%s_%i_%i.png" %(method, n_B, k_folds), dpi=300, bbox_inches='tight')
+    plt.savefig("../figures/boot_cv_comp_%s_%i_%i.png" %(method, n_B, k_folds), dpi=300, bbox_inches='tight')
     plt.show()
 
 def main():
     degree = 5
     n = 30
     std = 0.2
-    k_folds = 10
+    k_folds = 5
     maxdegree = 15
     n_B = 100
     x, y, z = make_data(n, std, seed=200)#np.random.randint(101))

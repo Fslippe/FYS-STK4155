@@ -22,7 +22,9 @@
 \BOOKMARK [3][-]{subsubsection.3.3.1}{Predictions}{subsection.3.3}% 22
 \BOOKMARK [1][-]{section.4}{Discussion}{}% 23
 \BOOKMARK [2][-]{subsection.4.1}{Scaling of data}{section.4}% 24
-\BOOKMARK [2][-]{subsection.4.2}{Choice of \040parameters}{section.4}% 25
-\BOOKMARK [2][-]{subsection.4.3}{Bias variance tradeoff}{section.4}% 26
-\BOOKMARK [1][-]{section.5}{Conclusion}{}% 27
-\BOOKMARK [1][-]{section.6}{}{}% 28
+\BOOKMARK [2][-]{subsection.4.2}{Splitting of data and overfitting}{section.4}% 25
+\BOOKMARK [2][-]{subsection.4.3}{Comparison of bootstrap and cross validation}{section.4}% 26
+\BOOKMARK [2][-]{subsection.4.4}{Choice of \040parameters}{section.4}% 27
+\BOOKMARK [2][-]{subsection.4.5}{Bias variance tradeoff}{section.4}% 28
+\BOOKMARK [1][-]{section.5}{Conclusion}{}% 29
+\BOOKMARK [1][-]{section.6}{}{}% 30

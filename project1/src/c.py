@@ -13,7 +13,7 @@ from sklearn.linear_model import LinearRegression
 from functions import *
 plt.rcParams.update({"font.size": 16})
 
-def bias_variance_tradeoff(franke=True, x=None, y=None, z=None, n=22, std=0.2, mindegree=0, maxdegree=15, n_B=100, plot=True, method="OLS", lamda=1, show=True, seed=200, save=False):
+def bias_variance_tradeoff(franke=True, x=None, y=None, z=None, n=30, std=0.2, mindegree=0, maxdegree=15, n_B=100, plot=True, method="OLS", lamda=1, show=True, seed=200, save=False):
     """
     Calculates the bias variance tradeoff using bootstrap and OLS
     Takes in

@@ -366,11 +366,11 @@ We see an increase in distance between the $\beta$ parameteres for an increasing
 
 \subsubsection{OLS bias variance tradeoff}
 
-To futher analyze our models dependence on polynomial degree we have a plot of the bias variance tradeoff in figure \ref{fig:bias_variance} for a degree up to 15 using $n=22$ steps and a noise standard deviation of $\sigma=0.2$.
+To futher analyze our models dependence on polynomial degree we have a plot of the bias variance tradeoff in figure \ref{fig:bias_variance} for a degree up to 15 using $n=30$ steps and a noise standard deviation of $\sigma=0.2$.
 \begin{figure}[H]
   \centering
   \includegraphics[width=.7\textwidth]{../figures/bias_variance_tradeoff.png}
-  \caption{The bias variance tradeoff for the Franke function using 100 bootstrap iteration together with $n=22$ steps and a noise standard deviation of $\sigma=0.2$}
+  \caption{The bias variance tradeoff for the Franke function using 100 bootstrap iteration together with $n=30$ steps and a noise standard deviation of $\sigma=0.2$}
   \label{fig:bias_variance}
 \end{figure}
 We se above in figure \ref{fig:bias_variance} areas of both high variance and low bias and low variance and relative high bias. We also see that the area of lowest MSE for a degree of 6 is where both the bias and variance together is at their lowest. A futher increase in polynomial degree gives mostly a variance dominated error contribution while we at lower polynomial degrees see that the bias is what contributes the most to the error. When we look at figure \ref{fig:bias_variance_100} we see another trend especially for higher polynomial degrees. Here the variance stays low which may together with the low mse indicate that we dont as easy overfit our data when we have more of it at hand.
@@ -799,6 +799,15 @@ As we can see in figure \ref{fig:pred_real_skip} we get for all the regression m
 \subsection{Scaling of data}
 Our result from our compairison between scaled and non-scaled data from the Franke function (\ref{fig:compare_scale}) showed that a futher scaling was unnecesary. This choice of not scaling could have made our results inaccurate, escpecially for Ridge and Lasso regression where the magnitude of the coefficient for one variable is dependent on the magnitude of that variable. We see in figure \ref{fig:compare_scale} that this may espceially be true for design matrices of higher degrees where the differences between scaled and non-scaled data in both MSE and $R^2$ decreases. For models like Ridge and Lasso which have a regularization that makes higher polynomial degrees more favorable would threfefore expecially take an accuracy hit for the choice of not scaling. For our topography data we ended up scaling our $z$-values but not our chosen design matrix with $x,y\in [0,1]$. This may also similar to our Franke function have given us an unnecesary amount of implications while using SciKit learns lasso implementation. Here we saw a convergence problem in our code, which could have been avoided by scaling of our data. An increase in the number of maximum iterations for the Lasso method is also a solution to fix the convergence problem but at a great cost of computation time. Without a powerful enough computer we were stricted to either choose a maximum number of iterations to 100 or 1000 which may be an explanation to why the lasso method performed worse for both the Franke function \ref{tab:best_comp} and especially for real data \ref{tab:best_comp_real}.
 
+\subsection{Splitting of data and overfitting}
+As we saw in figure \ref{fig:train_test_resample_mse} and \ref{fig:train_test_resample_r2}, it is clear that we for higher degrees start seeing overfitting. Here it is important to notice that our plots are a result of pulling more samples from the same distribution, which is not what we normaly can perform in a real life scenario. These figures serves therefore only a purpose of showing how we will always gain a lower MSE by only using our train data. This is the main reason why we perform a train-test split of our data when performing all our analysis. That means we will not only adjust our model to fit the data we have at hand, but also predict other data which comes from the same source. The test data serves therfore the purpose of reducing overfitting.
+
+When we look at the bias variance tradeoff in figure \ref{fig:bias_variance} we see the same trend as in figure \ref{fig:train_test_resample_mse}. A lower MSE for around a degree of 6 and a following increase for higher and lower degrees. What is interesting here is that we gain an insight in what is causing the errors at different degrees. As we described earlier in the method part of this report, the MSE is a function of the bias, variance and the standard deviation of the noise. From this it is expected that the higher bias coming from the simplification of the model for lower degrees is the main contributer to the error, and following we see how the increase in polynomial degree causes an increase in variance. This is a sign of overfitting showing how our model varies by training it with different datasets.
+
+\subsection{Comparison of bootstrap and cross validation}
+In our comparison between bootstrap and cross validation in figure \ref{fig:cv_comp} we saw a trend of bootstrap giving lower MSE for lower polynomial degrees while cross validation gave us lower MSE for higher degrees. When we compare the two choices of $k$-folds we see a smoother plot for 10 $k$-folds and otherwisea slightly lower MSE for 10 $k$-folds than for 5 for higher degrees. This means that a higher choce of $k$-folds when performing an analysis of best polynomial degree, could change our results for an optimal model to one with higher variance and lower bias. When continuing our analysis we have used a $k$-fold of 5 which means our models would favor a higher bias and lower variance. This is often a usefull choice when we have limited data which is the case for us. At the same time has research sugested that more advanced models which would be considered overfitted, also has a high accuracy on test data (\url{https://www.pnas.org/doi/10.1073/pnas.1903070116}). This means that we are left with a hard choice when choosing the right amount of $k$-folds in our cross validation. 
+
+
 \subsection{Choice of $\lambda$ parameters}
 A futher inaccuracy in the results from our models may also have come from our choice of $\lambda$ parameters we tested for. Here is both the amount of parameters and the interval of parameteres we tested for a possible error to our methods. For example could a $\lambda$ we did not test for make the Lasso method the method with best predictions for the Franke function. This means that there are a great room for improvement in our choice of $\lambda$ parameters, but in the end will the right choice of $\lambda$ forever be a question while we will always be stricted on the computational power we have at hand.
 
@@ -810,6 +819,7 @@ A futher inaccuracy in the results from our models may also have come from our c
 
 \section{Conclusion}
 \begin{itemize}
+  \item få orden på hvordan bootstrap fungerer
   \item trene på et område og predikere et annet
 \end{itemize}
 \section{}

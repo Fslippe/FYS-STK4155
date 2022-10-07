@@ -49,10 +49,14 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {4.1}Scaling of data}{32}{subsection.4.1}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.2}Choice of $\lambda $ parameters}{32}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.2}Splitting of data and overfitting}{32}{subsection.4.2}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.3}Bias variance tradeoff}{33}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.3}Comparison of bootstrap and cross validation}{33}{subsection.4.3}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {5}Conclusion}{33}{section.5}%
+\contentsline {subsection}{\numberline {4.4}Choice of $\lambda $ parameters}{33}{subsection.4.4}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {6}}{33}{section.6}%
+\contentsline {subsection}{\numberline {4.5}Bias variance tradeoff}{34}{subsection.4.5}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {5}Conclusion}{34}{section.5}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {6}}{34}{section.6}%
