@@ -64,9 +64,10 @@ def MSE_R2_2(x, y, z, maxdegree, scaler, method):
 # Load the terrain
 def main():
     terrain = imread('../data/SRTM_data_Norway_1.tif')
-    print(np.shape(terrain))
     n = 20
     n_skip = 2
+    #n = 40
+    #n_skip = 1
     std = 0
     maxdegree = 25
     n_B = 100
@@ -74,39 +75,41 @@ def main():
     np.random.seed(200)
     noise = 0 #np.random.normal(0, std, size=(n+1,n+1))
     x, y, z = make_data(n*n_skip, std)
+
     x = x[1::n_skip]
     y = y[1::n_skip]
     z = (terrain + noise*np.mean(terrain)).ravel()
     mean_scale = np.mean(z)
     std_scale = np.std(z)
     z_scaled = (z - mean_scale)/std_scale
+    print(np.max(z_scaled))
+    run_best_lambda = False
+    run_tradeoff = False
+    run_mse_r2 = False
 
-    mse, r2 = MSE_R2_2(x, y, z, maxdegree, "STANDARD", "OLS")
-    #plot_MSE(mse, save="mse_deg_real")
-    #plot_R2(r2, save="r2_deg_real")
+    if run_mse_r2:
+        mse, r2 = MSE_R2_2(x, y, z, maxdegree, "STANDARD", "OLS")
+        plot_MSE(mse, save="mse_deg_real")
+        plot_R2(r2, save="r2_deg_real")
 
-    #bias_variance_tradeoff(franke=False, x=x, y=y, z=z_scaled, maxdegree=maxdegree, method="OLS", lamda=1, show=True, save="ols_real_tradeoff")
-    plt.show()
-    lamda = np.logspace(-13, -1, 4)
-
-    #bias_variance_lamda(n, std, maxdegree, n_B, "RIDGE", lamda, "real", False, x, y, z_scaled)
-    #plt.show()
-    lamda = np.logspace(-13, -1, 4)
-
-    bias_variance_lamda(n, std, maxdegree, n_B, "LASSO", lamda, "real", False, x, y, z_scaled)
-    plt.show()
-    run_best_lambda = True
+    if run_tradeoff:
+        bias_variance_tradeoff(franke=False, x=x, y=y, z=z_scaled, maxdegree=maxdegree, method="OLS", lamda=1, show=True, save="ols_real_tradeoff")
+        plt.show()
+        lamda = np.logspace(-13, -1, 4)
+        bias_variance_lamda(n, std, maxdegree, n_B, "RIDGE", lamda, "real", False, x, y, z_scaled)
+        plt.show()
+        bias_variance_lamda(n, std, maxdegree, n_B, "LASSO", lamda, "real", False, x, y, z_scaled)
+        plt.show()
 
     if run_best_lambda:
         lmb_ols, deg_ols, mse_ols = lamda_degree_MSE(x, y, z_scaled, "OLS", std, n_lmb = 1, maxdegree = maxdegree, k_folds = 5, max_iter = 100, save=False)
-        lmb_ridge, deg_ridge, mse_ridge = lamda_degree_MSE(x, y, z_scaled, "RIDGE", std, n_lmb = 20, maxdegree = maxdegree, k_folds = 5, max_iter = 100, save=False, lmb_min=-13, lmb_max=-3)
-        lmb_lasso, deg_lasso, mse_lasso = lamda_degree_MSE(x, y, z_scaled, "LASSO", std, n_lmb = 20, maxdegree = maxdegree, k_folds = 5, max_iter = 100, save=False, lmb_min=-13, lmb_max=-3)
         print("OLS:", lmb_ols, deg_ols, mse_ols)
+        lmb_ridge, deg_ridge, mse_ridge = lamda_degree_MSE(x, y, z_scaled, "RIDGE", std, n_lmb = 20, maxdegree = maxdegree, k_folds = 5, max_iter = 100, save=False, lmb_min=-13, lmb_max=-3)
         print("RIDGE:", lmb_ridge, deg_ridge, mse_ridge)
+        lmb_lasso, deg_lasso, mse_lasso = lamda_degree_MSE(x, y, z_scaled, "LASSO", std, n_lmb = 20, maxdegree = 32, k_folds = 5, max_iter = 1000, save=True, lmb_min=-14, lmb_max=-3)
         print("LASSO:", lmb_lasso, deg_lasso, mse_lasso)
 
     else:
-
         deg_ols = 19
         mse_ols = 0.010703657377970114
 
@@ -114,18 +117,12 @@ def main():
         deg_ridge = 20
         mse_ridge = 0.009997042109663854
 
-        lmb_lasso = 1.6237767391887177e-09
-        deg_lasso = 22
-        mse_lasso = 0.11060598506946814
+        lmb_lasso = 1.1288378916846884e-10
+        deg_lasso = 29
+        mse_lasso = 0.068238282615363
 
-    compare_3d(x, y, z_scaled, 0, deg_ols, lmb_ridge, deg_ridge, lmb_lasso, deg_lasso, name_add="test_2", std=std_scale, mean=mean_scale)
+    compare_3d(x, y, z_scaled, 0, deg_ols, lmb_ridge, deg_ridge, lmb_lasso, deg_lasso, name_add="n40", std=std_scale, mean=mean_scale, azim=60)
 
-    lamda = np.logspace(2, 2, 1)
-    n_B = 20
-    bias_variance_lamda(n, std, maxdegree, n_B, "RIDGE", lamda, "real", False, x, y, z_scaled)
-    plt.show()
-    bias_variance_lamda(n, std, maxdegree, n_B, "LASSO", lamda, "real", False, x, y, z_scaled)
-    plt.show()
 
 
 

@@ -78,7 +78,7 @@ def lamda_degree_MSE(x, y, z, method, std, n_lmb = 50, maxdegree = 15, k_folds =
         return lamda[argmin], degree[argmin], mse[argmin]
 
 
-def compare_3d(x, y, z, noise, deg_ols, lmb_ridge, deg_ridge, lmb_lasso, deg_lasso, name_add="franke", std=1, mean=0):
+def compare_3d(x, y, z, noise, deg_ols, lmb_ridge, deg_ridge, lmb_lasso, deg_lasso, name_add="franke", std=1, mean=0, azim=50):
     """
     Plots 3D surface for OLS, RIDGE and LASSO regression for the chosen degrees
     and lambdas. Saves the files giving a total of 6 plots.
@@ -115,17 +115,17 @@ def compare_3d(x, y, z, noise, deg_ols, lmb_ridge, deg_ridge, lmb_lasso, deg_las
     beta = OLS(X_train, z_train)
     z_pred_OLS =  (X_test @ beta)*std + mean
 
-    plot_3d_trisurf(x_test, y_test, z_test*std + mean , azim=50, title="Test data")
+    plot_3d_trisurf(x_test, y_test, z_test*std + mean , azim=azim, title="Test data")
     plt.savefig("../figures/test_data_%s.png" %(name_add), dpi=300, bbox_inches='tight')
-    plot_3d_trisurf(x_train, y_train, z_train*std + mean , azim=50, title="Train data")
+    plot_3d_trisurf(x_train, y_train, z_train*std + mean , azim=azim, title="Train data")
     plt.savefig("../figures/train_data_%s.png" %(name_add), dpi=300, bbox_inches='tight')
-    plot_3d_trisurf(x.ravel(), y.ravel(), z_true, azim=50, title="Actual data")
+    plot_3d_trisurf(x.ravel(), y.ravel(), z_true, azim=azim, title="Actual data")
     plt.savefig("../figures/actual_data_%s.png" %(name_add), dpi=300, bbox_inches='tight')
-    plot_3d_trisurf(x_test, y_test, z_pred_ridge, azim=50, title="Ridge predict")
+    plot_3d_trisurf(x_test, y_test, z_pred_ridge, azim=azim, title="Ridge predict")
     plt.savefig("../figures/ridge_pred_%s.png" %(name_add), dpi=300, bbox_inches='tight')
-    plot_3d_trisurf(x_test, y_test, z_pred_lasso, azim=50, title="Lasso predict")
+    plot_3d_trisurf(x_test, y_test, z_pred_lasso, azim=azim, title="Lasso predict")
     plt.savefig("../figures/lasso_pred_%s.png" %(name_add), dpi=300, bbox_inches='tight')
-    plot_3d_trisurf(x_test, y_test, z_pred_OLS, azim=50, title="OLS predict")
+    plot_3d_trisurf(x_test, y_test, z_pred_OLS, azim=azim, title="OLS predict")
     plt.savefig("../figures/ols_pred_%s.png" %(name_add), dpi=300, bbox_inches='tight')
 
     plt.show()

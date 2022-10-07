@@ -83,7 +83,23 @@ The ordinary least squares gives us an aproximation to the above equation where 
 \begin{align*}
   \boldsymbol{\tilde{z}} = \boldsymbol{X}\boldsymbol{\beta}
 \end{align*}
-for a chosen design matrix $\boldsymbol{X}$ of some degree $n$.
+for a chosen design matrix $\boldsymbol{X}$ of some degree $N$ with the dimensions $(n+1)\times (N+1)(N+2)/2$ and $\beta$ with the dimensions $(N+1)(N+2)/2$ for our case where we choose a design matrix to follow a $x$ and $y$ dependent polynomial on the form:
+\begin{align*}
+  \boldsymbol{X} = \begin{bmatrix}
+    1 & x_0 & y_0 & x_0^2 & x_0y_0 & y_0^2 & \hdots &x_0^N & y_0^N \\
+    1 & x_1 & y_1 & x_1^2 & x_1y_1 & y_1^2 &\hdots& x_1^N & y_1^N \\
+    \vdots & \vdots & \vdots & \vdots & \vdots &\vdots & &\vdots & \vdots \\
+    1 & x_n & y_n & x_n^2 & x_ny_n & y_n^2 &\hdots& x_n^N & y_n^N
+\end{bmatrix}
+, \quad
+\boldsymbol{\beta} =
+\begin{bmatrix}
+  \beta_0 \\
+  \beta_1 \\
+  \vdots \\
+  \beta_n
+\end{bmatrix}
+\end{align*}
 
 This approximation gives us a new way of describing our dataset in terms of $\boldsymbol{\tilde{z}}$ instead of $f(\boldsymbol{x})$.
 \begin{align*}
@@ -150,7 +166,7 @@ For a matrix $A$ we have Var$(\boldsymbol{AX}+b) = \boldsymbol{A}\text{Var}(\bol
 This we can use to compute the optimal $\beta$ and in turn give us a OLS prediction for our real function $f$.
 
 \subsection{Splitting and scaling of data}
-A central part of regression analysis is to scale and split our data to avoid both overfitting and avoid the MSE to contain the intercept. In our case of the Franke function we have $x,y \in [0,1]$ and follwing $z$ data on the same order which may indicate that a scaling is unessecary. This expectation comes from that our data does not include any extreme values of any other order that may greatly negativly incluence our predictors. In other words scaling of data is normaly what we do to get the data as equal to each other as our Franke data already is. To test if this expectation is valid, we test this and compare our non-scaled data to mean scaled data where we have subtracted the mean.
+A central part of regression analysis is to scale and split our data to avoid both overfitting and avoid the MSE to contain the intercept. In our case of the Franke function we have $x,y \in [0,1]$ and follwing $z$ data on the same order which may indicate that a scaling is unessecary. This expectation comes from that our data does not include any extreme values of any other order that may greatly negativly incluence our predictors. In other words scaling of data is normaly what we do to get the data as equal to each other as our Franke data already is. To test if this expectation is valid, we test this and compare our non-scaled data to mean scaled data where we have subtracted the mean. We do not perform a normal standard scale because this would increase our values because of the standard deviation of data between 0 and 1 is less than 1.
 
 To avoid overfitting we perform a 80-20 percent split into train and test data. We use the train data to train the model or in other words find the $\beta$ parameters. To predict we use the trained model together with the test data which leaves us with a more generalized prediction not only working for the data we have at hand, but also other data coming from the same source. This can be explained by for example a model trained so well with a design matrix $\boldsymbol{X}$ of an infinite degree that its prediction follows every noisy outlier. This woulds match the data at hand very well and give us an extremly low MSE, but give us high MSE for new data which were not used to train the model. To test this we look at both MSE and R squared for predictions for $\boldsymbol{X}$ of different degrees using only train data compared to predictions made using both train and test data.
 
@@ -654,32 +670,148 @@ We perform the bias variance tradeoff for the three methods for a degree up to 2
 We see that OLS keeps a low variance until a degree of 19 while the bias generally stays low for degrees of around 8 and above. For Ridge and Lasso we see the same trend as for OLS with a decreasing bias for greater degrees. On the other hand we do not notice any significant increase in the variance for both lasso and Ridge which more clearly can be seen in the OLS tradeoff. We also see that both Lasso and Ridge keeps a low variance up to a degree of 25 for different values of $\lambda$ which means that the bias has the main responsibility for the MSE of these models.
 
 \subsection{Finding best models}
-
+To find the optimal model we do as for the Franke function plot a heatmap to find for which $\lambda$ and degree we get the lowest MSE as seen in figure \ref{fig:heat_real}
 \begin{figure}
   \begin{subfigure}{\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{../figures/best_lambda_OLS_00.png}
-    \caption{}
-    \label{fig:}
+    \includegraphics[width=.5\textwidth]{../figures/best_lambda_OLS_00.png}
+    \caption{OLS}
+    \label{fig:best_ols_real}
   \end{subfigure}\\[1ex]
   \begin{subfigure}{.5\textwidth}
     \centering
     \includegraphics[width=\textwidth]{../figures/best_lambda_RIDGE_00.png}
-    \caption{}
-    \label{fig:}
+    \caption{Ridge}
+    \label{fig:best_ridge_real}
   \end{subfigure}
   \begin{subfigure}{.5\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{../figures/best_lambda_LASSO_00.png}
-    \caption{}
-    \label{fig:}
+    \includegraphics[width=\textwidth]{../figures/best_lambda_LASSO_1000iter.png}
+    \caption{Lasso}
+    \label{fig:best_lasso_real}
   \end{subfigure}
   \caption{Heatmap of MSE for different choices of polynomial degree and $\lambda$. Here we have used cross validation with 5$k$-folds for data of indexes [100:141] where every second index is skipped}
   \label{fig:heat_real}
 \end{figure}
-\section{Discussion}
-\section{Conclusion}
+We see in \ref{fig:best_ols_real} that the OLS generaly gives low MSE from around a degree of 12 until a degree of 25 where the MSE blows up. For Ridge in \ref{fig:best_ridge_real} we see that a quite low $\lambda$ is required together with a degree of at least 12. In total the parameter $\lambda =3.79 \times 10^{-12}$ together with a degree of 20 ends up giving the lowest MSE. For Lasso in figure \ref{fig:best_lasso_real} we see that the model is not so strict on what $\lambda$ it takes in but rather the degree. We see lower MSE from a degree of 18 and up which matched with a $\lambda$ in the interval [$10^{-3}$, $10^{-13}$] would give low MSE. In total we see that a degree of 22 together with a parameter $\lambda=1.62\times10^{-9}$ gives the lowest MSE. The best parameters, degrees and MSEs can be seen under in table \ref{tab:best_comp_real}
+\begin{table}[H]
+  \centering
+  \caption{Table of best parameters and the following MSE for OLS, Ridge and Lasso regression}
+  \label{tab:best_comp_real}
+  \begin{tabular}{|c||c|c|c|}
+    \hline
+    Method & $\lambda$ & Degree & $MSE$ \\
+    \hline
+    OLS &  & 19 & 0.0107 \\
+    \hline
+    RIDGE & $3.79\times10^{-12}$ & 20 & 0.0100 \\
+    \hline
+    LASSO & $8.86\times10^{-6}$ & 29 & 0.0680 \\
+    \hline
+  \end{tabular}
+\end{table}
 
+\subsubsection{Predictions}
+From the best parameters we found in figure \ref{fig:heat_real} we do predictions and plot them as seen in figure \ref{fig:pred_real_skip}. To plot a smoother surface we can also use the same parameters as seen in table \ref{tab:best_comp_real} without skipping every second step in the terrain data. This gives us more datapoints to work with and gives us the plot seen in figure \ref{fig:pred_real}.
+\begin{figure}[H]
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/actual_data_n40_skip2.png}
+    \caption{Full data before split}
+    \label{fig:real_pred_real_skip}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/train_data_n40_skip2.png}
+    \caption{Train data from function data with added noise}
+    \label{fig:real_pred_train_skip}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/test_data_n40_skip2.png}
+    \caption{Test data from function data with added noise}
+    \label{fig:real_pred_test_skip}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/ols_pred_n40_skip2.png}
+    \caption{OLS prediction}
+    \label{fig:real_pred_ols_skip}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/ridge_pred_n40_skip2.png}
+    \caption{Ridge prediction}
+    \label{fig:real_pred_ridge_skip}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/lasso_pred_n40_skip2.png}
+    \caption{Lasso prediction}
+    \label{fig:real_pred_lasos_skip}
+  \end{subfigure}
+  \caption{Plot of our data together with our train and test data, and our predictions for our optimal parameters shown in table \ref{tab:best_comp_real} }
+  \label{fig:pred_real_skip}
+\end{figure}
+
+\begin{figure}[H]
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/actual_data_n40.png}
+    \caption{Full data before split}
+    \label{fig:real_pred_real}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/train_data_n40.png}
+    \caption{Train data from function data with added noise}
+    \label{fig:real_pred_train}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/test_data_n40.png}
+    \caption{Test data from function data with added noise}
+    \label{fig:real_pred_test}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/ols_pred_n40.png}
+    \caption{OLS prediction}
+    \label{fig:real_pred_ols}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/ridge_pred_n40.png}
+    \caption{Ridge prediction}
+    \label{fig:real_pred_ridge}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../figures/lasso_pred_n40.png}
+    \caption{Lasso prediction}
+    \label{fig:real_pred_lasso}
+  \end{subfigure}
+  \caption{Plot of the true Franke function together with our train and test data, and our predictions for our optimal parameters shown in table \ref{tab:best_comp_real}}
+  \label{fig:pred_real}
+\end{figure}
+As we can see in figure \ref{fig:pred_real_skip} we get for all the regression methods low resoulution results. We see that using terrain data without skipping every second index as shown in figure \ref{fig:pred_real} gives us higher resolution. This gives us the possibility to see a greater difference between the three models, where we for OLS and Ridge can see that the small bumps in the furhterst corner in \ref{fig:real_pred_real} predicts these while lasso smooths them out to one top as seen in \ref{fig:real_pred_lasso}.
+\section{Discussion}
+\subsection{Scaling of data}
+Our result from our compairison between scaled and non-scaled data from the Franke function (\ref{fig:compare_scale}) showed that a futher scaling was unnecesary. This choice of not scaling could have made our results inaccurate, escpecially for Ridge and Lasso regression where the magnitude of the coefficient for one variable is dependent on the magnitude of that variable. We see in figure \ref{fig:compare_scale} that this may espceially be true for design matrices of higher degrees where the differences between scaled and non-scaled data in both MSE and $R^2$ decreases. For models like Ridge and Lasso which have a regularization that makes higher polynomial degrees more favorable would threfefore expecially take an accuracy hit for the choice of not scaling. For our topography data we ended up scaling our $z$-values but not our chosen design matrix with $x,y\in [0,1]$. This may also similar to our Franke function have given us an unnecesary amount of implications while using SciKit learns lasso implementation. Here we saw a convergence problem in our code, which could have been avoided by scaling of our data. An increase in the number of maximum iterations for the Lasso method is also a solution to fix the convergence problem but at a great cost of computation time. Without a powerful enough computer we were stricted to either choose a maximum number of iterations to 100 or 1000 which may be an explanation to why the lasso method performed worse for both the Franke function \ref{tab:best_comp} and especially for real data \ref{tab:best_comp_real}.
+
+\subsection{Choice of $\lambda$ parameters}
+A futher inaccuracy in the results from our models may also have come from our choice of $\lambda$ parameters we tested for. Here is both the amount of parameters and the interval of parameteres we tested for a possible error to our methods. For example could a $\lambda$ we did not test for make the Lasso method the method with best predictions for the Franke function. This means that there are a great room for improvement in our choice of $\lambda$ parameters, but in the end will the right choice of $\lambda$ forever be a question while we will always be stricted on the computational power we have at hand.
+
+\subsection{Bias variance tradeoff}
+
+
+
+
+
+\section{Conclusion}
+\begin{itemize}
+  \item trene på et område og predikere et annet
+\end{itemize}
 \section{}
 
 \end{document}

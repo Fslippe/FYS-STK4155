@@ -25,7 +25,7 @@ def bias_variance_lamda(n, std, maxdegree, n_B, method, lamda, name_add="", fran
         plt.savefig("../figures/tradeoff_%s_%.0e%s.png" %(method, lmb, name_add), dpi=300, bbox_inches="tight")
 
         i +=1
-    print(np.min(bias))
+
 def cross_validation_lamda(n, std, k_folds, method, lamda, degree=5, savefig=False):
     x, y, z = make_data(n, std, seed=100)
     X = design_matrix(x, y, degree)

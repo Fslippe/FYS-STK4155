@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2022.8.24)  6 OCT 2022 14:23
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2022.8.24)  7 OCT 2022 12:09
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -570,611 +570,818 @@ LaTeX Warning: Label `fig:' multiply defined.
 
 LaTeX Warning: Label `sub@fig:' multiply defined.
 
-./project1.aux:43: Text line contains an invalid character.
-l.43 \@writefile{lof}{\defcoun^^@
-                                 ^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 \@writefile{lof}{\defcoun^^@^^@
-                                    ^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 \@writefile{lof}{\defcoun^^@^^@^^@
-                                       ^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 \@writefile{lof}{\defcoun^^@^^@^^@^^@
-                                          ^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 \@writefile{lof}{\defcoun^^@^^@^^@^^@^^@
-                                             ^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 \@writefile{lof}{\defcoun^^@^^@^^@^^@^^@^^@
-                                                ^^@^^@^^@^^@^^@^^@^^@^^@^^@^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...itefile{lof}{\defcoun^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...file{lof}{\defcoun^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...e{lof}{\defcoun^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...of}{\defcoun^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...{\defcoun^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...efcoun^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...oun^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-A funny symbol that I can't read has just been input.
-Continue, and I'll forget that it ever happened.
-
-./project1.aux:43: Text line contains an invalid character.
-l.43 ...^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@^^@
-                                                  ^^@^^@^^@^^@^^@^^@^^@^^@^^...
-(That makes 100 errors; please try again.) 
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:train_test_resample_mse' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:train_test_resample_mse' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:l_1e-08' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:l_1e-08' multiply defined.
+
+
+LaTeX Warning: Label `fig:l_1e-09' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:l_1e-09' multiply defined.
+
+
+LaTeX Warning: Label `fig:l_1e-10' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:l_1e-10' multiply defined.
+
+
+LaTeX Warning: Label `fig:l_1e-12' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:l_1e-12' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:' multiply defined.
+
+
+LaTeX Warning: Label `fig:pred_real' multiply defined.
+
+)
+\openout1 = `project1.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 61.
+LaTeX Font Info:    ... okay on input line 61.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 61.
+LaTeX Font Info:    ... okay on input line 61.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 61.
+LaTeX Font Info:    ... okay on input line 61.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 61.
+LaTeX Font Info:    ... okay on input line 61.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 61.
+LaTeX Font Info:    ... okay on input line 61.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 61.
+LaTeX Font Info:    ... okay on input line 61.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 61.
+LaTeX Font Info:    ... okay on input line 61.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 61.
+LaTeX Font Info:    ... okay on input line 61.
+ (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count415
+\scratchdimen=\dimen172
+\scratchbox=\box53
+\nofMPsegments=\count416
+\nofMParguments=\count417
+\everyMPshowfont=\toks29
+\MPscratchCnt=\count418
+\MPscratchDim=\dimen173
+\MPnumerator=\count419
+\makeMPintoPDFobject=\count420
+\everyMPtoPDFconversion=\toks30
+) (/usr/share/texlive/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
+Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
+ (/usr/share/texlive/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
+))
+\c@lstlisting=\count421
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: hyperref package is loaded.
+Package caption Info: wrapfig package is loaded.
+Package caption Info: End \AtBeginDocument code.
+\AtBeginShipoutBox=\box54
+Package hyperref Info: Link coloring ON on input line 61.
+ (/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
+Package: nameref 2019/09/16 v2.46 Cross-referencing by name of section
+ (/usr/share/texlive/texmf-dist/tex/latex/refcount/refcount.sty
+Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
+) (/usr/share/texlive/texmf-dist/tex/generic/gettitlestring/gettitlestring.sty
+Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
+)
+\c@section@level=\count422
+)
+LaTeX Info: Redefining \ref on input line 61.
+LaTeX Info: Redefining \pageref on input line 61.
+LaTeX Info: Redefining \nameref on input line 61.
+ (./project1.out) (./project1.out)
+\@outlinefile=\write4
+\openout4 = `project1.out'.
+
+Package biblatex Info: Trying to load language 'english'...
+Package biblatex Info: ... file 'english.lbx' found.
+ (/usr/share/texlive/texmf-dist/tex/latex/biblatex/lbx/english.lbx
+File: english.lbx 2019/12/01 v3.14 biblatex localization (PK/MW)
+)
+Package biblatex Info: Input encoding 'utf8' detected.
+Package biblatex Info: Automatic encoding selection.
+(biblatex)             Assuming data encoding 'utf8'.
+\openout3 = `project1.bcf'.
+
+Package biblatex Info: Trying to load bibliographic data...
+Package biblatex Info: ... file 'project1.bbl' found.
+ (./project1.bbl)
+Package biblatex Info: Reference section=0 on input line 61.
+Package biblatex Info: Reference segment=0 on input line 61.
+
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+*geometry* verbose mode - [ preamble ] result:
+* driver: pdftex
+* paper: a4paper
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: 
+* h-part:(L,W,R)=(81.94394pt, 433.62pt, 81.94394pt)
+* v-part:(T,H,B)=(77.84674pt, 650.43pt, 116.77011pt)
+* \paperwidth=597.50787pt
+* \paperheight=845.04684pt
+* \textwidth=433.62pt
+* \textheight=650.43pt
+* \oddsidemargin=9.67395pt
+* \evensidemargin=9.67395pt
+* \topmargin=-31.42325pt
+* \headheight=12.0pt
+* \headsep=25.0pt
+* \topskip=12.0pt
+* \footskip=30.0pt
+* \marginparwidth=44.0pt
+* \marginparsep=10.0pt
+* \columnsep=10.0pt
+* \skip\footins=10.8pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+LaTeX Font Info:    Trying to load font information for U+msa on input line 63.
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Trying to load font information for U+msb on input line 63.
+ (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+) [1
+
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] (./project1.toc)
+\tf@toc=\write5
+\openout5 = `project1.toc'.
+
+ [2] [3] [4] [5] [6] [7] [8]
+<../figures/cv_kfold.png, id=195, 433.62pt x 216.81pt>
+File: ../figures/cv_kfold.png Graphic file (type png)
+<use ../figures/cv_kfold.png>
+Package pdftex.def Info: ../figures/cv_kfold.png  used on input line 229.
+(pdftex.def)             Requested size: 303.53267pt x 151.77257pt.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 235.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\lambda' on input line 235.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 235.
+
+[9 <../figures/cv_kfold.png (PNG copy)>]
+<../figures/compare_scale_mse.png, id=206, 436.7517pt x 319.9152pt>
+File: ../figures/compare_scale_mse.png Graphic file (type png)
+<use ../figures/compare_scale_mse.png>
+Package pdftex.def Info: ../figures/compare_scale_mse.png  used on input line 252.
+(pdftex.def)             Requested size: 216.81pt x 158.81004pt.
+<../figures/compare_scale_r2.png, id=208, 440.1243pt x 319.9152pt>
+File: ../figures/compare_scale_r2.png Graphic file (type png)
+<use ../figures/compare_scale_r2.png>
+Package pdftex.def Info: ../figures/compare_scale_r2.png  used on input line 258.
+(pdftex.def)             Requested size: 216.81pt x 157.59454pt.
+
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 250--262
+[]$[]$ $[]$ 
+ []
+
+[10]
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 267.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `superscript' on input line 267.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 267.
+
+<../figures/mse_ols_5.png, id=214, 437.9562pt x 319.9152pt>
+File: ../figures/mse_ols_5.png Graphic file (type png)
+<use ../figures/mse_ols_5.png>
+Package pdftex.def Info: ../figures/mse_ols_5.png  used on input line 273.
+(pdftex.def)             Requested size: 216.81pt x 158.37071pt.
+<../figures/r2_ols_5.png, id=215, 429.0429pt x 319.9152pt>
+File: ../figures/r2_ols_5.png Graphic file (type png)
+<use ../figures/r2_ols_5.png>
+Package pdftex.def Info: ../figures/r2_ols_5.png  used on input line 279.
+(pdftex.def)             Requested size: 216.81pt x 161.66573pt.
+
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 271--283
+[]$[]$ $[]$ 
+ []
+
+[11 <../figures/compare_scale_mse.png> <../figures/compare_scale_r2.png>]
+<../figures/mse_train_test.png, id=228, 437.9562pt x 319.9152pt>
+File: ../figures/mse_train_test.png Graphic file (type png)
+<use ../figures/mse_train_test.png>
+Package pdftex.def Info: ../figures/mse_train_test.png  used on input line 292.
+(pdftex.def)             Requested size: 216.81pt x 158.37071pt.
+<../figures/r2_train_test.png, id=229, 429.0429pt x 319.9152pt>
+File: ../figures/r2_train_test.png Graphic file (type png)
+<use ../figures/r2_train_test.png>
+Package pdftex.def Info: ../figures/r2_train_test.png  used on input line 298.
+(pdftex.def)             Requested size: 216.81pt x 161.66573pt.
+
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 290--302
+[]$[]$ $[]$ 
+ []
+
+<../figures/MSE_train_test_resample.png, id=230, 437.9562pt x 319.9152pt>
+File: ../figures/MSE_train_test_resample.png Graphic file (type png)
+<use ../figures/MSE_train_test_resample.png>
+Package pdftex.def Info: ../figures/MSE_train_test_resample.png  used on input line 309.
+(pdftex.def)             Requested size: 216.81pt x 158.37071pt.
+<../figures/R2_train_test_resample.png, id=231, 429.0429pt x 319.9152pt>
+File: ../figures/R2_train_test_resample.png Graphic file (type png)
+<use ../figures/R2_train_test_resample.png>
+Package pdftex.def Info: ../figures/R2_train_test_resample.png  used on input line 315.
+(pdftex.def)             Requested size: 216.81pt x 161.66573pt.
+
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 307--319
+[]$[]$ $[]$ 
+ []
+
+[12 <../figures/mse_ols_5.png> <../figures/r2_ols_5.png> <../figures/MSE_train_test.png> <../figures/R2_train_test.png>]
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 324.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\beta' on input line 324.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 324.
+
+<../figures/beta_degree.png, id=244, 438.438pt x 322.0833pt>
+File: ../figures/beta_degree.png Graphic file (type png)
+<use ../figures/beta_degree.png>
+Package pdftex.def Info: ../figures/beta_degree.png  used on input line 329.
+(pdftex.def)             Requested size: 303.53267pt x 222.99455pt.
+[13 <../figures/MSE_train_test_resample.png> <../figures/R2_train_test_resample.png>] [14 <../figures/beta_degree.png>]
+<../figures/bias_variance_tradeoff.png, id=264, 441.3288pt x 328.3467pt>
+File: ../figures/bias_variance_tradeoff.png Graphic file (type png)
+<use ../figures/bias_variance_tradeoff.png>
+Package pdftex.def Info: ../figures/bias_variance_tradeoff.png  used on input line 372.
+(pdftex.def)             Requested size: 303.53267pt x 225.83298pt.
+ [15]
+<../figures/bias_variance_100.png, id=272, 441.3288pt x 328.3467pt>
+File: ../figures/bias_variance_100.png Graphic file (type png)
+<use ../figures/bias_variance_100.png>
+Package pdftex.def Info: ../figures/bias_variance_100.png  used on input line 379.
+(pdftex.def)             Requested size: 303.53267pt x 225.83298pt.
+ [16 <../figures/bias_variance_tradeoff.png>]
+<../figures/boot_cv_comp_OLS_100_5.png, id=280, 449.2785pt x 338.7054pt>
+File: ../figures/boot_cv_comp_OLS_100_5.png Graphic file (type png)
+<use ../figures/boot_cv_comp_OLS_100_5.png>
+Package pdftex.def Info: ../figures/boot_cv_comp_OLS_100_5.png  used on input line 388.
+(pdftex.def)             Requested size: 216.81pt x 163.45016pt.
+<../figures/boot_cv_comp_OLS_100_10.png, id=281, 454.5783pt x 338.7054pt>
+File: ../figures/boot_cv_comp_OLS_100_10.png Graphic file (type png)
+<use ../figures/boot_cv_comp_OLS_100_10.png>
+Package pdftex.def Info: ../figures/boot_cv_comp_OLS_100_10.png  used on input line 394.
+(pdftex.def)             Requested size: 216.81pt x 161.54826pt.
+
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 386--398
+[]$[]$ $[]$ 
+ []
+
+<../figures/boot_cv_comp_01.png, id=283, 454.5783pt x 338.7054pt>
+File: ../figures/boot_cv_comp_01.png Graphic file (type png)
+<use ../figures/boot_cv_comp_01.png>
+Package pdftex.def Info: ../figures/boot_cv_comp_01.png  used on input line 404.
+(pdftex.def)             Requested size: 303.53267pt x 226.16653pt.
+[17 <../figures/bias_variance_100.png> <../figures/boot_cv_comp_OLS_100_5.png> <../figures/boot_cv_comp_OLS_100_10.png>]
+<../figures/best_lambda_OLS_02_franke.png, id=293, 441.3288pt x 323.2878pt>
+File: ../figures/best_lambda_OLS_02_franke.png Graphic file (type png)
+<use ../figures/best_lambda_OLS_02_franke.png>
+Package pdftex.def Info: ../figures/best_lambda_OLS_02_franke.png  used on input line 413.
+(pdftex.def)             Requested size: 303.53267pt x 222.35353pt.
+ [18 <../figures/boot_cv_comp_01.png>]
+<../figures/tradeoff_RIDGE_1e-07.png, id=305, 415.5525pt x 344.9688pt>
+File: ../figures/tradeoff_RIDGE_1e-07.png Graphic file (type png)
+<use ../figures/tradeoff_RIDGE_1e-07.png>
+Package pdftex.def Info: ../figures/tradeoff_RIDGE_1e-07.png  used on input line 425.
+(pdftex.def)             Requested size: 216.81pt x 179.98486pt.
+<../figures/tradeoff_RIDGE_1e-08.png, id=306, 415.5525pt x 344.9688pt>
+File: ../figures/tradeoff_RIDGE_1e-08.png Graphic file (type png)
+<use ../figures/tradeoff_RIDGE_1e-08.png>
+Package pdftex.def Info: ../figures/tradeoff_RIDGE_1e-08.png  used on input line 431.
+(pdftex.def)             Requested size: 216.81pt x 179.98486pt.
+<../figures/tradeoff_RIDGE_1e-09.png, id=307, 415.5525pt x 344.9688pt>
+File: ../figures/tradeoff_RIDGE_1e-09.png Graphic file (type png)
+<use ../figures/tradeoff_RIDGE_1e-09.png>
+Package pdftex.def Info: ../figures/tradeoff_RIDGE_1e-09.png  used on input line 437.
+(pdftex.def)             Requested size: 216.81pt x 179.98486pt.
+<../figures/tradeoff_RIDGE_1e-10.png, id=308, 415.5525pt x 344.9688pt>
+File: ../figures/tradeoff_RIDGE_1e-10.png Graphic file (type png)
+<use ../figures/tradeoff_RIDGE_1e-10.png>
+Package pdftex.def Info: ../figures/tradeoff_RIDGE_1e-10.png  used on input line 443.
+(pdftex.def)             Requested size: 216.81pt x 179.98486pt.
+<../figures/tradeoff_RIDGE_1e-11.png, id=309, 415.5525pt x 344.9688pt>
+File: ../figures/tradeoff_RIDGE_1e-11.png Graphic file (type png)
+<use ../figures/tradeoff_RIDGE_1e-11.png>
+Package pdftex.def Info: ../figures/tradeoff_RIDGE_1e-11.png  used on input line 449.
+(pdftex.def)             Requested size: 216.81pt x 179.98486pt.
+<../figures/tradeoff_RIDGE_1e-12.png, id=310, 415.5525pt x 344.9688pt>
+File: ../figures/tradeoff_RIDGE_1e-12.png Graphic file (type png)
+<use ../figures/tradeoff_RIDGE_1e-12.png>
+Package pdftex.def Info: ../figures/tradeoff_RIDGE_1e-12.png  used on input line 455.
+(pdftex.def)             Requested size: 216.81pt x 179.98486pt.
+
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 423--459
+[]$[]$ $[]$
+ []
+
+
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 423--459
+[]$ $[]$
+ []
+
+
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 423--459
+[]$ $[]$ 
+ []
+
+<../figures/tradeoff_LASSO_1e-08.png, id=311, 415.5525pt x 344.9688pt>
+File: ../figures/tradeoff_LASSO_1e-08.png Graphic file (type png)
+<use ../figures/tradeoff_LASSO_1e-08.png>
+Package pdftex.def Info: ../figures/tradeoff_LASSO_1e-08.png  used on input line 465.
+(pdftex.def)             Requested size: 216.81pt x 179.98486pt.
+<../figures/tradeoff_LASSO_1e-09.png, id=312, 415.5525pt x 344.9688pt>
+File: ../figures/tradeoff_LASSO_1e-09.png Graphic file (type png)
+<use ../figures/tradeoff_LASSO_1e-09.png>
+Package pdftex.def Info: ../figures/tradeoff_LASSO_1e-09.png  used on input line 471.
+(pdftex.def)             Requested size: 216.81pt x 179.98486pt.
+<../figures/tradeoff_LASSO_1e-10.png, id=313, 415.5525pt x 344.9688pt>
+File: ../figures/tradeoff_LASSO_1e-10.png Graphic file (type png)
+<use ../figures/tradeoff_LASSO_1e-10.png>
+Package pdftex.def Info: ../figures/tradeoff_LASSO_1e-10.png  used on input line 477.
+(pdftex.def)             Requested size: 216.81pt x 179.98486pt.
+<../figures/tradeoff_LASSO_1e-11.png, id=314, 415.5525pt x 344.9688pt>
+File: ../figures/tradeoff_LASSO_1e-11.png Graphic file (type png)
+<use ../figures/tradeoff_LASSO_1e-11.png>
+Package pdftex.def Info: ../figures/tradeoff_LASSO_1e-11.png  used on input line 483.
+(pdftex.def)             Requested size: 216.81pt x 179.98486pt.
+<../figures/tradeoff_LASSO_1e-12.png, id=315, 415.5525pt x 344.9688pt>
+File: ../figures/tradeoff_LASSO_1e-12.png Graphic file (type png)
+<use ../figures/tradeoff_LASSO_1e-12.png>
+Package pdftex.def Info: ../figures/tradeoff_LASSO_1e-12.png  used on input line 489.
+(pdftex.def)             Requested size: 216.81pt x 179.98486pt.
+<../figures/tradeoff_LASSO_1e-13.png, id=316, 415.5525pt x 344.9688pt>
+File: ../figures/tradeoff_LASSO_1e-13.png Graphic file (type png)
+<use ../figures/tradeoff_LASSO_1e-13.png>
+Package pdftex.def Info: ../figures/tradeoff_LASSO_1e-13.png  used on input line 495.
+(pdftex.def)             Requested size: 216.81pt x 179.98486pt.
+
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 463--499
+[]$[]$ $[]$
+ []
+
+
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 463--499
+[]$ $[]$
+ []
+
+
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 463--499
+[]$ $[]$ 
+ []
+
+[19 <../figures/best_lambda_OLS_02_franke.png>] [20 <../figures/tradeoff_RIDGE_1e-07.png> <../figures/tradeoff_RIDGE_1e-08.png> <../figures/tradeoff_RIDGE_1e-09.png> <../figures/tradeoff_RIDGE_1e-10.png> <../figures/tradeoff_RIDGE_1e-11.png> <../figures/tradeoff_RIDGE_1e-12.png>] [21 <../figures/tradeoff_LASSO_1e-08.png> <../figures/tradeoff_LASSO_1e-09.png> <../figures/tradeoff_LASSO_1e-10.png> <../figures/tradeoff_LASSO_1e-11.png> <../figures/tradeoff_LASSO_1e-12.png> <../figures/tradeoff_LASSO_1e-13.png>]
+<../figures/best_lambda_RIDGE_02.png, id=350, 477.4638pt x 321.3606pt>
+File: ../figures/best_lambda_RIDGE_02.png Graphic file (type png)
+<use ../figures/best_lambda_RIDGE_02.png>
+Package pdftex.def Info: ../figures/best_lambda_RIDGE_02.png  used on input line 510.
+(pdftex.def)             Requested size: 216.81pt x 145.92508pt.
+<../figures/best_lambda_LASSO_02.png, id=351, 467.8278pt x 321.3606pt>
+File: ../figures/best_lambda_LASSO_02.png Graphic file (type png)
+<use ../figures/best_lambda_LASSO_02.png>
+Package pdftex.def Info: ../figures/best_lambda_LASSO_02.png  used on input line 516.
+(pdftex.def)             Requested size: 216.81pt x 148.93095pt.
+
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 508--520
+[]$[]$ $[]$ 
+ []
+
+[22 <../figures/best_lambda_RIDGE_02.png> <../figures/best_lambda_LASSO_02.png>]
+<../figures/actual_data_franke_2.png, id=368, 392.1852pt x 326.4195pt>
+File: ../figures/actual_data_franke_2.png Graphic file (type png)
+<use ../figures/actual_data_franke_2.png>
+Package pdftex.def Info: ../figures/actual_data_franke_2.png  used on input line 546.
+(pdftex.def)             Requested size: 216.81pt x 180.45769pt.
+<../figures/train_data_franke_2.png, id=369, 392.9079pt x 326.4195pt>
+File: ../figures/train_data_franke_2.png Graphic file (type png)
+<use ../figures/train_data_franke_2.png>
+Package pdftex.def Info: ../figures/train_data_franke_2.png  used on input line 552.
+(pdftex.def)             Requested size: 216.81pt x 180.11899pt.
+<../figures/test_data_franke_2.png, id=370, 392.1852pt x 326.4195pt>
+File: ../figures/test_data_franke_2.png Graphic file (type png)
+<use ../figures/test_data_franke_2.png>
+Package pdftex.def Info: ../figures/test_data_franke_2.png  used on input line 558.
+(pdftex.def)             Requested size: 216.81pt x 180.45769pt.
+<../figures/ols_pred_franke_2.png, id=371, 392.4261pt x 326.4195pt>
+File: ../figures/ols_pred_franke_2.png Graphic file (type png)
+<use ../figures/ols_pred_franke_2.png>
+Package pdftex.def Info: ../figures/ols_pred_franke_2.png  used on input line 564.
+(pdftex.def)             Requested size: 216.81pt x 180.34312pt.
+<../figures/ridge_pred_franke_2.png, id=372, 392.4261pt x 326.4195pt>
+File: ../figures/ridge_pred_franke_2.png Graphic file (type png)
+<use ../figures/ridge_pred_franke_2.png>
+Package pdftex.def Info: ../figures/ridge_pred_franke_2.png  used on input line 570.
+(pdftex.def)             Requested size: 216.81pt x 180.34312pt.
+<../figures/lasso_pred_franke_2.png, id=373, 392.9079pt x 326.4195pt>
+File: ../figures/lasso_pred_franke_2.png Graphic file (type png)
+<use ../figures/lasso_pred_franke_2.png>
+Package pdftex.def Info: ../figures/lasso_pred_franke_2.png  used on input line 576.
+(pdftex.def)             Requested size: 216.81pt x 180.11899pt.
+
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 544--580
+[]$[]$ $[]$
+ []
+
+
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 544--580
+[]$ $[]$
+ []
+
+
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 544--580
+[]$ $[]$ 
+ []
+
+[23]
+Overfull \vbox (17.48978pt too high) has occurred while \output is active []
+
+ [24 <../figures/actual_data_franke_2.png> <../figures/train_data_franke_2.png> <../figures/test_data_franke_2.png> <../figures/ols_pred_franke_2.png> <../figures/ridge_pred_franke_2.png> <../figures/lasso_pred_franke_2.png>]
+<../figures/mse_deg_real.png, id=397, 431.9337pt x 321.3606pt>
+File: ../figures/mse_deg_real.png Graphic file (type png)
+<use ../figures/mse_deg_real.png>
+Package pdftex.def Info: ../figures/mse_deg_real.png  used on input line 589.
+(pdftex.def)             Requested size: 216.81pt x 161.30756pt.
+<../figures/r2_deg_real.png, id=398, 432.4155pt x 321.3606pt>
+File: ../figures/r2_deg_real.png Graphic file (type png)
+<use ../figures/r2_deg_real.png>
+Package pdftex.def Info: ../figures/r2_deg_real.png  used on input line 595.
+(pdftex.def)             Requested size: 216.81pt x 161.12611pt.
+
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 587--599
+[]$[]$ $[]$ 
+ []
+
+<../figures/ols_real_tradeoff.png, id=402, 443.7378pt x 328.1058pt>
+File: ../figures/ols_real_tradeoff.png Graphic file (type png)
+<use ../figures/ols_real_tradeoff.png>
+Package pdftex.def Info: ../figures/ols_real_tradeoff.png  used on input line 608.
+(pdftex.def)             Requested size: 216.81pt x 160.31265pt.
+[25 <../figures/mse_deg_real.png> <../figures/r2_deg_real.png>]
+<../figures/tradeoff_RIDGE_1e-01real.png, id=415, 403.7484pt x 341.1144pt>
+File: ../figures/tradeoff_RIDGE_1e-01real.png Graphic file (type png)
+<use ../figures/tradeoff_RIDGE_1e-01real.png>
+Package pdftex.def Info: ../figures/tradeoff_RIDGE_1e-01real.png  used on input line 616.
+(pdftex.def)             Requested size: 216.81pt x 183.17883pt.
+<../figures/tradeoff_RIDGE_1e-05real.png, id=416, 403.7484pt x 341.1144pt>
+File: ../figures/tradeoff_RIDGE_1e-05real.png Graphic file (type png)
+<use ../figures/tradeoff_RIDGE_1e-05real.png>
+Package pdftex.def Info: ../figures/tradeoff_RIDGE_1e-05real.png  used on input line 622.
+(pdftex.def)             Requested size: 216.81pt x 183.17883pt.
+<../figures/tradeoff_RIDGE_1e-09real.png, id=417, 403.7484pt x 341.1144pt>
+File: ../figures/tradeoff_RIDGE_1e-09real.png Graphic file (type png)
+<use ../figures/tradeoff_RIDGE_1e-09real.png>
+Package pdftex.def Info: ../figures/tradeoff_RIDGE_1e-09real.png  used on input line 628.
+(pdftex.def)             Requested size: 216.81pt x 183.17883pt.
+<../figures/tradeoff_RIDGE_1e-13real.png, id=418, 403.7484pt x 341.1144pt>
+File: ../figures/tradeoff_RIDGE_1e-13real.png Graphic file (type png)
+<use ../figures/tradeoff_RIDGE_1e-13real.png>
+Package pdftex.def Info: ../figures/tradeoff_RIDGE_1e-13real.png  used on input line 634.
+(pdftex.def)             Requested size: 216.81pt x 183.17883pt.
+
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 614--638
+[]$[]$ $[]$
+ []
+
+
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 614--638
+[]$ $[]$ 
+ []
+
+<../figures/tradeoff_LASSO_1e-01real.png, id=419, 403.7484pt x 341.1144pt>
+File: ../figures/tradeoff_LASSO_1e-01real.png Graphic file (type png)
+<use ../figures/tradeoff_LASSO_1e-01real.png>
+Package pdftex.def Info: ../figures/tradeoff_LASSO_1e-01real.png  used on input line 645.
+(pdftex.def)             Requested size: 216.81pt x 183.17883pt.
+<../figures/tradeoff_LASSO_1e-05real.png, id=420, 403.7484pt x 341.1144pt>
+File: ../figures/tradeoff_LASSO_1e-05real.png Graphic file (type png)
+<use ../figures/tradeoff_LASSO_1e-05real.png>
+Package pdftex.def Info: ../figures/tradeoff_LASSO_1e-05real.png  used on input line 651.
+(pdftex.def)             Requested size: 216.81pt x 183.17883pt.
+<../figures/tradeoff_LASSO_1e-09real.png, id=421, 403.7484pt x 341.1144pt>
+File: ../figures/tradeoff_LASSO_1e-09real.png Graphic file (type png)
+<use ../figures/tradeoff_LASSO_1e-09real.png>
+Package pdftex.def Info: ../figures/tradeoff_LASSO_1e-09real.png  used on input line 657.
+(pdftex.def)             Requested size: 216.81pt x 183.17883pt.
+<../figures/tradeoff_LASSO_1e-13real.png, id=422, 403.7484pt x 341.1144pt>
+File: ../figures/tradeoff_LASSO_1e-13real.png Graphic file (type png)
+<use ../figures/tradeoff_LASSO_1e-13real.png>
+Package pdftex.def Info: ../figures/tradeoff_LASSO_1e-13real.png  used on input line 663.
+(pdftex.def)             Requested size: 216.81pt x 183.17883pt.
+
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 643--667
+[]$[]$ $[]$
+ []
+
+
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 643--667
+[]$ $[]$ 
+ []
+
+[26 <../figures/ols_real_tradeoff.png> <../figures/tradeoff_RIDGE_1e-01real.png> <../figures/tradeoff_RIDGE_1e-05real.png> <../figures/tradeoff_RIDGE_1e-09real.png> <../figures/tradeoff_RIDGE_1e-13real.png>]
+<../figures/best_lambda_OLS_00.png, id=433, 431.9337pt x 321.3606pt>
+File: ../figures/best_lambda_OLS_00.png Graphic file (type png)
+<use ../figures/best_lambda_OLS_00.png>
+Package pdftex.def Info: ../figures/best_lambda_OLS_00.png  used on input line 677.
+(pdftex.def)             Requested size: 216.81pt x 161.30756pt.
+<../figures/best_lambda_RIDGE_00.png, id=434, 467.5869pt x 327.3831pt>
+File: ../figures/best_lambda_RIDGE_00.png Graphic file (type png)
+<use ../figures/best_lambda_RIDGE_00.png>
+Package pdftex.def Info: ../figures/best_lambda_RIDGE_00.png  used on input line 683.
+(pdftex.def)             Requested size: 216.81pt x 151.80196pt.
+<../figures/best_lambda_LASSO_1000iter.png, id=435, 462.528pt x 346.896pt>
+File: ../figures/best_lambda_LASSO_1000iter.png Graphic file (type png)
+<use ../figures/best_lambda_LASSO_1000iter.png>
+Package pdftex.def Info: ../figures/best_lambda_LASSO_1000iter.png  used on input line 689.
+(pdftex.def)             Requested size: 216.81pt x 162.60709pt.
+
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 675--693
+[]$ $[]$ 
+ []
+
+[27 <../figures/tradeoff_LASSO_1e-01real.png> <../figures/tradeoff_LASSO_1e-05real.png> <../figures/tradeoff_LASSO_1e-09real.png> <../figures/tradeoff_LASSO_1e-13real.png>] [28 <../figures/best_lambda_OLS_00.png> <../figures/best_lambda_RIDGE_00.png> <../figures/best_lambda_LASSO_1000iter.png>]
+<../figures/actual_data_n40_skip2.png, id=460, 413.8662pt x 325.9377pt>
+File: ../figures/actual_data_n40_skip2.png Graphic file (type png)
+<use ../figures/actual_data_n40_skip2.png>
+Package pdftex.def Info: ../figures/actual_data_n40_skip2.png  used on input line 719.
+(pdftex.def)             Requested size: 216.81pt x 170.74684pt.
+<../figures/train_data_n40_skip2.png, id=461, 413.8662pt x 325.9377pt>
+File: ../figures/train_data_n40_skip2.png Graphic file (type png)
+<use ../figures/train_data_n40_skip2.png>
+Package pdftex.def Info: ../figures/train_data_n40_skip2.png  used on input line 725.
+(pdftex.def)             Requested size: 216.81pt x 170.74684pt.
+<../figures/test_data_n40_skip2.png, id=462, 414.1071pt x 325.9377pt>
+File: ../figures/test_data_n40_skip2.png Graphic file (type png)
+<use ../figures/test_data_n40_skip2.png>
+Package pdftex.def Info: ../figures/test_data_n40_skip2.png  used on input line 731.
+(pdftex.def)             Requested size: 216.81pt x 170.65234pt.
+<../figures/ols_pred_n40_skip2.png, id=463, 413.6253pt x 325.9377pt>
+File: ../figures/ols_pred_n40_skip2.png Graphic file (type png)
+<use ../figures/ols_pred_n40_skip2.png>
+Package pdftex.def Info: ../figures/ols_pred_n40_skip2.png  used on input line 737.
+(pdftex.def)             Requested size: 216.81pt x 170.85127pt.
+<../figures/ridge_pred_n40_skip2.png, id=464, 413.6253pt x 325.9377pt>
+File: ../figures/ridge_pred_n40_skip2.png Graphic file (type png)
+<use ../figures/ridge_pred_n40_skip2.png>
+Package pdftex.def Info: ../figures/ridge_pred_n40_skip2.png  used on input line 743.
+(pdftex.def)             Requested size: 216.81pt x 170.85127pt.
+<../figures/lasso_pred_n40_skip2.png, id=465, 414.348pt x 325.9377pt>
+File: ../figures/lasso_pred_n40_skip2.png Graphic file (type png)
+<use ../figures/lasso_pred_n40_skip2.png>
+Package pdftex.def Info: ../figures/lasso_pred_n40_skip2.png  used on input line 749.
+(pdftex.def)             Requested size: 216.81pt x 170.5479pt.
+
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 717--753
+[]$[]$ $[]$
+ []
+
+
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 717--753
+[]$ $[]$
+ []
+
+
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 717--753
+[]$ $[]$ 
+ []
+
+[29]
+<../figures/actual_data_n40.png, id=474, 414.1071pt x 325.9377pt>
+File: ../figures/actual_data_n40.png Graphic file (type png)
+<use ../figures/actual_data_n40.png>
+Package pdftex.def Info: ../figures/actual_data_n40.png  used on input line 760.
+(pdftex.def)             Requested size: 216.81pt x 170.65234pt.
+<../figures/train_data_n40.png, id=475, 413.8662pt x 325.9377pt>
+File: ../figures/train_data_n40.png Graphic file (type png)
+<use ../figures/train_data_n40.png>
+Package pdftex.def Info: ../figures/train_data_n40.png  used on input line 766.
+(pdftex.def)             Requested size: 216.81pt x 170.74684pt.
+<../figures/test_data_n40.png, id=476, 414.1071pt x 325.9377pt>
+File: ../figures/test_data_n40.png Graphic file (type png)
+<use ../figures/test_data_n40.png>
+Package pdftex.def Info: ../figures/test_data_n40.png  used on input line 772.
+(pdftex.def)             Requested size: 216.81pt x 170.65234pt.
+<../figures/ols_pred_n40.png, id=477, 414.1071pt x 325.9377pt>
+File: ../figures/ols_pred_n40.png Graphic file (type png)
+<use ../figures/ols_pred_n40.png>
+Package pdftex.def Info: ../figures/ols_pred_n40.png  used on input line 778.
+(pdftex.def)             Requested size: 216.81pt x 170.65234pt.
+<../figures/ridge_pred_n40.png, id=478, 414.1071pt x 325.9377pt>
+File: ../figures/ridge_pred_n40.png Graphic file (type png)
+<use ../figures/ridge_pred_n40.png>
+Package pdftex.def Info: ../figures/ridge_pred_n40.png  used on input line 784.
+(pdftex.def)             Requested size: 216.81pt x 170.65234pt.
+<../figures/lasso_pred_n40.png, id=479, 413.8662pt x 325.9377pt>
+File: ../figures/lasso_pred_n40.png Graphic file (type png)
+<use ../figures/lasso_pred_n40.png>
+Package pdftex.def Info: ../figures/lasso_pred_n40.png  used on input line 790.
+(pdftex.def)             Requested size: 216.81pt x 170.74684pt.
+
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 758--794
+[]$[]$ $[]$
+ []
+
+
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 758--794
+[]$ $[]$
+ []
+
+
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 758--794
+[]$ $[]$ 
+ []
+
+[30 <../figures/actual_data_n40_skip2.png> <../figures/train_data_n40_skip2.png> <../figures/test_data_n40_skip2.png> <../figures/ols_pred_n40_skip2.png> <../figures/ridge_pred_n40_skip2.png> <../figures/lasso_pred_n40_skip2.png>] [31 <../figures/actual_data_n40.png> <../figures/train_data_n40.png> <../figures/test_data_n40.png> <../figures/ols_pred_n40.png> <../figures/ridge_pred_n40.png> <../figures/lasso_pred_n40.png>]
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 802.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\lambda' on input line 802.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 802.
+
+[32]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 817.
+ [33]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 817.
+ (./project1.aux)
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 817.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 817.
+Package rerunfilecheck Info: File `project1.out' has not changed.
+(rerunfilecheck)             Checksum: 0F2831D04FF44E60CD0CC15514AA2CB2;1953.
+
+
+LaTeX Warning: There were multiply-defined labels.
+
+Package logreq Info: Writing requests to 'project1.run.xml'.
+\openout1 = `project1.run.xml'.
+
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 817.
+ ) 
 Here is how much of TeX's memory you used:
- 16139 strings out of 481239
- 274888 string characters out of 5920377
- 883953 words of memory out of 5000000
- 31237 multiletter control sequences out of 15000+600000
- 532636 words of font info for 25 fonts, out of 8000000 for 9000
+ 18351 strings out of 481239
+ 317757 string characters out of 5920377
+ 1073634 words of memory out of 5000000
+ 33220 multiletter control sequences out of 15000+600000
+ 545925 words of font info for 75 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 48i,0n,46p,8487b,217s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 48i,15n,61p,1611b,1707s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/share/texmf/fonts/enc/dvips/cm-super/cm-super-ts1.enc}</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmib8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/
+cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1200.pfb>
+Output written on project1.pdf (33 pages, 8694799 bytes).
+PDF statistics:
+ 598 PDF objects out of 1000 (max. 8388607)
+ 414 compressed objects within 5 object streams
+ 88 named destinations out of 1000 (max. 500000)
+ 535 words of extra memory for PDF output out of 10000 (max. 10000000)
 
-./project1.aux:43:  ==> Fatal error occurred, no output PDF file produced!
