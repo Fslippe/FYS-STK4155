@@ -167,6 +167,7 @@ def main():
     #compare_beta_lambda(x, y, z, np.logspace(-10, 1, 100))
 
     run_best_lambda_plots = False
+
     if run_best_lambda_plots:
         lmb, deg, mse = lamda_degree_MSE(x, y, z, "OLS", std, save=True, maxdegree=15)
         lmb_ridge, deg_ridge, mse_ridge = lamda_degree_MSE(x, y, z, "RIDGE", std, save=True, maxdegree=15, lmb_min =-8, n_lmb=30)
@@ -176,16 +177,19 @@ def main():
         print("RIDGE:", lmb_ridge, deg_ridge, mse_ridge)
         print("LASSO:", lmb_lasso, deg_lasso, mse_lasso)
 
-    lmb_ridge = 1.6102620275609392e-07
-    deg_ridge = 8
-    mse_ridge = 0.03902354229755195
-    lmb_lasso = 1.0826367338740564e-09
-    deg_lasso = 19
-    mse_lasso = 0.04242593103561867
-    deg_ols = 6
-    mse_ols = 0.03930695369808278
+    else:
+        lmb_ridge = 1.6102620275609392e-07
+        deg_ridge = 8
+        mse_ridge = 0.03902354229755195
+        lmb_lasso = 1.0826367338740564e-09
+        deg_lasso = 19
+        mse_lasso = 0.04242593103561867
+        deg_ols = 6
+        mse_ols = 0.03930695369808278
+
 
     compare_3d(x, y, z, noise, deg_ols, lmb_ridge, deg_ridge, lmb_lasso, deg_lasso, name_add="franke_extra")
+
 
     """BIAS VARIANCE TRADEOFF FOR BEST LAMDA"""
     #x, y, z = make_data(n, std, seed=100)#np.random.randint(101))
