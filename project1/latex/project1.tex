@@ -66,7 +66,8 @@
 \newpage
 \tableofcontents
 \section{Introduction}
-In this project we will study the Franke function and real topography data by using regression analysis and resampling methods. These are both two dimensional systems which gives us a way of generalizing our functions to work for both. We will use ordinary least squares, ridge and lasso regression in our study of our data and do comparisons to try finding the optimal model for the different datasets.
+In this project we will study the Franke function and real topography data by using regression analysis and resampling methods. These are both two dimensional systems taking in coordinates in $x$ and $y$ direction which gives us a way of generalizing our functions to work for both. We will use ordinary least squares, Ridge and Lasso regression in our study of our data and do comparisons to try finding the optimal model for the different datasets. We will implement cross validation and Bootstrap to analyze our result to gain the best possible predictions. This will be done in form of both looking at the bias variance tradeoff, and a mean square error analysis using cross validation to find optimal parameters and polynomial degrees for our datasets.
+
 \section{Method}
 Our fist step is to set up our data for analysis. We start by implementing the Franke function which is a sum of four exponentials:
 \begin{align*}
@@ -77,13 +78,13 @@ By using this function we generate our data by using ($n+1\times n+1$) points in
 \begin{align*}
   \boldsymbol{z} = f(\boldsymbol{x}) + \boldsymbol{\epsilon}
 \end{align*}
-This can also be assumed of some real data, for the assumtion of the existence of a continous function $f$ and normal distributed error $\epsilon$.
+This can also be assumed of some real data, based on the existence of a continous function $f$ and normal distributed error $\epsilon$.
 
-The ordinary least squares gives us an aproximation to the above equation where we minimize $(\boldsymbol{z} - \boldsymbol{\tilde{z}})^2$ to give us the matrix equation:
+For the Regression method ordinary least squares we have the aproximation to the above equation where we minimize $(\boldsymbol{z} - \boldsymbol{\tilde{z}})^2$ to give us the matrix equation:
 \begin{align*}
   \boldsymbol{\tilde{z}} = \boldsymbol{X}\boldsymbol{\beta}
 \end{align*}
-for a chosen design matrix $\boldsymbol{X}$ of some degree $N$ with the dimensions $(n+1)\times (N+1)(N+2)/2$ and $\beta$ with the dimensions $(N+1)(N+2)/2$ for our case where we choose a design matrix to follow a $x$ and $y$ dependent polynomial on the form:
+for a chosen design matrix $\boldsymbol{X}$ of some degree $N$ with the dimensions $(n+1)\times (N+1)(N+2)/2$ and $\beta$ with the dimensions $(N+1)(N+2)/2$  for our case where we choose a design matrix to follow a $x$ and $y$ dependent polynomial on the form:
 \begin{align*}
   \boldsymbol{X} = \begin{bmatrix}
     1 & x_0 & y_0 & x_0^2 & x_0y_0 & y_0^2 & \hdots &x_0^N & y_0^N \\
@@ -113,7 +114,7 @@ This means that the elemnt $i$ is given by:
 \begin{align*}
   z_i = \epsilon_i + \sum_j x_{ij}\beta_j
 \end{align*}
-and the expectation value of the element $i$ in $\boldsymbol{z}$:
+Which gives the expectation value of the element $i$ in $\boldsymbol{z}$:
 \begin{align*}
   E(z_i) = E(\epsilon_i + \sum_j x_{ij}\beta_j)
 \end{align*}
@@ -133,7 +134,7 @@ $\boldsymbol{\tilde{z}}$ is defined through the minimization of the mean square 
 \begin{align*}
   C(\boldsymbol{\beta}) = \frac{1}{ n}\{(\boldsymbol{z}- \boldsymbol{X}\boldsymbol{\beta}^T\boldsymbol{z}- \boldsymbol{X}\boldsymbol{\beta})\}
 \end{align*}
-Where we take the derivative with respect to $\boldsymbol{\beta}$ and solve where the derivative is 0 to find the minimum:
+Where we take the derivative with respect to $\boldsymbol{\beta}$ and solve for $\boldsymbol{\beta}$ where the derivative is 0 to find the minimum:
 \begin{align*}
   \frac{\partial C(\boldsymbol{\beta})}{\partial \boldsymbol{\beta}} = \boldsymbol{X}^T (\boldsymbol{z}- \boldsymbol{X}\boldsymbol{\beta}) =0
 \end{align*}
@@ -163,13 +164,12 @@ For a matrix $A$ we have Var$(\boldsymbol{AX}+b) = \boldsymbol{A}\text{Var}(\bol
    (\boldsymbol{X}^T\boldsymbol{X})^{-1}\text{Var}[ {\boldsymbol{\epsilon}} ]
 \end{align*}
 
-This we can use to compute the optimal $\beta$ and in turn give us a OLS prediction for our real function $f$.
+All this gives us a base to compute the optimal $\beta$ and in turn give us an OLS prediction for our real function $f$.
 
 \subsection{Splitting and scaling of data}
-A central part of regression analysis is to scale and split our data to avoid both overfitting and avoid the MSE to contain the intercept. In our case of the Franke function we have $x,y \in [0,1]$ and follwing $z$ data on the same order which may indicate that a scaling is unessecary. This expectation comes from that our data does not include any extreme values of any other order that may greatly negativly incluence our predictors. In other words scaling of data is normaly what we do to get the data as equal to each other as our Franke data already is. To test if this expectation is valid, we test this and compare our non-scaled data to mean scaled data where we have subtracted the mean. We do not perform a normal standard scale because this would increase our values because of the standard deviation of data between 0 and 1 is less than 1.
+A central part of regression analysis is to scale and split our data to avoid both overfitting and avoid the MSE to contain the intercept. In our case of the Franke function we have $x,y \in [0,1]$ and follwing $z$ data on the same order which may indicate that a scaling is unessecary. This expectation comes from that our data does not include any extreme values of any other order, that may negativly incluence our predictors. In other words scaling of data is normaly what we do to get the data as equal to each other as our Franke data already is. To test if this expectation is valid, we test this and compare our non-scaled data to mean scaled data where we have subtracted the mean. Here we only perform a mean scale and not the more normal standard scale because this would include a dividation of the standard deviation. Since our data is in between 0 and 1 already will such a scaling only increase our values because of a standard deviation of less than 1.
 
-To avoid overfitting we perform a 80-20 percent split into train and test data. We use the train data to train the model or in other words find the $\beta$ parameters. To predict we use the trained model together with the test data which leaves us with a more generalized prediction not only working for the data we have at hand, but also other data coming from the same source. This can be explained by for example a model trained so well with a design matrix $\boldsymbol{X}$ of an infinite degree that its prediction follows every noisy outlier. This woulds match the data at hand very well and give us an extremly low MSE, but give us high MSE for new data which were not used to train the model. To test this we look at both MSE and R squared for predictions for $\boldsymbol{X}$ of different degrees using only train data compared to predictions made using both train and test data.
-
+To avoid overfitting we perform a 80-20 percent split into train and test data. We use the train data to train the model or in other words find the $\beta$ parameters. To predict we use the trained model together with the test data which leaves us with a more generalized prediction not only working for the data we have at hand, but also other data coming from the same source. This can be explained by for example a model trained so well with a design matrix $\boldsymbol{X}$ of an infinite degree that its prediction follows every noisy outlier. This woulds match the data at hand very well and give us an extremly low MSE, but give us high MSE for new data which were not used to train the model. To test this we look at both MSE and R squared for $\boldsymbol{X}$ of different degrees for a trained model using train data, where we compare predictions using the same train data, to predctions using test data.
 \subsection{Mean squared error and R squared}
 For different design matrices $X$ with different polynomial degrees we can calculate the mean squared error and R squared. This is done using the following equations where we define $z$ as our test data containing $n+1$ points.
 \begin{align*}
@@ -184,7 +184,7 @@ For the mean value:
 \end{align*}
 
 \subsection{Bias-variance trade-off}
-To study the bias-variance trade-off we first implement the bootstrap resampling technique. This is done by resampling our train data $n_B$ times with replacement. That means we gain $n_B$ new samples that may be unique but still only contain values from the original sample. This in turn is used to compute our predictions leaving us with a total of $n_B$ different predictions. This can be used to study the bias and variance of the predictions.
+To study the bias-variance trade-off we first implement the bootstrap resampling technique. This is done by resampling our train data $n_B$ times with replacement. That means we gain $n_B$ new samples that may be unique but still only contain values from the original sample. This in turn is used to compute our predictions leaving us with a total of $n_B$ different predictions. From these we get following the central limit theorem under the assumption that our $n_B$ datasets are independent and identically distributed we gain a mean prediction value folowing $\frac{1}{n}\sum_i \boldsymbol{z}_i$ and a standard deviation of $\sigma/\sqrt{m}$ where $\sigma$ is the standard deviation of our added noise.
 
 By looking back at the cost function which is minimized in order to find our optimal parameters $\boldsymbol{\beta}$ we can derive an expression for the bias and variance.
 \begin{align*}
@@ -244,8 +244,7 @@ Our regression analysis will then be used to try to compute how the topography a
 \section{Results}
 \subsection{Franke funtion}
 \subsubsection{OLS scaling of data}
-We first look if there is a need of scaling our data or not. As seen in figure \ref{fig:compare_scale} we have plotted the absoulute difference between the computed MSE and $R^2$ for different polynomial degrees. We see that the difference is so small especially for the
-\ref{fig:r2_mse_5} we see them both plotted for design matrices up to a degree of 5 for $n=30$ steps and $\sigma=0.2$.
+We first look if there is a need of scaling our data or not. As seen in figure \ref{fig:compare_scale} we have plotted the absoulute difference between the computed MSE and $R^2$ for different polynomial degrees. Here we have used input data of $n=30$ steps and $\sigma=0.2$.
 \begin{figure}[H]
   \begin{subfigure}{.5\textwidth}
     \centering
@@ -262,7 +261,7 @@ We first look if there is a need of scaling our data or not. As seen in figure \
   \caption{Comparison of MSE and $R^2$ between scaled and non-scaled data}
   \label{fig:compare_scale}
 \end{figure}
-We see that the difference between the scaled and non-scaled data are so small especially for lower polynomial degrees which indicate that scaling of our data is unnecesary.
+We see that the difference between the scaled and non-scaled data are small especially for lower polynomial degrees, which may indicate that scaling of our data is unnecesary.
 
 \subsubsection{OLS MSE and $R^2$}
 
@@ -285,7 +284,7 @@ We continue with our non-scaled data and look at how the mean square error and R
 \end{figure}
 Above in figure \ref{fig:r2_mse_5} we see a clear reduction in MSE for an increase in polynomial degree of the design matrix. For $R^2$ we see increasing values for higher degrees, with degree 5 giving us the lowest MSE and highest $R^2$ indicating degree 5 being the most optimal degree.
 
-We continue to look into MSE and $R^2$ but now comparing the use of train or test data in the prediction of $z$. We continue using $n=30$ steps and $\sigma=0.2$. In figure \ref{fig:train_test} we see a single run and the following MSE and $R^2$ while we in figure \ref{fig:train_test_resample} see a plot of a resample of the noise data giving us 100 unique datasets to take the mean of.
+We continue to look into MSE and $R^2$ but now for higher degrees and also comparing the use of train or test data in the prediction of $z$. We continue using $n=30$ steps and $\sigma=0.2$. In figure \ref{fig:train_test} we see a single run and the following MSE and $R^2$ while we in figure \ref{fig:train_test_resample} see a plot of a resample of the noise data giving us 100 unique datasets to take the mean of.
 \begin{figure}[H]
   \begin{subfigure}{.5\textwidth}
     \centering
@@ -330,7 +329,7 @@ To see how the $\beta$ parameters variate from different choices of degrees we p
   \caption{}
   \label{fig:beta}
 \end{figure}
-We see an increase in distance between the $\beta$ parameteres for an increasing polynomial degree. When we at the same time look at table \ref{tab:beta} we see that the parameters for a degree of 5 come with great variance. This is especially true for parameters of index in the interval [6,14] which we also see in figure \ref{fig:beta} have larger values than the rest. This may be an indication of overfitting, but looking back at our resampled train test MSE plot in figure \ref{fig:train_test_resample_mse} we see that we for a degree of 5 have lower MSE than larger polynomial degrees.
+We see an increase in distance between the $\beta$ parameteres for an increasing polynomial degree. When we at the same time look at table \ref{tab:beta} we see that the parameters for a degree of 5 come with great variance. This is especially true for parameters of index in the interval [6,14] which we also see in figure \ref{fig:beta} have larger values than the rest. This may be an indication of overfitting, but looking back at our resampled train test MSE plot in figure \ref{fig:train_test_resample_mse} we see that we for a degree of 5 have lower MSE than lower polynomial degrees which indicates we have still not reached overfitting.
 
 \begin{table}[H]
   \caption{Variance of the $\beta$ parameters for test and train data for a design matrix of polynomial degree 5. Calculated by $Var(\boldsymbol{\beta}) = diag(\sigma^2(X^T X)^{-1}$)}
@@ -373,7 +372,9 @@ To futher analyze our models dependence on polynomial degree we have a plot of t
   \caption{The bias variance tradeoff for the Franke function using 100 bootstrap iteration together with $n=30$ steps and a noise standard deviation of $\sigma=0.2$}
   \label{fig:bias_variance}
 \end{figure}
-We se above in figure \ref{fig:bias_variance} areas of both high variance and low bias and low variance and relative high bias. We also see that the area of lowest MSE for a degree of 6 is where both the bias and variance together is at their lowest. A futher increase in polynomial degree gives mostly a variance dominated error contribution while we at lower polynomial degrees see that the bias is what contributes the most to the error. When we look at figure \ref{fig:bias_variance_100} we see another trend especially for higher polynomial degrees. Here the variance stays low which may together with the low mse indicate that we dont as easy overfit our data when we have more of it at hand.
+We se above in figure \ref{fig:bias_variance} areas of both high variance and low bias and low variance and relative high bias. We also see that the area of lowest MSE for a degree of 6 is where both the bias and variance together is at their lowest. A futher increase in polynomial degree gives mostly a variance dominated error contribution while we at lower polynomial degrees see that the bias is what contributes the most to the error.
+
+When we look at figure \ref{fig:bias_variance_100} we see another trend especially for higher polynomial degrees. Here the variance stays low which may together with the low mse indicate that we dont as easy overfit our data when we have more of it at hand.
 \begin{figure}[H]
   \centering
   \includegraphics[width=.7\textwidth]{../figures/bias_variance_100.png}
@@ -398,7 +399,7 @@ From the implementation of cross validation we get the following comparison plot
   \caption{A comparison between bootstrap and cross validation for datasets with $n=30$ steps, noise standard deviation $\sigma=0.2$ and 100 bootstrap iterations}
   \label{fig:cv_comp}
 \end{figure}
-We see different results for bootstrap and cross validation for both 5 and 10 $k$-folds. The difference between the $k$-folds are quite small, but the difference from the bootstrap is for some polynomial degrees higher than others. Underneeth in figure \ref{fig:cv_comp_01} we see a comparison for the same amount of data only with an error standard deviation of $\sigma=0.1$ instead of 0.2:
+We see different results for bootstrap and cross validation for both 5 and 10 $k$-folds. The difference between the $k$-folds are quite small, but the difference from the bootstrap is for some polynomial degrees higher than others. This is espceilly true for lower polynomial degrees where bootstrap gives lower MSE, and for higher polynomial degrees where bootstrap gives higher MSE. Under in figure \ref{fig:cv_comp_01} we see a comparison for the same amount of data only with an error standard deviation of $\sigma=0.1$ instead of 0.2:
 \begin{figure}[H]
   \centering
   \includegraphics[width=.7\textwidth]{../figures/boot_cv_comp_01.png}
@@ -418,7 +419,7 @@ We continue using the cross validation method to compute for which degree we get
 Above in figure \ref{fig:best_OLS} we see similar to figure \ref{fig:cv_comp} That we for a degree of 6 minimize the MSE for OLS regression. This means that if we want to compute the best possible prediction $\tilde{z}$ we should use a design matrix of degree 6.
 
 \subsubsection{Ridge and Lasso bias variance tradeoff}
-We look into the $\beta$ parameters reaction to different choices of $\lambda$ seen under in figure \ref{fig:beta_lambda_rl}.
+For Ridge and Lasso regression we look into the $\beta$ parameters reaction to different choices of $\lambda$ as seen under in figure \ref{fig:beta_lambda_rl}.
 \begin{figure}[H]
   \begin{subfigure}{.5\textwidth}
     \centering
@@ -441,37 +442,37 @@ In the same way as for ordinary least squares we look at the bias variance trade
 \begin{figure}[H]
   \begin{subfigure}{.5\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{../figures/tradeoff_RIDGE_1e-07.png}
+    \includegraphics[width=\textwidth]{../figures/tradeoff_RIDGE_1e-07_20.png}
     \caption{}
     \label{fig:l_1e-07}
   \end{subfigure}
   \begin{subfigure}{.5\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{../figures/tradeoff_RIDGE_1e-08.png}
+    \includegraphics[width=\textwidth]{../figures/tradeoff_RIDGE_1e-08_20.png}
     \caption{}
     \label{fig:l_1e-08}
   \end{subfigure}
   \begin{subfigure}{.5\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{../figures/tradeoff_RIDGE_1e-09.png}
+    \includegraphics[width=\textwidth]{../figures/tradeoff_RIDGE_1e-09_20.png}
     \caption{}
     \label{fig:l_1e-09}
   \end{subfigure}
   \begin{subfigure}{.5\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{../figures/tradeoff_RIDGE_1e-10.png}
+    \includegraphics[width=\textwidth]{../figures/tradeoff_RIDGE_1e-10_20.png}
     \caption{}
     \label{fig:l_1e-10}
   \end{subfigure}
   \begin{subfigure}{.5\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{../figures/tradeoff_RIDGE_1e-11.png}
+    \includegraphics[width=\textwidth]{../figures/tradeoff_RIDGE_1e-11_20.png}
     \caption{}
     \label{fig:l_1e-11}
   \end{subfigure}
   \begin{subfigure}{.5\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{../figures/tradeoff_RIDGE_1e-12.png}
+    \includegraphics[width=\textwidth]{../figures/tradeoff_RIDGE_1e-12_20.png}
     \caption{}
     \label{fig:l_1e-12}
   \end{subfigure}
@@ -481,44 +482,44 @@ In the same way as for ordinary least squares we look at the bias variance trade
 \begin{figure}[H]
   \begin{subfigure}{.5\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{../figures/tradeoff_LASSO_1e-08.png}
+    \includegraphics[width=\textwidth]{../figures/tradeoff_LASSO_1e-01_20.png}
     \caption{}
     \label{fig:l_1e-08}
   \end{subfigure}
   \begin{subfigure}{.5\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{../figures/tradeoff_LASSO_1e-09.png}
+    \includegraphics[width=\textwidth]{../figures/tradeoff_LASSO_1e-02_20.png}
     \caption{}
     \label{fig:l_1e-09}
   \end{subfigure}
   \begin{subfigure}{.5\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{../figures/tradeoff_LASSO_1e-10.png}
+    \includegraphics[width=\textwidth]{../figures/tradeoff_LASSO_1e-03_20.png}
     \caption{}
     \label{fig:l_1e-10}
   \end{subfigure}
   \begin{subfigure}{.5\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{../figures/tradeoff_LASSO_1e-11.png}
+    \includegraphics[width=\textwidth]{../figures/tradeoff_LASSO_1e-0420.png}
     \caption{}
     \label{fig:l_1e-1}
   \end{subfigure}
   \begin{subfigure}{.5\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{../figures/tradeoff_LASSO_1e-12.png}
+    \includegraphics[width=\textwidth]{../figures/tradeoff_LASSO_1e-0520.png}
     \caption{}
     \label{fig:l_1e-12}
   \end{subfigure}
   \begin{subfigure}{.5\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{../figures/tradeoff_LASSO_1e-13.png}
+    \includegraphics[width=\textwidth]{../figures/tradeoff_LASSO_1e-0620.png}
     \caption{}
     \label{fig:l_1e-13}
   \end{subfigure}
   \caption{Bias variance tradeoff for different choices of lambda using Lasso regression for data with $n=30$ steps and noise standard deviation of $\sigma=0.2$}
   \label{fig:lasso_tradeoff}
 \end{figure}
-When comparing the two above figures (\ref{fig:ridge_tradeoff} and \ref{fig:lasso_tradeoff}) of the bias variance tradeoff with the tradeoff for OLS in figure \ref{fig:bias_variance} we see that ridge and lasso are much less prone to a fast increasing variance for higher degrees. It is also clear that the lasso regression is even better at keeping the variance down than the ridge regression even for smaller $\lambda$ parameters. It is in other words clear that the dampning parameter $\lambda$ does a great job of reducing overfiting for both ridge and lasso regression.
+When comparing the two above figures (\ref{fig:ridge_tradeoff} and \ref{fig:lasso_tradeoff}) of the bias variance tradeoff with the tradeoff for OLS in figure \ref{fig:bias_variance} we see that ridge and lasso are much less prone to a fast increasing variance for higher degrees. It is also clear that the lasso regression is even better at keeping the variance down than the ridge regression especially for smaller $\lambda$ parameters. We can also see that there is minimal change in lasso for  It is in other words clear that the dampning parameter $\lambda$ does a great job of reducing overfiting for both ridge and lasso regression.
 
 \subsubsection{Finding best models}
 We continue with analyzing the error of our models dependency of polynomial degree and choice of the parameter $\lambda$. To best show this for lasso and ridge regression a heatmap is shown in figure \ref{fig:heat_franke} below where cross validation with 5 $k$-folds has been used. Here we have polynomial degree on the x-axis and $\lambda$ on the y-axis togethere with the MSE in color following the colorbar to the right of the figures.
@@ -877,14 +878,14 @@ For the Franke function we found that Ridge barely gave us the prediction with t
 
 In \ref{fig:extra_pred_franke} we madde futher predictions on a new dataset starting with the optimal parameters found in table \ref{tab:best_comp} to get a better visual understanding of our predictions. Here we have not stored the beta parameters computed earlier for $n=30$ which means that new parameters have been computed. This is typically not what you would do in a real world scenario when you gain new data to test for. For this increase in steps to $n=200$ it would be beneficial of finding new optimal parameters which would because of an increase in sample size end up making better predictions. This plot does in other words not tell us anything special but rather show us that the parameters found in \ref{tab:best_comp} would give us a good understanding of where we should start with our analysis given a new and bigger dataset from the same source.
 
-What discusse above is also valid for our plot \ref{pred_real} which means these also are left as nice visualization of our predictions. Futhermore is our predictions in this case not made based on some function with some large noise. This means that our predictions may be worse than our initial data at describing the topography depending on how accurate our topography messurements are. For sea level height data messured by remote sensing it is found that uncertainties in messurements of local change in sea level height are as low as 0.062mm/year \url{https://doi.org/10.1038/s41597-020-00786-7} which leaves us to believe that similar surface height messurements of topography has an uncertainty of the same scale. This means that the predictions performed on our topography data serves only as a study of how different regression methods predicts and reacts to different input data. What would be interesting to do to with this topography data on the other hand, is to see if a trained model on one surface could help to make a prediction on another where there is less available data or of lower quality"""""
+What discusse above is also valid for our plot \ref{pred_real} which means these also are left as nice visualization of our predictions. Futhermore is our predictions in this case not made based on some function with some large noise. This means that our predictions may be worse than our initial data at describing the topography depending on how accurate our topography messurements are. For sea level height data messured by remote sensing it is found that uncertainties in messurements of local change in sea level height are as low as 0.062mm/year \url{https://doi.org/10.1038/s41597-020-00786-7} which leaves us to believe that similar surface height messurements of topography has an uncertainty of the same scale. This means that the predictions performed on our topography data serves only as a study of how different regression methods predicts and reacts to different input data. What would on the other hand be interesting to do to with our topography data, is to see if a trained model on one surface could help to make a prediction on another where there is less available data or data of lower quality or resolution. Such a prediction is left as a possibility for futher research.
 
 \section{Conclusion}
-In total just a method study
+In total we have looked at both generated data from the Franke function and real topography data. Both have ended up beeing more of a study of our three different regression methods, OLS, Lasso and Ridge, than a study of the data in itself. We have looked into the bias variance tradeoff a
+
 \begin{itemize}
   \item få orden på hvordan bootstrap fungerer
   \item trene på et område og predikere et annet
 \end{itemize}
-\section{}
 
 \end{document}

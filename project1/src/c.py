@@ -13,7 +13,7 @@ from sklearn.linear_model import LinearRegression
 from functions import *
 plt.rcParams.update({"font.size": 16})
 
-def bias_variance_tradeoff(franke=True, x=None, y=None, z=None, n=30, std=0.2, mindegree=0, maxdegree=15, n_B=100, plot=True, method="OLS", lamda=1, show=True, seed=200, save=False):
+def bias_variance_tradeoff(franke=True, x=None, y=None, z=None, n=30, std=0.2, mindegree=0, maxdegree=15, n_B=100, plot=True, method="OLS", lamda=1, show=True, seed=200, save=False, max_iter=100):
     """
     Calculates the bias variance tradeoff using bootstrap and OLS
     Takes in
@@ -38,7 +38,7 @@ def bias_variance_tradeoff(franke=True, x=None, y=None, z=None, n=30, std=0.2, m
     for i in range(maxdegree+1 - mindegree):  # For increasing complexity
         X = design_matrix(x, y, i)
         X_train, X_test, z_train, z_test = train_test_split(X, z, test_size=0.2)
-        z_pred = bootstrap(X_train, X_test, z_train, z_test, n_B, method=method, lamda=lamda)
+        z_pred = bootstrap(X_train, X_test, z_train, z_test, n_B, method=method, lamda=lamda, max_iter=max_iter)
 
         bias[i] = np.mean((z_test - np.mean(z_pred, axis=1, keepdims=True).T)**2) - std**2
         variance[i] = np.mean((z_pred -  np.mean(z_pred, axis=1, keepdims=True))**2)

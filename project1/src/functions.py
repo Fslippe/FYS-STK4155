@@ -156,7 +156,7 @@ def plot_3d_trisurf(x, y, z, scale_std=1, scale_mean=0, savename=None, azim=110,
         plt.savefig("../figures/%s.png" %(savename))
 
 
-def bootstrap(X_train, X_test, z_train, z_test, n_B, method, lamda=1):
+def bootstrap(X_train, X_test, z_train, z_test, n_B, method, lamda=1, max_iter =100):
     z_pred = np.zeros((len(z_test), n_B))
     for i in range(n_B):
         X_, z_ = resample(X_train, z_train)
@@ -169,7 +169,7 @@ def bootstrap(X_train, X_test, z_train, z_test, n_B, method, lamda=1):
             z_pred[:, i] = (X_test @ beta).ravel()
 
         if method == "LASSO":
-            model = lasso_regression(X_, z_, lamda)
+            model = lasso_regression(X_, z_, lamda, max_iter)
             z_pred[:, i] = model.predict(X_test).ravel()
 
     return z_pred

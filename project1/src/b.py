@@ -208,7 +208,6 @@ def main():
     std = 0.2
     x, y, z = make_data(n, std, seed=200)
     X = design_matrix(x, y, degree)
-    print(np.shape(z))
     #comparing MSE and R2 of scaled and non-scaled data
     compare_scale(X, z)
 
