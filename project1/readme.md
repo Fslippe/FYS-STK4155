@@ -17,4 +17,4 @@ The code is structured with pythonfiles with names b.py, c.py... corresponding t
 To reproduce the results run the python files with
 - python3 filename.py  
 
-For running g.py the data file located in the data folder needs to be downloaded. The rest should work if all the python files are located in the same folder. To reproduce some results from the report, some changes of parameters in the python files may be needed. To use right parameters change the parameters in the code to match with the parameters used in the plot.  
+For running g.py the data file located in the data folder needs to be downloaded. The rest should work if all the python files are located in the same folder. To reproduce some results from the report, some changes of parameters in the python files may be needed. To use right parameters change the parameters in the code to match with the parameters used in the plot. There are also descriptions for every function on how they work, what they produce and what arguments they take in. 
