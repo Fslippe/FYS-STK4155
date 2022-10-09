@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2022.8.24)  9 OCT 2022 15:41
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2022.8.24)  9 OCT 2022 16:07
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -833,61 +833,66 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 <../figures/cv_kfold.png, id=195, 433.62pt x 216.81pt>
 File: ../figures/cv_kfold.png Graphic file (type png)
 <use ../figures/cv_kfold.png>
-Package pdftex.def Info: ../figures/cv_kfold.png  used on input line 228.
+Package pdftex.def Info: ../figures/cv_kfold.png  used on input line 230.
 (pdftex.def)             Requested size: 303.53267pt x 151.77257pt.
- [9]
+
+Overfull \hbox (3.34491pt too wide) in paragraph at lines 227--233
+\OT1/cmr/m/n/12 To fur-ther in-ves-ti-gate our model we im-ple-ment the cross val-i-da-tion re-sam-pling method.
+ []
+
+[9]
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 233.
+(hyperref)                removing `math shift' on input line 235.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\lambda' on input line 233.
+(hyperref)                removing `\lambda' on input line 235.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 233.
+(hyperref)                removing `math shift' on input line 235.
 
 [10 <../figures/cv_kfold.png (PNG copy)>]
 <../figures/compare_scale_mse.png, id=209, 436.7517pt x 319.9152pt>
 File: ../figures/compare_scale_mse.png Graphic file (type png)
 <use ../figures/compare_scale_mse.png>
-Package pdftex.def Info: ../figures/compare_scale_mse.png  used on input line 249.
+Package pdftex.def Info: ../figures/compare_scale_mse.png  used on input line 252.
 (pdftex.def)             Requested size: 216.81pt x 158.81004pt.
 <../figures/compare_scale_r2.png, id=211, 440.1243pt x 319.9152pt>
 File: ../figures/compare_scale_r2.png Graphic file (type png)
 <use ../figures/compare_scale_r2.png>
-Package pdftex.def Info: ../figures/compare_scale_r2.png  used on input line 255.
+Package pdftex.def Info: ../figures/compare_scale_r2.png  used on input line 258.
 (pdftex.def)             Requested size: 216.81pt x 157.59454pt.
 
-Overfull \hbox (2.61108pt too wide) in paragraph at lines 247--259
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 250--262
 []$[]$ $[]$ 
  []
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 264.
+(hyperref)                removing `math shift' on input line 267.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 264.
+(hyperref)                removing `superscript' on input line 267.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 264.
+(hyperref)                removing `math shift' on input line 267.
 
 <../figures/mse_ols_5.png, id=213, 437.9562pt x 319.9152pt>
 File: ../figures/mse_ols_5.png Graphic file (type png)
 <use ../figures/mse_ols_5.png>
-Package pdftex.def Info: ../figures/mse_ols_5.png  used on input line 270.
+Package pdftex.def Info: ../figures/mse_ols_5.png  used on input line 272.
 (pdftex.def)             Requested size: 216.81pt x 158.37071pt.
 <../figures/r2_ols_5.png, id=214, 429.0429pt x 319.9152pt>
 File: ../figures/r2_ols_5.png Graphic file (type png)
 <use ../figures/r2_ols_5.png>
-Package pdftex.def Info: ../figures/r2_ols_5.png  used on input line 276.
+Package pdftex.def Info: ../figures/r2_ols_5.png  used on input line 278.
 (pdftex.def)             Requested size: 216.81pt x 161.66573pt.
 
-Overfull \hbox (2.61108pt too wide) in paragraph at lines 268--280
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 270--282
 []$[]$ $[]$ 
  []
 
@@ -895,15 +900,15 @@ Overfull \hbox (2.61108pt too wide) in paragraph at lines 268--280
 <../figures/mse_train_test.png, id=226, 437.9562pt x 319.9152pt>
 File: ../figures/mse_train_test.png Graphic file (type png)
 <use ../figures/mse_train_test.png>
-Package pdftex.def Info: ../figures/mse_train_test.png  used on input line 289.
+Package pdftex.def Info: ../figures/mse_train_test.png  used on input line 291.
 (pdftex.def)             Requested size: 216.81pt x 158.37071pt.
 <../figures/r2_train_test.png, id=227, 429.0429pt x 319.9152pt>
 File: ../figures/r2_train_test.png Graphic file (type png)
 <use ../figures/r2_train_test.png>
-Package pdftex.def Info: ../figures/r2_train_test.png  used on input line 295.
+Package pdftex.def Info: ../figures/r2_train_test.png  used on input line 297.
 (pdftex.def)             Requested size: 216.81pt x 161.66573pt.
 
-Overfull \hbox (2.61108pt too wide) in paragraph at lines 287--299
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 289--301
 []$[]$ $[]$ 
  []
 
@@ -911,48 +916,48 @@ Overfull \hbox (2.61108pt too wide) in paragraph at lines 287--299
 <../figures/MSE_train_test_resample.png, id=237, 437.9562pt x 319.9152pt>
 File: ../figures/MSE_train_test_resample.png Graphic file (type png)
 <use ../figures/MSE_train_test_resample.png>
-Package pdftex.def Info: ../figures/MSE_train_test_resample.png  used on input line 306.
+Package pdftex.def Info: ../figures/MSE_train_test_resample.png  used on input line 308.
 (pdftex.def)             Requested size: 216.81pt x 158.37071pt.
 <../figures/R2_train_test_resample.png, id=238, 429.0429pt x 319.9152pt>
 File: ../figures/R2_train_test_resample.png Graphic file (type png)
 <use ../figures/R2_train_test_resample.png>
-Package pdftex.def Info: ../figures/R2_train_test_resample.png  used on input line 312.
+Package pdftex.def Info: ../figures/R2_train_test_resample.png  used on input line 314.
 (pdftex.def)             Requested size: 216.81pt x 161.66573pt.
 
-Overfull \hbox (2.61108pt too wide) in paragraph at lines 304--316
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 306--318
 []$[]$ $[]$ 
  []
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 321.
+(hyperref)                removing `math shift' on input line 323.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\beta' on input line 321.
+(hyperref)                removing `\beta' on input line 323.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 321.
+(hyperref)                removing `math shift' on input line 323.
 
 <../figures/beta_degree.png, id=241, 438.438pt x 322.0833pt>
 File: ../figures/beta_degree.png Graphic file (type png)
 <use ../figures/beta_degree.png>
-Package pdftex.def Info: ../figures/beta_degree.png  used on input line 326.
+Package pdftex.def Info: ../figures/beta_degree.png  used on input line 328.
 (pdftex.def)             Requested size: 303.53267pt x 222.99455pt.
 [13 <../figures/MSE_train_test.png> <../figures/R2_train_test.png> <../figures/MSE_train_test_resample.png> <../figures/R2_train_test_resample.png>]
 <../figures/ridge_beta.png, id=255, 411.6981pt x 342.5598pt>
 File: ../figures/ridge_beta.png Graphic file (type png)
 <use ../figures/ridge_beta.png>
-Package pdftex.def Info: ../figures/ridge_beta.png  used on input line 336.
+Package pdftex.def Info: ../figures/ridge_beta.png  used on input line 338.
 (pdftex.def)             Requested size: 216.81pt x 180.40063pt.
 <../figures/lasso_beta.png, id=256, 411.6981pt x 342.5598pt>
 File: ../figures/lasso_beta.png Graphic file (type png)
 <use ../figures/lasso_beta.png>
-Package pdftex.def Info: ../figures/lasso_beta.png  used on input line 342.
+Package pdftex.def Info: ../figures/lasso_beta.png  used on input line 344.
 (pdftex.def)             Requested size: 216.81pt x 180.40063pt.
 
-Overfull \hbox (2.61108pt too wide) in paragraph at lines 334--346
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 336--348
 []$[]$ $[]$ 
  []
 
@@ -960,102 +965,102 @@ Overfull \hbox (2.61108pt too wide) in paragraph at lines 334--346
 <../figures/bias_variance_tradeoff.png, id=273, 441.3288pt x 328.3467pt>
 File: ../figures/bias_variance_tradeoff.png Graphic file (type png)
 <use ../figures/bias_variance_tradeoff.png>
-Package pdftex.def Info: ../figures/bias_variance_tradeoff.png  used on input line 388.
+Package pdftex.def Info: ../figures/bias_variance_tradeoff.png  used on input line 390.
 (pdftex.def)             Requested size: 303.53267pt x 225.83298pt.
  [16]
 <../figures/bias_variance_100.png, id=281, 441.3288pt x 328.3467pt>
 File: ../figures/bias_variance_100.png Graphic file (type png)
 <use ../figures/bias_variance_100.png>
-Package pdftex.def Info: ../figures/bias_variance_100.png  used on input line 397.
+Package pdftex.def Info: ../figures/bias_variance_100.png  used on input line 399.
 (pdftex.def)             Requested size: 303.53267pt x 225.83298pt.
  [17 <../figures/bias_variance_tradeoff.png>]
 <../figures/tradeoff_RIDGE_1e-07_20.png, id=290, 425.9112pt x 344.9688pt>
 File: ../figures/tradeoff_RIDGE_1e-07_20.png Graphic file (type png)
 <use ../figures/tradeoff_RIDGE_1e-07_20.png>
-Package pdftex.def Info: ../figures/tradeoff_RIDGE_1e-07_20.png  used on input line 407.
+Package pdftex.def Info: ../figures/tradeoff_RIDGE_1e-07_20.png  used on input line 409.
 (pdftex.def)             Requested size: 216.81pt x 175.6054pt.
 <../figures/tradeoff_RIDGE_1e-08_20.png, id=291, 425.9112pt x 344.9688pt>
 File: ../figures/tradeoff_RIDGE_1e-08_20.png Graphic file (type png)
 <use ../figures/tradeoff_RIDGE_1e-08_20.png>
-Package pdftex.def Info: ../figures/tradeoff_RIDGE_1e-08_20.png  used on input line 413.
+Package pdftex.def Info: ../figures/tradeoff_RIDGE_1e-08_20.png  used on input line 415.
 (pdftex.def)             Requested size: 216.81pt x 175.6054pt.
 <../figures/tradeoff_RIDGE_1e-09_20.png, id=292, 425.9112pt x 344.9688pt>
 File: ../figures/tradeoff_RIDGE_1e-09_20.png Graphic file (type png)
 <use ../figures/tradeoff_RIDGE_1e-09_20.png>
-Package pdftex.def Info: ../figures/tradeoff_RIDGE_1e-09_20.png  used on input line 419.
+Package pdftex.def Info: ../figures/tradeoff_RIDGE_1e-09_20.png  used on input line 421.
 (pdftex.def)             Requested size: 216.81pt x 175.6054pt.
 <../figures/tradeoff_RIDGE_1e-10_20.png, id=293, 425.9112pt x 344.9688pt>
 File: ../figures/tradeoff_RIDGE_1e-10_20.png Graphic file (type png)
 <use ../figures/tradeoff_RIDGE_1e-10_20.png>
-Package pdftex.def Info: ../figures/tradeoff_RIDGE_1e-10_20.png  used on input line 425.
+Package pdftex.def Info: ../figures/tradeoff_RIDGE_1e-10_20.png  used on input line 427.
 (pdftex.def)             Requested size: 216.81pt x 175.6054pt.
 <../figures/tradeoff_RIDGE_1e-11_20.png, id=294, 425.9112pt x 344.9688pt>
 File: ../figures/tradeoff_RIDGE_1e-11_20.png Graphic file (type png)
 <use ../figures/tradeoff_RIDGE_1e-11_20.png>
-Package pdftex.def Info: ../figures/tradeoff_RIDGE_1e-11_20.png  used on input line 431.
+Package pdftex.def Info: ../figures/tradeoff_RIDGE_1e-11_20.png  used on input line 433.
 (pdftex.def)             Requested size: 216.81pt x 175.6054pt.
 <../figures/tradeoff_RIDGE_1e-12_20.png, id=295, 425.9112pt x 344.9688pt>
 File: ../figures/tradeoff_RIDGE_1e-12_20.png Graphic file (type png)
 <use ../figures/tradeoff_RIDGE_1e-12_20.png>
-Package pdftex.def Info: ../figures/tradeoff_RIDGE_1e-12_20.png  used on input line 437.
+Package pdftex.def Info: ../figures/tradeoff_RIDGE_1e-12_20.png  used on input line 439.
 (pdftex.def)             Requested size: 216.81pt x 175.6054pt.
 
-Overfull \hbox (2.61108pt too wide) in paragraph at lines 405--441
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 407--443
 []$[]$ $[]$
  []
 
 
-Overfull \hbox (2.61108pt too wide) in paragraph at lines 405--441
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 407--443
 []$ $[]$
  []
 
 
-Overfull \hbox (2.61108pt too wide) in paragraph at lines 405--441
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 407--443
 []$ $[]$ 
  []
 
 <../figures/tradeoff_LASSO_1e-01_20.png, id=296, 425.9112pt x 344.9688pt>
 File: ../figures/tradeoff_LASSO_1e-01_20.png Graphic file (type png)
 <use ../figures/tradeoff_LASSO_1e-01_20.png>
-Package pdftex.def Info: ../figures/tradeoff_LASSO_1e-01_20.png  used on input line 447.
+Package pdftex.def Info: ../figures/tradeoff_LASSO_1e-01_20.png  used on input line 449.
 (pdftex.def)             Requested size: 216.81pt x 175.6054pt.
 <../figures/tradeoff_LASSO_1e-02_20.png, id=297, 425.9112pt x 344.9688pt>
 File: ../figures/tradeoff_LASSO_1e-02_20.png Graphic file (type png)
 <use ../figures/tradeoff_LASSO_1e-02_20.png>
-Package pdftex.def Info: ../figures/tradeoff_LASSO_1e-02_20.png  used on input line 453.
+Package pdftex.def Info: ../figures/tradeoff_LASSO_1e-02_20.png  used on input line 455.
 (pdftex.def)             Requested size: 216.81pt x 175.6054pt.
 <../figures/tradeoff_LASSO_1e-03_20.png, id=298, 425.9112pt x 344.9688pt>
 File: ../figures/tradeoff_LASSO_1e-03_20.png Graphic file (type png)
 <use ../figures/tradeoff_LASSO_1e-03_20.png>
-Package pdftex.def Info: ../figures/tradeoff_LASSO_1e-03_20.png  used on input line 459.
+Package pdftex.def Info: ../figures/tradeoff_LASSO_1e-03_20.png  used on input line 461.
 (pdftex.def)             Requested size: 216.81pt x 175.6054pt.
 <../figures/tradeoff_LASSO_1e-0420.png, id=299, 425.9112pt x 344.9688pt>
 File: ../figures/tradeoff_LASSO_1e-0420.png Graphic file (type png)
 <use ../figures/tradeoff_LASSO_1e-0420.png>
-Package pdftex.def Info: ../figures/tradeoff_LASSO_1e-0420.png  used on input line 465.
+Package pdftex.def Info: ../figures/tradeoff_LASSO_1e-0420.png  used on input line 467.
 (pdftex.def)             Requested size: 216.81pt x 175.6054pt.
 <../figures/tradeoff_LASSO_1e-0520.png, id=300, 425.9112pt x 344.9688pt>
 File: ../figures/tradeoff_LASSO_1e-0520.png Graphic file (type png)
 <use ../figures/tradeoff_LASSO_1e-0520.png>
-Package pdftex.def Info: ../figures/tradeoff_LASSO_1e-0520.png  used on input line 471.
+Package pdftex.def Info: ../figures/tradeoff_LASSO_1e-0520.png  used on input line 473.
 (pdftex.def)             Requested size: 216.81pt x 175.6054pt.
 <../figures/tradeoff_LASSO_1e-0620.png, id=301, 425.9112pt x 344.9688pt>
 File: ../figures/tradeoff_LASSO_1e-0620.png Graphic file (type png)
 <use ../figures/tradeoff_LASSO_1e-0620.png>
-Package pdftex.def Info: ../figures/tradeoff_LASSO_1e-0620.png  used on input line 477.
+Package pdftex.def Info: ../figures/tradeoff_LASSO_1e-0620.png  used on input line 479.
 (pdftex.def)             Requested size: 216.81pt x 175.6054pt.
 
-Overfull \hbox (2.61108pt too wide) in paragraph at lines 445--481
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 447--483
 []$[]$ $[]$
  []
 
 
-Overfull \hbox (2.61108pt too wide) in paragraph at lines 445--481
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 447--483
 []$ $[]$
  []
 
 
-Overfull \hbox (2.61108pt too wide) in paragraph at lines 445--481
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 447--483
 []$ $[]$ 
  []
 
@@ -1063,42 +1068,42 @@ Overfull \hbox (2.61108pt too wide) in paragraph at lines 445--481
 <../figures/boot_cv_comp_OLS_100_5.png, id=334, 449.2785pt x 338.7054pt>
 File: ../figures/boot_cv_comp_OLS_100_5.png Graphic file (type png)
 <use ../figures/boot_cv_comp_OLS_100_5.png>
-Package pdftex.def Info: ../figures/boot_cv_comp_OLS_100_5.png  used on input line 491.
+Package pdftex.def Info: ../figures/boot_cv_comp_OLS_100_5.png  used on input line 493.
 (pdftex.def)             Requested size: 216.81pt x 163.45016pt.
 <../figures/boot_cv_comp_OLS_100_10.png, id=335, 454.5783pt x 338.7054pt>
 File: ../figures/boot_cv_comp_OLS_100_10.png Graphic file (type png)
 <use ../figures/boot_cv_comp_OLS_100_10.png>
-Package pdftex.def Info: ../figures/boot_cv_comp_OLS_100_10.png  used on input line 497.
+Package pdftex.def Info: ../figures/boot_cv_comp_OLS_100_10.png  used on input line 499.
 (pdftex.def)             Requested size: 216.81pt x 161.54826pt.
 
-Overfull \hbox (2.61108pt too wide) in paragraph at lines 489--501
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 491--503
 []$[]$ $[]$ 
  []
 
 <../figures/boot_cv_comp_01.png, id=337, 454.5783pt x 338.7054pt>
 File: ../figures/boot_cv_comp_01.png Graphic file (type png)
 <use ../figures/boot_cv_comp_01.png>
-Package pdftex.def Info: ../figures/boot_cv_comp_01.png  used on input line 507.
+Package pdftex.def Info: ../figures/boot_cv_comp_01.png  used on input line 509.
 (pdftex.def)             Requested size: 303.53267pt x 226.16653pt.
 [21 <../figures/boot_cv_comp_OLS_100_5.png> <../figures/boot_cv_comp_OLS_100_10.png>]
 <../figures/best_lambda_OLS_02_franke.png, id=350, 441.3288pt x 323.2878pt>
 File: ../figures/best_lambda_OLS_02_franke.png Graphic file (type png)
 <use ../figures/best_lambda_OLS_02_franke.png>
-Package pdftex.def Info: ../figures/best_lambda_OLS_02_franke.png  used on input line 518.
+Package pdftex.def Info: ../figures/best_lambda_OLS_02_franke.png  used on input line 519.
 (pdftex.def)             Requested size: 303.53267pt x 222.35353pt.
  [22 <../figures/boot_cv_comp_01.png>]
 <../figures/best_lambda_RIDGE_02.png, id=358, 470.7186pt x 321.3606pt>
 File: ../figures/best_lambda_RIDGE_02.png Graphic file (type png)
 <use ../figures/best_lambda_RIDGE_02.png>
-Package pdftex.def Info: ../figures/best_lambda_RIDGE_02.png  used on input line 527.
+Package pdftex.def Info: ../figures/best_lambda_RIDGE_02.png  used on input line 528.
 (pdftex.def)             Requested size: 216.81pt x 148.01889pt.
 <../figures/best_lambda_LASSO_02.png, id=359, 467.8278pt x 321.3606pt>
 File: ../figures/best_lambda_LASSO_02.png Graphic file (type png)
 <use ../figures/best_lambda_LASSO_02.png>
-Package pdftex.def Info: ../figures/best_lambda_LASSO_02.png  used on input line 533.
+Package pdftex.def Info: ../figures/best_lambda_LASSO_02.png  used on input line 534.
 (pdftex.def)             Requested size: 216.81pt x 148.93095pt.
 
-Overfull \hbox (2.61108pt too wide) in paragraph at lines 525--537
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 526--538
 []$[]$ $[]$ 
  []
 
@@ -1106,45 +1111,45 @@ Overfull \hbox (2.61108pt too wide) in paragraph at lines 525--537
 <../figures/actual_data_franke_2.png, id=379, 392.1852pt x 326.4195pt>
 File: ../figures/actual_data_franke_2.png Graphic file (type png)
 <use ../figures/actual_data_franke_2.png>
-Package pdftex.def Info: ../figures/actual_data_franke_2.png  used on input line 566.
+Package pdftex.def Info: ../figures/actual_data_franke_2.png  used on input line 568.
 (pdftex.def)             Requested size: 216.81pt x 180.45769pt.
 <../figures/train_data_franke_2.png, id=380, 392.9079pt x 326.4195pt>
 File: ../figures/train_data_franke_2.png Graphic file (type png)
 <use ../figures/train_data_franke_2.png>
-Package pdftex.def Info: ../figures/train_data_franke_2.png  used on input line 572.
+Package pdftex.def Info: ../figures/train_data_franke_2.png  used on input line 574.
 (pdftex.def)             Requested size: 216.81pt x 180.11899pt.
 <../figures/test_data_franke_2.png, id=381, 391.7034pt x 326.4195pt>
 File: ../figures/test_data_franke_2.png Graphic file (type png)
 <use ../figures/test_data_franke_2.png>
-Package pdftex.def Info: ../figures/test_data_franke_2.png  used on input line 578.
+Package pdftex.def Info: ../figures/test_data_franke_2.png  used on input line 580.
 (pdftex.def)             Requested size: 216.81pt x 180.68182pt.
 <../figures/ols_pred_franke_2.png, id=382, 392.667pt x 326.4195pt>
 File: ../figures/ols_pred_franke_2.png Graphic file (type png)
 <use ../figures/ols_pred_franke_2.png>
-Package pdftex.def Info: ../figures/ols_pred_franke_2.png  used on input line 584.
+Package pdftex.def Info: ../figures/ols_pred_franke_2.png  used on input line 586.
 (pdftex.def)             Requested size: 216.81pt x 180.23355pt.
 <../figures/ridge_pred_franke_2.png, id=383, 392.4261pt x 326.4195pt>
 File: ../figures/ridge_pred_franke_2.png Graphic file (type png)
 <use ../figures/ridge_pred_franke_2.png>
-Package pdftex.def Info: ../figures/ridge_pred_franke_2.png  used on input line 590.
+Package pdftex.def Info: ../figures/ridge_pred_franke_2.png  used on input line 592.
 (pdftex.def)             Requested size: 216.81pt x 180.34312pt.
 <../figures/lasso_pred_franke_2.png, id=384, 393.1488pt x 326.4195pt>
 File: ../figures/lasso_pred_franke_2.png Graphic file (type png)
 <use ../figures/lasso_pred_franke_2.png>
-Package pdftex.def Info: ../figures/lasso_pred_franke_2.png  used on input line 596.
+Package pdftex.def Info: ../figures/lasso_pred_franke_2.png  used on input line 598.
 (pdftex.def)             Requested size: 216.81pt x 180.00941pt.
 
-Overfull \hbox (2.61108pt too wide) in paragraph at lines 564--600
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 566--602
 []$[]$ $[]$
  []
 
 
-Overfull \hbox (2.61108pt too wide) in paragraph at lines 564--600
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 566--602
 []$ $[]$
  []
 
 
-Overfull \hbox (2.61108pt too wide) in paragraph at lines 564--600
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 566--602
 []$ $[]$ 
  []
 
@@ -1155,45 +1160,45 @@ Overfull \vbox (17.71391pt too high) has occurred while \output is active []
 <../figures/actual_data_franke_extra.png, id=405, 392.1852pt x 326.4195pt>
 File: ../figures/actual_data_franke_extra.png Graphic file (type png)
 <use ../figures/actual_data_franke_extra.png>
-Package pdftex.def Info: ../figures/actual_data_franke_extra.png  used on input line 608.
+Package pdftex.def Info: ../figures/actual_data_franke_extra.png  used on input line 610.
 (pdftex.def)             Requested size: 216.81pt x 180.45769pt.
 <../figures/train_data_franke_extra.png, id=406, 392.4261pt x 326.4195pt>
 File: ../figures/train_data_franke_extra.png Graphic file (type png)
 <use ../figures/train_data_franke_extra.png>
-Package pdftex.def Info: ../figures/train_data_franke_extra.png  used on input line 614.
+Package pdftex.def Info: ../figures/train_data_franke_extra.png  used on input line 616.
 (pdftex.def)             Requested size: 216.81pt x 180.34312pt.
 <../figures/test_data_franke_extra.png, id=407, 392.667pt x 326.4195pt>
 File: ../figures/test_data_franke_extra.png Graphic file (type png)
 <use ../figures/test_data_franke_extra.png>
-Package pdftex.def Info: ../figures/test_data_franke_extra.png  used on input line 620.
+Package pdftex.def Info: ../figures/test_data_franke_extra.png  used on input line 622.
 (pdftex.def)             Requested size: 216.81pt x 180.23355pt.
 <../figures/ols_pred_franke_extra.png, id=408, 392.4261pt x 326.4195pt>
 File: ../figures/ols_pred_franke_extra.png Graphic file (type png)
 <use ../figures/ols_pred_franke_extra.png>
-Package pdftex.def Info: ../figures/ols_pred_franke_extra.png  used on input line 626.
+Package pdftex.def Info: ../figures/ols_pred_franke_extra.png  used on input line 628.
 (pdftex.def)             Requested size: 216.81pt x 180.34312pt.
 <../figures/ridge_pred_franke_extra.png, id=409, 392.4261pt x 326.4195pt>
 File: ../figures/ridge_pred_franke_extra.png Graphic file (type png)
 <use ../figures/ridge_pred_franke_extra.png>
-Package pdftex.def Info: ../figures/ridge_pred_franke_extra.png  used on input line 632.
+Package pdftex.def Info: ../figures/ridge_pred_franke_extra.png  used on input line 634.
 (pdftex.def)             Requested size: 216.81pt x 180.34312pt.
 <../figures/lasso_pred_franke_extra.png, id=410, 392.9079pt x 326.4195pt>
 File: ../figures/lasso_pred_franke_extra.png Graphic file (type png)
 <use ../figures/lasso_pred_franke_extra.png>
-Package pdftex.def Info: ../figures/lasso_pred_franke_extra.png  used on input line 638.
+Package pdftex.def Info: ../figures/lasso_pred_franke_extra.png  used on input line 640.
 (pdftex.def)             Requested size: 216.81pt x 180.11899pt.
 
-Overfull \hbox (2.61108pt too wide) in paragraph at lines 606--642
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 608--644
 []$[]$ $[]$
  []
 
 
-Overfull \hbox (2.61108pt too wide) in paragraph at lines 606--642
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 608--644
 []$ $[]$
  []
 
 
-Overfull \hbox (2.61108pt too wide) in paragraph at lines 606--642
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 608--644
 []$ $[]$ 
  []
 
@@ -1204,51 +1209,51 @@ Overfull \vbox (31.98978pt too high) has occurred while \output is active []
 <../figures/mse_deg_real.png, id=433, 431.9337pt x 321.3606pt>
 File: ../figures/mse_deg_real.png Graphic file (type png)
 <use ../figures/mse_deg_real.png>
-Package pdftex.def Info: ../figures/mse_deg_real.png  used on input line 654.
+Package pdftex.def Info: ../figures/mse_deg_real.png  used on input line 656.
 (pdftex.def)             Requested size: 216.81pt x 161.30756pt.
 <../figures/r2_deg_real.png, id=434, 432.4155pt x 321.3606pt>
 File: ../figures/r2_deg_real.png Graphic file (type png)
 <use ../figures/r2_deg_real.png>
-Package pdftex.def Info: ../figures/r2_deg_real.png  used on input line 660.
+Package pdftex.def Info: ../figures/r2_deg_real.png  used on input line 662.
 (pdftex.def)             Requested size: 216.81pt x 161.12611pt.
 
-Overfull \hbox (2.61108pt too wide) in paragraph at lines 652--664
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 654--666
 []$[]$ $[]$ 
  []
 
 <../figures/ols_real_tradeoff.png, id=438, 443.7378pt x 328.1058pt>
 File: ../figures/ols_real_tradeoff.png Graphic file (type png)
 <use ../figures/ols_real_tradeoff.png>
-Package pdftex.def Info: ../figures/ols_real_tradeoff.png  used on input line 673.
+Package pdftex.def Info: ../figures/ols_real_tradeoff.png  used on input line 675.
 (pdftex.def)             Requested size: 216.81pt x 160.31265pt.
 [27 <../figures/mse_deg_real.png> <../figures/r2_deg_real.png>]
 <../figures/tradeoff_RIDGE_1e-01real.png, id=447, 403.7484pt x 341.1144pt>
 File: ../figures/tradeoff_RIDGE_1e-01real.png Graphic file (type png)
 <use ../figures/tradeoff_RIDGE_1e-01real.png>
-Package pdftex.def Info: ../figures/tradeoff_RIDGE_1e-01real.png  used on input line 681.
+Package pdftex.def Info: ../figures/tradeoff_RIDGE_1e-01real.png  used on input line 683.
 (pdftex.def)             Requested size: 216.81pt x 183.17883pt.
 <../figures/tradeoff_RIDGE_1e-05real.png, id=448, 403.7484pt x 341.1144pt>
 File: ../figures/tradeoff_RIDGE_1e-05real.png Graphic file (type png)
 <use ../figures/tradeoff_RIDGE_1e-05real.png>
-Package pdftex.def Info: ../figures/tradeoff_RIDGE_1e-05real.png  used on input line 687.
+Package pdftex.def Info: ../figures/tradeoff_RIDGE_1e-05real.png  used on input line 689.
 (pdftex.def)             Requested size: 216.81pt x 183.17883pt.
 <../figures/tradeoff_RIDGE_1e-09real.png, id=449, 403.7484pt x 341.1144pt>
 File: ../figures/tradeoff_RIDGE_1e-09real.png Graphic file (type png)
 <use ../figures/tradeoff_RIDGE_1e-09real.png>
-Package pdftex.def Info: ../figures/tradeoff_RIDGE_1e-09real.png  used on input line 693.
+Package pdftex.def Info: ../figures/tradeoff_RIDGE_1e-09real.png  used on input line 695.
 (pdftex.def)             Requested size: 216.81pt x 183.17883pt.
 <../figures/tradeoff_RIDGE_1e-13real.png, id=450, 403.7484pt x 341.1144pt>
 File: ../figures/tradeoff_RIDGE_1e-13real.png Graphic file (type png)
 <use ../figures/tradeoff_RIDGE_1e-13real.png>
-Package pdftex.def Info: ../figures/tradeoff_RIDGE_1e-13real.png  used on input line 699.
+Package pdftex.def Info: ../figures/tradeoff_RIDGE_1e-13real.png  used on input line 701.
 (pdftex.def)             Requested size: 216.81pt x 183.17883pt.
 
-Overfull \hbox (2.61108pt too wide) in paragraph at lines 679--703
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 681--705
 []$[]$ $[]$
  []
 
 
-Overfull \hbox (2.61108pt too wide) in paragraph at lines 679--703
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 681--705
 []$ $[]$ 
  []
 
@@ -1256,30 +1261,30 @@ Overfull \hbox (2.61108pt too wide) in paragraph at lines 679--703
 <../figures/tradeoff_LASSO_1e-01real.png, id=459, 403.7484pt x 341.1144pt>
 File: ../figures/tradeoff_LASSO_1e-01real.png Graphic file (type png)
 <use ../figures/tradeoff_LASSO_1e-01real.png>
-Package pdftex.def Info: ../figures/tradeoff_LASSO_1e-01real.png  used on input line 710.
+Package pdftex.def Info: ../figures/tradeoff_LASSO_1e-01real.png  used on input line 712.
 (pdftex.def)             Requested size: 216.81pt x 183.17883pt.
 <../figures/tradeoff_LASSO_1e-05real.png, id=460, 403.7484pt x 341.1144pt>
 File: ../figures/tradeoff_LASSO_1e-05real.png Graphic file (type png)
 <use ../figures/tradeoff_LASSO_1e-05real.png>
-Package pdftex.def Info: ../figures/tradeoff_LASSO_1e-05real.png  used on input line 716.
+Package pdftex.def Info: ../figures/tradeoff_LASSO_1e-05real.png  used on input line 718.
 (pdftex.def)             Requested size: 216.81pt x 183.17883pt.
 <../figures/tradeoff_LASSO_1e-09real.png, id=461, 403.7484pt x 341.1144pt>
 File: ../figures/tradeoff_LASSO_1e-09real.png Graphic file (type png)
 <use ../figures/tradeoff_LASSO_1e-09real.png>
-Package pdftex.def Info: ../figures/tradeoff_LASSO_1e-09real.png  used on input line 722.
+Package pdftex.def Info: ../figures/tradeoff_LASSO_1e-09real.png  used on input line 724.
 (pdftex.def)             Requested size: 216.81pt x 183.17883pt.
 <../figures/tradeoff_LASSO_1e-13real.png, id=462, 403.7484pt x 341.1144pt>
 File: ../figures/tradeoff_LASSO_1e-13real.png Graphic file (type png)
 <use ../figures/tradeoff_LASSO_1e-13real.png>
-Package pdftex.def Info: ../figures/tradeoff_LASSO_1e-13real.png  used on input line 728.
+Package pdftex.def Info: ../figures/tradeoff_LASSO_1e-13real.png  used on input line 730.
 (pdftex.def)             Requested size: 216.81pt x 183.17883pt.
 
-Overfull \hbox (2.61108pt too wide) in paragraph at lines 708--732
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 710--734
 []$[]$ $[]$
  []
 
 
-Overfull \hbox (2.61108pt too wide) in paragraph at lines 708--732
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 710--734
 []$ $[]$ 
  []
 
@@ -1287,20 +1292,20 @@ Overfull \hbox (2.61108pt too wide) in paragraph at lines 708--732
 <../figures/best_lambda_OLS_00.png, id=472, 431.9337pt x 321.3606pt>
 File: ../figures/best_lambda_OLS_00.png Graphic file (type png)
 <use ../figures/best_lambda_OLS_00.png>
-Package pdftex.def Info: ../figures/best_lambda_OLS_00.png  used on input line 742.
+Package pdftex.def Info: ../figures/best_lambda_OLS_00.png  used on input line 744.
 (pdftex.def)             Requested size: 216.81pt x 161.30756pt.
 <../figures/best_lambda_RIDGE_00.png, id=473, 467.5869pt x 327.3831pt>
 File: ../figures/best_lambda_RIDGE_00.png Graphic file (type png)
 <use ../figures/best_lambda_RIDGE_00.png>
-Package pdftex.def Info: ../figures/best_lambda_RIDGE_00.png  used on input line 748.
+Package pdftex.def Info: ../figures/best_lambda_RIDGE_00.png  used on input line 750.
 (pdftex.def)             Requested size: 216.81pt x 151.80196pt.
 <../figures/best_lambda_LASSO_00.png, id=474, 468.0687pt x 321.3606pt>
 File: ../figures/best_lambda_LASSO_00.png Graphic file (type png)
 <use ../figures/best_lambda_LASSO_00.png>
-Package pdftex.def Info: ../figures/best_lambda_LASSO_00.png  used on input line 754.
+Package pdftex.def Info: ../figures/best_lambda_LASSO_00.png  used on input line 756.
 (pdftex.def)             Requested size: 216.81pt x 148.85251pt.
 
-Overfull \hbox (2.61108pt too wide) in paragraph at lines 740--758
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 742--760
 []$ $[]$ 
  []
 
@@ -1308,45 +1313,45 @@ Overfull \hbox (2.61108pt too wide) in paragraph at lines 740--758
 <../figures/actual_data_n40_skip2.png, id=501, 413.8662pt x 325.9377pt>
 File: ../figures/actual_data_n40_skip2.png Graphic file (type png)
 <use ../figures/actual_data_n40_skip2.png>
-Package pdftex.def Info: ../figures/actual_data_n40_skip2.png  used on input line 784.
+Package pdftex.def Info: ../figures/actual_data_n40_skip2.png  used on input line 788.
 (pdftex.def)             Requested size: 216.81pt x 170.74684pt.
 <../figures/train_data_n40_skip2.png, id=502, 413.8662pt x 325.9377pt>
 File: ../figures/train_data_n40_skip2.png Graphic file (type png)
 <use ../figures/train_data_n40_skip2.png>
-Package pdftex.def Info: ../figures/train_data_n40_skip2.png  used on input line 790.
+Package pdftex.def Info: ../figures/train_data_n40_skip2.png  used on input line 794.
 (pdftex.def)             Requested size: 216.81pt x 170.74684pt.
 <../figures/test_data_n40_skip2.png, id=503, 414.1071pt x 325.9377pt>
 File: ../figures/test_data_n40_skip2.png Graphic file (type png)
 <use ../figures/test_data_n40_skip2.png>
-Package pdftex.def Info: ../figures/test_data_n40_skip2.png  used on input line 796.
+Package pdftex.def Info: ../figures/test_data_n40_skip2.png  used on input line 800.
 (pdftex.def)             Requested size: 216.81pt x 170.65234pt.
 <../figures/ols_pred_n40_skip2.png, id=504, 413.6253pt x 325.9377pt>
 File: ../figures/ols_pred_n40_skip2.png Graphic file (type png)
 <use ../figures/ols_pred_n40_skip2.png>
-Package pdftex.def Info: ../figures/ols_pred_n40_skip2.png  used on input line 802.
+Package pdftex.def Info: ../figures/ols_pred_n40_skip2.png  used on input line 806.
 (pdftex.def)             Requested size: 216.81pt x 170.85127pt.
 <../figures/ridge_pred_n40_skip2.png, id=505, 413.6253pt x 325.9377pt>
 File: ../figures/ridge_pred_n40_skip2.png Graphic file (type png)
 <use ../figures/ridge_pred_n40_skip2.png>
-Package pdftex.def Info: ../figures/ridge_pred_n40_skip2.png  used on input line 808.
+Package pdftex.def Info: ../figures/ridge_pred_n40_skip2.png  used on input line 812.
 (pdftex.def)             Requested size: 216.81pt x 170.85127pt.
 <../figures/lasso_pred_n40_skip2.png, id=506, 414.348pt x 325.9377pt>
 File: ../figures/lasso_pred_n40_skip2.png Graphic file (type png)
 <use ../figures/lasso_pred_n40_skip2.png>
-Package pdftex.def Info: ../figures/lasso_pred_n40_skip2.png  used on input line 814.
+Package pdftex.def Info: ../figures/lasso_pred_n40_skip2.png  used on input line 818.
 (pdftex.def)             Requested size: 216.81pt x 170.5479pt.
 
-Overfull \hbox (2.61108pt too wide) in paragraph at lines 782--818
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 786--822
 []$[]$ $[]$
  []
 
 
-Overfull \hbox (2.61108pt too wide) in paragraph at lines 782--818
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 786--822
 []$ $[]$
  []
 
 
-Overfull \hbox (2.61108pt too wide) in paragraph at lines 782--818
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 786--822
 []$ $[]$ 
  []
 
@@ -1354,45 +1359,45 @@ Overfull \hbox (2.61108pt too wide) in paragraph at lines 782--818
 <../figures/actual_data_n40.png, id=515, 414.1071pt x 325.9377pt>
 File: ../figures/actual_data_n40.png Graphic file (type png)
 <use ../figures/actual_data_n40.png>
-Package pdftex.def Info: ../figures/actual_data_n40.png  used on input line 825.
+Package pdftex.def Info: ../figures/actual_data_n40.png  used on input line 829.
 (pdftex.def)             Requested size: 216.81pt x 170.65234pt.
 <../figures/train_data_n40.png, id=516, 413.8662pt x 325.9377pt>
 File: ../figures/train_data_n40.png Graphic file (type png)
 <use ../figures/train_data_n40.png>
-Package pdftex.def Info: ../figures/train_data_n40.png  used on input line 831.
+Package pdftex.def Info: ../figures/train_data_n40.png  used on input line 835.
 (pdftex.def)             Requested size: 216.81pt x 170.74684pt.
 <../figures/test_data_n40.png, id=517, 414.1071pt x 325.9377pt>
 File: ../figures/test_data_n40.png Graphic file (type png)
 <use ../figures/test_data_n40.png>
-Package pdftex.def Info: ../figures/test_data_n40.png  used on input line 837.
+Package pdftex.def Info: ../figures/test_data_n40.png  used on input line 841.
 (pdftex.def)             Requested size: 216.81pt x 170.65234pt.
 <../figures/ols_pred_n40.png, id=518, 414.1071pt x 325.9377pt>
 File: ../figures/ols_pred_n40.png Graphic file (type png)
 <use ../figures/ols_pred_n40.png>
-Package pdftex.def Info: ../figures/ols_pred_n40.png  used on input line 843.
+Package pdftex.def Info: ../figures/ols_pred_n40.png  used on input line 847.
 (pdftex.def)             Requested size: 216.81pt x 170.65234pt.
 <../figures/ridge_pred_n40.png, id=519, 414.1071pt x 325.9377pt>
 File: ../figures/ridge_pred_n40.png Graphic file (type png)
 <use ../figures/ridge_pred_n40.png>
-Package pdftex.def Info: ../figures/ridge_pred_n40.png  used on input line 849.
+Package pdftex.def Info: ../figures/ridge_pred_n40.png  used on input line 853.
 (pdftex.def)             Requested size: 216.81pt x 170.65234pt.
 <../figures/lasso_pred_n40.png, id=520, 413.8662pt x 325.9377pt>
 File: ../figures/lasso_pred_n40.png Graphic file (type png)
 <use ../figures/lasso_pred_n40.png>
-Package pdftex.def Info: ../figures/lasso_pred_n40.png  used on input line 855.
+Package pdftex.def Info: ../figures/lasso_pred_n40.png  used on input line 859.
 (pdftex.def)             Requested size: 216.81pt x 170.74684pt.
 
-Overfull \hbox (2.61108pt too wide) in paragraph at lines 823--859
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 827--863
 []$[]$ $[]$
  []
 
 
-Overfull \hbox (2.61108pt too wide) in paragraph at lines 823--859
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 827--863
 []$ $[]$
  []
 
 
-Overfull \hbox (2.61108pt too wide) in paragraph at lines 823--859
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 827--863
 []$ $[]$ 
  []
 
@@ -1402,25 +1407,25 @@ Overfull \vbox (17.716pt too high) has occurred while \output is active []
  [34 <../figures/actual_data_n40.png> <../figures/train_data_n40.png> <../figures/test_data_n40.png> <../figures/ols_pred_n40.png> <../figures/ridge_pred_n40.png> <../figures/lasso_pred_n40.png>] [35]
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 877.
+(hyperref)                removing `math shift' on input line 881.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\lambda' on input line 877.
+(hyperref)                removing `\lambda' on input line 881.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 877.
+(hyperref)                removing `math shift' on input line 881.
 
 [36] [37] [38]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 891.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 895.
  [39]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 891.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 895.
  (./project1.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 891.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 891.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 895.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 895.
 Package rerunfilecheck Info: File `project1.out' has not changed.
-(rerunfilecheck)             Checksum: AEE44387770C5AE3B517D6208C7695A6;1996.
+(rerunfilecheck)             Checksum: D4F3CD234D50EB5DC47647818B1CDAC0;2005.
 
 
 LaTeX Warning: There were multiply-defined labels.
@@ -1428,19 +1433,19 @@ LaTeX Warning: There were multiply-defined labels.
 Package logreq Info: Writing requests to 'project1.run.xml'.
 \openout1 = `project1.run.xml'.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 891.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 895.
  ) 
 Here is how much of TeX's memory you used:
  18636 strings out of 481239
  324415 string characters out of 5920377
- 1075138 words of memory out of 5000000
+ 1075137 words of memory out of 5000000
  33484 multiletter control sequences out of 15000+600000
  546236 words of font info for 76 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 48i,15n,73p,1564b,1707s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 48i,15n,73p,1562b,1707s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmib8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/publi
 c/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on project1.pdf (39 pages, 10894852 bytes).
+Output written on project1.pdf (39 pages, 10894753 bytes).
 PDF statistics:
  684 PDF objects out of 1000 (max. 8388607)
  475 compressed objects within 5 object streams
