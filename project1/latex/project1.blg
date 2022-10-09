@@ -1,9 +1,17 @@
 [0] Config.pm:304> INFO - This is Biber 2.14 (beta)
 [0] Config.pm:307> INFO - Logfile is 'project1.blg'
-[41] biber:322> INFO - === Sat Oct  8, 2022, 15:51:34
-[50] Biber.pm:415> INFO - Reading 'project1.bcf'
-[90] Biber.pm:943> INFO - Found 0 citekeys in bib section 0
-[93] Utils.pm:293> WARN - The file 'project1.bcf' does not contain any citations!
-[98] bbl.pm:652> INFO - Writing 'project1.bbl' with encoding 'UTF-8'
-[98] bbl.pm:755> INFO - Output to project1.bbl
-[98] Biber.pm:128> INFO - WARNINGS: 1
+[39] biber:322> INFO - === Sun Oct  9, 2022, 13:09:36
+[47] Biber.pm:415> INFO - Reading 'project1.bcf'
+[84] Biber.pm:943> INFO - Found 3 citekeys in bib section 0
+[90] Biber.pm:4256> INFO - Processing section 0
+[91] Utils.pm:75> INFO - Globbing data source 'report.bib'
+[91] Utils.pm:91> INFO - Globbed data source 'report.bib' to report.bib
+[97] Biber.pm:4455> INFO - Looking for bibtex format file 'report.bib' for section 0
+[97] bibtex.pm:1653> INFO - LaTeX decoding ...
+[100] bibtex.pm:1471> INFO - Found BibTeX data source 'report.bib'
+[127] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[127] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[127] Biber.pm:4084> INFO - Sorting list 'nty/global//global/global' of type 'entry' with template 'nty' and locale 'en-US'
+[127] Biber.pm:4090> INFO - No sort tailoring available for locale 'en-US'
+[132] bbl.pm:652> INFO - Writing 'project1.bbl' with encoding 'UTF-8'
+[134] bbl.pm:755> INFO - Output to project1.bbl

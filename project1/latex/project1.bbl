@@ -16,5 +16,145 @@
   {}
 \endgroup
 
+
+\refsection{0}
+  \datalist[entry]{nty/global//global/global}
+    \entry{overfitting}{article}{}
+      \name{author}{4}{}{%
+        {{hash=b2aeb0539e71c989e52b170b56b1fabd}{%
+           family={Belkin},
+           familyi={B\bibinitperiod},
+           given={Mikhail},
+           giveni={M\bibinitperiod}}}%
+        {{hash=97d68bdafb2fefd550bc00375aab158e}{%
+           family={Hsu},
+           familyi={H\bibinitperiod},
+           given={Daniel},
+           giveni={D\bibinitperiod}}}%
+        {{hash=2eebe9bcff663d57eb49edc43dfee6a4}{%
+           family={Ma},
+           familyi={M\bibinitperiod},
+           given={Siyuan},
+           giveni={S\bibinitperiod}}}%
+        {{hash=b59a201ea7db1f04f3e759f7f4f9fdb1}{%
+           family={Mandal},
+           familyi={M\bibinitperiod},
+           given={Soumik},
+           giveni={S\bibinitperiod}}}%
+      }
+      \strng{namehash}{d345a47731758681f1be1a00df52823b}
+      \strng{fullhash}{53ff9bd1260405afa11c8ea0926eccf4}
+      \strng{bibnamehash}{d345a47731758681f1be1a00df52823b}
+      \strng{authorbibnamehash}{d345a47731758681f1be1a00df52823b}
+      \strng{authornamehash}{d345a47731758681f1be1a00df52823b}
+      \strng{authorfullhash}{53ff9bd1260405afa11c8ea0926eccf4}
+      \field{sortinit}{B}
+      \field{sortinithash}{8de16967003c7207dae369d874f1456e}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Proceedings of the National Academy of Sciences}
+      \field{number}{32}
+      \field{title}{Reconciling modern machine-learning practice and the classical bias–variance trade-off}
+      \field{volume}{116}
+      \field{year}{2019}
+      \field{pages}{15849\bibrangedash 15854}
+      \range{pages}{6}
+      \verb{doi}
+      \verb 10.1073/pnas.1903070116
+      \endverb
+      \verb{eprint}
+      \verb https://www.pnas.org/doi/pdf/10.1073/pnas.1903070116
+      \endverb
+      \verb{urlraw}
+      \verb https://www.pnas.org/doi/abs/10.1073/pnas.1903070116
+      \endverb
+      \verb{url}
+      \verb https://www.pnas.org/doi/abs/10.1073/pnas.1903070116
+      \endverb
+    \endentry
+    \entry{cv}{online}{}
+      \name{author}{1}{}{%
+        {{hash=99a1c0d93e8859dd4dc1cfa37afe7514}{%
+           family={learn},
+           familyi={l\bibinitperiod},
+           prefix={scikit},
+           prefixi={s\bibinitperiod}}}%
+      }
+      \strng{namehash}{99a1c0d93e8859dd4dc1cfa37afe7514}
+      \strng{fullhash}{99a1c0d93e8859dd4dc1cfa37afe7514}
+      \strng{bibnamehash}{99a1c0d93e8859dd4dc1cfa37afe7514}
+      \strng{authorbibnamehash}{99a1c0d93e8859dd4dc1cfa37afe7514}
+      \strng{authornamehash}{99a1c0d93e8859dd4dc1cfa37afe7514}
+      \strng{authorfullhash}{99a1c0d93e8859dd4dc1cfa37afe7514}
+      \field{sortinit}{l}
+      \field{sortinithash}{dad3efd0836470093a7b4a7bb756eb8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Cross-validation: evaluating estimator performance}
+      \field{urlday}{9}
+      \field{urlmonth}{10}
+      \field{urlyear}{2022}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://scikit-learn.org/stable/modules/cross_validation.html
+      \endverb
+      \verb{url}
+      \verb https://scikit-learn.org/stable/modules/cross_validation.html
+      \endverb
+    \endentry
+    \entry{sealevel}{article}{}
+      \name{author}{6}{}{%
+        {{hash=2c94c1517bef7fc51ebb344646102b31}{%
+           family={Prandi},
+           familyi={P\bibinitperiod},
+           given={Pierre},
+           giveni={P\bibinitperiod}}}%
+        {{hash=3e4db5c765296605c9fa71ebe0707d47}{%
+           family={Meyssignac},
+           familyi={M\bibinitperiod},
+           given={Benoit},
+           giveni={B\bibinitperiod}}}%
+        {{hash=f6bd1a290042a03c46f6850a28ca65c2}{%
+           family={Ablain},
+           familyi={A\bibinitperiod},
+           given={Michaël},
+           giveni={M\bibinitperiod}}}%
+        {{hash=3011e7fe78b09ea8fbd9cd55761567d9}{%
+           family={Spada},
+           familyi={S\bibinitperiod},
+           given={Giorgio},
+           giveni={G\bibinitperiod}}}%
+        {{hash=85f2d75aaafbc5f95dcc48f52dac51f7}{%
+           family={Ribes},
+           familyi={R\bibinitperiod},
+           given={Aurélien},
+           giveni={A\bibinitperiod}}}%
+        {{hash=c8e8fe404c86a0205837eeaba648ddff}{%
+           family={Benveniste},
+           familyi={B\bibinitperiod},
+           given={Jérôme},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{178d45ce7123c3ebc0a0ece572c0b834}
+      \strng{fullhash}{a0aa5eccf3d846269a8ebe0d214b054f}
+      \strng{bibnamehash}{178d45ce7123c3ebc0a0ece572c0b834}
+      \strng{authorbibnamehash}{178d45ce7123c3ebc0a0ece572c0b834}
+      \strng{authornamehash}{178d45ce7123c3ebc0a0ece572c0b834}
+      \strng{authorfullhash}{a0aa5eccf3d846269a8ebe0d214b054f}
+      \field{sortinit}{P}
+      \field{sortinithash}{bb5b15f2db90f7aef79bb9e83defefcb}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Scientific Data}
+      \field{number}{1}
+      \field{title}{Local sea level trends, accelerations and uncertainties over 1993–2019}
+      \field{volume}{8}
+      \field{year}{2021}
+      \verb{doi}
+      \verb https://doi.org/10.1038/s41597-020-00786-7
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
 \endinput
 
