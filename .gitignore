@@ -1,0 +1,16 @@
+*
+!/**/
+!*.*
+*.fls
+*.log
+*.out
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.synctex.gz 
+*.DS_Store
+*.dat
+*.txt
+
+
