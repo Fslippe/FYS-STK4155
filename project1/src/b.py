@@ -16,6 +16,11 @@ def plot_train_test(train, test, ylabel, save=False):
     """
     Comparing parameter found using test and train data
     Can be used for MSE and R2
+    takes in:
+    - train:    Train data
+    - test:     Test data
+    - ylabel:   ylabel for plot
+    - save:     Savename to save file, defaults to False and not saving
     """
     degree_array = np.arange(1, np.size(train)+1)
     plt.figure().gca().xaxis.set_major_locator(MaxNLocator(integer=True))
@@ -32,7 +37,7 @@ def plot_train_test(train, test, ylabel, save=False):
 def plot_MSE(MSE, save=False):
     """
     Takes in and plotting MSE for chosen label and line type.
-    Saving if save=True
+    Saving with savename save if not False
     """
     plt.figure().gca().xaxis.set_major_locator(MaxNLocator(integer=True))
     degree_array = np.arange(1, np.size(MSE)+1, 1)
@@ -49,7 +54,7 @@ def plot_MSE(MSE, save=False):
 def plot_R2(R2, save=False):
     """
     Takes in and plotting R2 for chosen label and line type.
-    Saving if save=True
+    Saving with savename save if not False
     """
     plt.figure().gca().xaxis.set_major_locator(MaxNLocator(integer=True))
     degree_array = np.arange(1, np.size(R2)+1, 1)
@@ -67,6 +72,10 @@ def compare_scale(X, z):
     """
     Comparing MSE and R2 between scaled and non scaled data
     Data is scaled by subtracting mean
+    Plots the difference and saves the files
+    takes in
+    - X:  Design matrix
+    - z   dataset
     """
     x, y, z = make_data(30, 0.2, seed=200)
 
@@ -117,6 +126,8 @@ def scaled_OLSprediction(X, z, var_beta=False):
     Performs a split in train and test data
     Scales the data by subtracting the mean
     performs OLS and finding z using both train and test data
+    if var_beta=True:
+        will calculate and return the variance of beta parameters for noise std=0.2
     """
     X_train, X_test, z_train, z_test = train_test_split(X, z, test_size=0.2)
     X_train_scaled = X_train - np.mean(X_train, axis=0)
@@ -167,7 +178,15 @@ def MSE_R2(x, y, z, maxdegree):
 
 def resample_MSE_R2(n, std, maxdegree, resamples):
     """
-    Using function to get a smooth curve of MSE and R2 for different degrees
+    Function to get a smooth curve of MSE and R2 for different degrees
+    takes in:
+    - n:            number of steps in generated datasets
+    - std:          standard deviation of noise in dataset
+    - maxdegree:    maximum degree to calculate MSE and R2 for
+    - resamples:    amount of new datasets generated
+
+    returns:
+    mse, r2 for both train and test data
     """
 
     mse_re = np.zeros((resamples, maxdegree))
@@ -188,6 +207,7 @@ def resample_MSE_R2(n, std, maxdegree, resamples):
 def plot_beta_degree(beta, save=False):
     """
     plotting betas for different choises of polynomial degrees
+    if save is not false saves with savename save
     """
     plt.figure().gca().xaxis.set_major_locator(MaxNLocator(integer=True))
     for i in range(np.size(beta, axis=0)):

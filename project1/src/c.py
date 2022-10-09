@@ -17,12 +17,24 @@ def bias_variance_tradeoff(franke=True, x=None, y=None, z=None, n=30, std=0.2, m
     """
     Calculates the bias variance tradeoff using bootstrap and OLS
     Takes in
-    - n:         number of datapoints generated
-    - std:       standard deviation of normal distributed noise in z
-    - maxdegree: Highest polynomial degree
-    - n_B        Number of bootstrap iterations
+    - franke:           True if using Franke function. othewise x, y and z has to be taken as args
+    - x (opt):          x-data if not using Franke function (Franke=False)
+    - y (opt):          x-data if not using Franke function (Franke=False)
+    - z (opt):          x-data if not using Franke function (Franke=False)
+    - n:                number of steps in generated data
+    - std:              standard deviation of normal distributed noise in z
+    - mindegree (opt):  Minimum degree to calculate bias variance tradeoff
+    - maxdegree (opt):  Maximum degree to calculate bias variance tradeoff
+    - n_B:              Number of bootstrap iterations
+    - plot (opt):       plotting the tradeoff if true otherwise returning values of mse bias and variance
+    - method (opt):     Chosen method to calculate the tradeoff default OLS
+    - lamda (opt):      chosen lamda to use for Ridge and Lasso regression default 1
+    - show (opt)        shows plot if true, default true
+    - seed (opt)        seed of generated data if using Franke function
+    - save (opt):       if not False saves file with name of string save, default False
+    - max_iter (opt):   maximum number of iterations in Lasso method, default 100
 
-    Generates a plot showing the tradeoff
+    Generates a plot showing the tradeoff or returns the tradeoff values if plot=False
     """
     polydegree = np.arange(mindegree, maxdegree+1)
     bias = np.zeros(maxdegree+1- mindegree)

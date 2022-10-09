@@ -5,6 +5,19 @@ from d import sklearn_cross_validation
 def bias_variance_lamda(n, std, maxdegree, n_B, method, lamda, name_add="", franke=True, x=None, y=None, z=None, max_iter=100):
     """
     runs biass variance tradeoff for chosen method for different lamdas
+    and plots the tradeoffs
+    takes in:
+    - n:                number of steps of produced data
+    - std:              std of noise added to data
+    - n_B:              number of Bootstrap iterations
+    - method:           Regression method
+    - lamda:            1D array of different lamdas to run the tradeoff for
+    - name_add (opt):   To add at end of saved filename
+    - Franke (opt):     If using Franke function True otherwise False
+    - x (opt):          if Franke False - x data
+    - y (opt):          if Franke False - y data
+    - z (opt):          if Franke False - z data
+    - max_iter (opt):   maximum number of iterations used for lasso prediction
     """
     i = 0
 
@@ -26,56 +39,22 @@ def bias_variance_lamda(n, std, maxdegree, n_B, method, lamda, name_add="", fran
 
         i +=1
 
-def cross_validation_lamda(n, std, k_folds, method, lamda, degree=5, savefig=False):
-    x, y, z = make_data(n, std, seed=100)
-    X = design_matrix(x, y, degree)
-    i = 0
-
-    M = np.zeros(len(lamda))
-
-    for lmb in lamda:
-        if method == "LASSO":
-            M[i] = sklearn_cross_validation(X, z, k_folds, lmb, method)
-        else:
-            M[i] = cross_validation(X, z, k_folds, lmb, method, scale=False)
-        i +=1
-
-    plt.tight_layout(pad=1.1, w_pad=0.7, h_pad=0.2)
-    plt.rcParams.update({"font.size": 8})
-    plt.title("Cross validation MSE for %i kfolds" %(k_folds))
-    plt.xlabel(r"$\lambda$")
-    plt.ylabel("$MSE$")
-    plt.plot(lamda, M, label="%s Degree: %i" %(method, degree))
-    argmin = np.argmin(M)
-    print("\n%s" %(method))
-    print("min MSE:", M[argmin])
-    print("lambda:", lamda[argmin])
-    plt.scatter(lamda[argmin], M[argmin], label=r"Min: $\lambda=$%.2e, $MSE=$%.5f" %(lamda[argmin], M[argmin]))
-    plt.xscale("log")
-    plt.legend()
-    if savefig == True:
-        plt.savefig("../figures/cross_val_lambda_ridge.png", dpi=300, bbox_inches="tight")
-    return lamda[argmin]
-
 def main():
     n = 30
     std = 0.2
     maxdegree = 20
     n_B = 100
-    """
+
     method = "RIDGE"
     lamda = np.logspace(-12, -7, 6)
     k_folds = 5
     bias_variance_lamda(n, std, maxdegree, n_B, method, lamda, name_add="_20", max_iter=1000)
     plt.show()
-    """
     method = "LASSO"
-    lamda = np.array([1e-20,1])#np.logspace(-6, -1, 6)
+    lamda = np.logspace(-6, -1, 6)
     k_folds = 5
     bias_variance_lamda(n, std, maxdegree, n_B, method, lamda, name_add="_20", max_iter=1000)
     plt.show()
-
-    #cross_validation_lamda(n, std, k_folds, method, lamda, degree=10)
 
 if __name__ == '__main__':
     main()

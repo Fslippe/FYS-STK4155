@@ -36,9 +36,9 @@ def standard_scale(X, z):
 
     return X_train, X_test, z_train, z_test
 
-def MSE_R2_2(x, y, z, maxdegree, scaler, method):
+def MSE_R2_standard_scale(x, y, z, maxdegree):
     """
-    calculates MSE, R2 and beta for mean scaled data for all degrees 1,..maxdegree
+    calculates MSE, R2 and beta using OLS for mean scaled data for all degrees 1,..maxdegree
     Takes in
     - dataset x, y, z
     - maxdegree: highest degree to calculate MSE and R2
@@ -49,12 +49,10 @@ def MSE_R2_2(x, y, z, maxdegree, scaler, method):
 
     for degree in range(1, maxdegree+1):
         X = design_matrix(x, y, degree)
-        if scaler == "STANDARD":
-            X_train, X_test, z_train, z_test = standard_scale(X, z)
+        X_train, X_test, z_train, z_test = standard_scale(X, z)
 
-        if method == "OLS":
-            beta = OLS(X_train, z_train)
-            z_pred = X_test @ beta
+        beta = OLS(X_train, z_train)
+        z_pred = X_test @ beta
 
         mse[degree-1] = MSE(z_test, z_pred)
         r2[degree-1] = R2(z_test, z_pred)
@@ -65,15 +63,15 @@ def MSE_R2_2(x, y, z, maxdegree, scaler, method):
 def main():
     terrain = imread('../data/SRTM_data_Norway_1.tif')
     n = 20
-    n_skip = 2
+    n_skip = 2 #skipping every n_skip index
     #n = 40
     #n_skip = 1
     std = 0
     maxdegree = 25
-    n_B = 100
-    terrain = terrain[100:n*n_skip+1+100,100:n*n_skip+1+100][1::n_skip]
+    n_B = 100 #Bootstrap iterations
+    terrain = terrain[100:n*n_skip+1+100,100:n*n_skip+1+100][1::n_skip] #slice of terrain
     np.random.seed(200)
-    noise = 0 #np.random.normal(0, std, size=(n+1,n+1))
+    noise = 0 #np.random.normal(0, std, size=(n+1,n+1)) #To test for added noise to data
     x, y, z = make_data(n*n_skip, std)
 
     x = x[1::n_skip]
@@ -81,18 +79,19 @@ def main():
     z = (terrain + noise*np.mean(terrain)).ravel()
     mean_scale = np.mean(z)
     std_scale = np.std(z)
-    z_scaled = (z - mean_scale)/std_scale
-    print(np.max(z_scaled))
+    z_scaled = (z - mean_scale)/std_scale #Standard scale
+
     run_best_lambda = False
     run_tradeoff = False
     run_mse_r2 = False
 
     if run_mse_r2:
-        mse, r2 = MSE_R2_2(x, y, z, maxdegree, "STANDARD", "OLS")
+        mse, r2 = MSE_R2_standard_scale(x, y, z, maxdegree)
         plot_MSE(mse, save="mse_deg_real")
         plot_R2(r2, save="r2_deg_real")
 
     if run_tradeoff:
+        """Tradeoff for different choices of degrees and lambdas for the three methods"""
         bias_variance_tradeoff(franke=False, x=x, y=y, z=z_scaled, maxdegree=maxdegree, method="OLS", lamda=1, show=True, save="ols_real_tradeoff")
         plt.show()
         lamda = np.logspace(-13, -1, 4)
@@ -122,9 +121,6 @@ def main():
         mse_lasso = 0.068238282615363
 
     compare_3d(x, y, z_scaled, 0, deg_ols, lmb_ridge, deg_ridge, lmb_lasso, deg_lasso, name_add="n40", std=std_scale, mean=mean_scale, azim=60)
-
-
-
 
 if __name__ == '__main__':
     main()

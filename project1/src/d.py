@@ -31,6 +31,16 @@ def sklearn_cross_validation(X, z, k_folds, lamda, method="RIDGE"):
 def compare_crossval_bootstrap(x, y, z, maxdegree, k_folds, n_B, method, lamda=1):
     """
     Comparing bootstrap and cross validation for different degrees
+    Takes in:
+    - x:            x data
+    - y:            y data
+    - z:            z data
+    - maxdegree     Maximum degree to plot for (plots from a degree of 1)
+    - k_folds:      number of k_folds in the cross validation algorithm
+    - n_B:          Number of Bootstrap iterations
+    - lamda (opt):  chosen lamda if method is RIDGE or LASSO
+
+    Plots compartison plots between bootrap and cross validation and saves them
     """
     mse_B = np.zeros(maxdegree)
     mse_cv = np.zeros(maxdegree)
@@ -66,7 +76,7 @@ def main():
     lamda = 1
 
     method = "OLS"
-    """
+    #Comparing Sklearn and implemented cross validation method
     M = cross_validation(X, z, k_folds, lamda, method, scale=False)
     M_sk = sklearn_cross_validation(X, z, k_folds, lamda)
     X_train, X_test, z_train, z_test = train_test_split(X, z, test_size=0.2)
@@ -77,7 +87,6 @@ def main():
     print("Bootstrap:", M_B)
     print("Diff Crossval Bootstrap:", abs(M-M_B))
     print("Diff maunal sklearn:", abs(M_sk-M))
-    """
     compare_crossval_bootstrap(x, y, z, maxdegree, k_folds, n_B, method, lamda)
 
 
