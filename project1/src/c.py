@@ -63,7 +63,7 @@ def bias_variance_tradeoff(franke=True, x=None, y=None, z=None, n=30, std=0.2, m
             else:
                 plt.title(r"$\sigma=$%.1f,  $n=$%i,   $\lambda=$%.2e" %(std, n, lamda))
         plt.plot(polydegree, MSE, "-o", label="Error")
-        plt.plot(polydegree, bias, "-o", label="bias")
+        plt.plot(polydegree, bias, "-o", label=r"Bias$^2$")
         plt.plot(polydegree, variance, "-o", label="Variance")
         plt.xlabel("Polynomial degree")
         plt.tight_layout(pad=1.1, w_pad=0.7, h_pad=0.2)
