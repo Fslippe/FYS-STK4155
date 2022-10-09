@@ -3,7 +3,6 @@ from e import *
 from c import bias_variance_tradeoff
 import matplotlib as mpl
 from matplotlib.cm import ScalarMappable
-import seaborn as sns
 plt.rcParams.update({"font.size": 15})
 
 def lamda_degree_MSE(x, y, z, method, std, n_lmb = 50, maxdegree = 15, k_folds = 5, max_iter = 100, save=True, lmb_min=-12, lmb_max=-1):
@@ -177,7 +176,7 @@ def main():
     np.random.seed(200)
     noise = np.random.normal(0, std, size=(n+1,n+1)).ravel()
 
-    run_best_lambda_plots = False #To run calculations for best degree and lamda. if False uses already calculated values
+    run_best_lambda_plots = False #To run calculations for best degree and lamda (may take some time). if False uses already calculated values
 
     if run_best_lambda_plots:
         lmb, deg, mse = lamda_degree_MSE(x, y, z, "OLS", std, save=True, maxdegree=15)

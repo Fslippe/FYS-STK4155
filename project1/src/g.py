@@ -1,4 +1,3 @@
-
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
@@ -82,8 +81,8 @@ def main():
     z_scaled = (z - mean_scale)/std_scale #Standard scale
 
     run_best_lambda = False
-    run_tradeoff = False
-    run_mse_r2 = False
+    run_tradeoff = True
+    run_mse_r2 = True
 
     if run_mse_r2:
         mse, r2 = MSE_R2_standard_scale(x, y, z, maxdegree)
@@ -101,6 +100,7 @@ def main():
         plt.show()
 
     if run_best_lambda:
+        """change run_best_lambda to True to run. Will produce same results as found under else:"""
         lmb_ols, deg_ols, mse_ols = lamda_degree_MSE(x, y, z_scaled, "OLS", std, n_lmb = 1, maxdegree = maxdegree, k_folds = 5, max_iter = 100, save=False)
         print("OLS:", lmb_ols, deg_ols, mse_ols)
         lmb_ridge, deg_ridge, mse_ridge = lamda_degree_MSE(x, y, z_scaled, "RIDGE", std, n_lmb = 20, maxdegree = maxdegree, k_folds = 5, max_iter = 100, save=False, lmb_min=-13, lmb_max=-3)
