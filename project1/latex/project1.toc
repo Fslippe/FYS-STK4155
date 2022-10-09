@@ -21,29 +21,27 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {3.1}Franke funtion}{11}{subsection.3.1}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\numberline {3.1.1}OLS scaling of data}{11}{subsubsection.3.1.1}%
+\contentsline {subsubsection}{\numberline {3.1.1}Scaling of data}{11}{subsubsection.3.1.1}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\numberline {3.1.2}OLS MSE and $R^2$}{11}{subsubsection.3.1.2}%
+\contentsline {subsubsection}{\numberline {3.1.2}MSE, $R^2$ and splitting of data}{12}{subsubsection.3.1.2}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\numberline {3.1.3}OLS variation of $\beta $ paramers}{13}{subsubsection.3.1.3}%
+\contentsline {subsubsection}{\numberline {3.1.3}variation of $\beta $ parameters}{14}{subsubsection.3.1.3}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\numberline {3.1.4}OLS bias variance tradeoff}{15}{subsubsection.3.1.4}%
+\contentsline {subsubsection}{\numberline {3.1.4}Bias variance tradeoff}{16}{subsubsection.3.1.4}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\numberline {3.1.5}OLS cross validation}{17}{subsubsection.3.1.5}%
+\contentsline {subsubsection}{\numberline {3.1.5}Cross validation}{21}{subsubsection.3.1.5}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\numberline {3.1.6}Ridge and Lasso bias variance tradeoff}{19}{subsubsection.3.1.6}%
+\contentsline {subsubsection}{\numberline {3.1.6}Finding best models}{22}{subsubsection.3.1.6}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\numberline {3.1.7}Finding best models}{23}{subsubsection.3.1.7}%
+\contentsline {subsubsection}{\numberline {3.1.7}Prediction plots}{24}{subsubsection.3.1.7}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\numberline {3.1.8}Prediction plots}{24}{subsubsection.3.1.8}%
-\defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.2}Topography data}{28}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.2}Topography data}{27}{subsection.3.2}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{\numberline {3.2.1}Bias variance tradeoff}{28}{subsubsection.3.2.1}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.3}Finding best models}{31}{subsection.3.3}%
+\contentsline {subsubsection}{\numberline {3.2.2}Finding best models}{31}{subsubsection.3.2.2}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\numberline {3.3.1}Predictions}{32}{subsubsection.3.3.1}%
+\contentsline {subsubsection}{\numberline {3.2.3}Predictions}{32}{subsubsection.3.2.3}%
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {4}Discussion}{35}{section.4}%
 \defcounter {refsection}{0}\relax 

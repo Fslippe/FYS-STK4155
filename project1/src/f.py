@@ -135,23 +135,25 @@ def compare_beta_lambda(x, y, z, lamda):
     beta_ridge = np.zeros((len(lamda), X.shape[1]))
     beta_lasso = np.zeros((len(lamda), X.shape[1]))
     i=0
+    X_train, X_test, z_train, z_test = train_test_split(X, z, test_size=0.2)
     for lmb in lamda:
-        beta_ridge[i] = ridge_regression(X, z, lmb)
-        beta_lasso[i] = lasso_regression(X, z, lmb, max_iter=10000).coef_
+        #beta_ridge[i] = ridge_regression(X, z, lmb)
+        beta_lasso[i] = lasso_regression(X_train, z_train, lmb, max_iter=20000).coef_
         i +=1
-
+    """
     plt.plot(lamda, beta_ridge)
     plt.title(r"Ridge $\beta$ for degree of 5")
     plt.xlabel(r"$\lambda$")
     plt.xscale("log")
     plt.savefig("../figures/ridge_beta.png", dpi=300, bbox_inches='tight')
-
     plt.show()
+    """
+
     plt.plot(lamda, beta_lasso)
     plt.title(r"Lasso $\beta$ for degree of 5")
     plt.xlabel(r"$\lambda$")
     plt.xscale("log")
-    plt.savefig("../figures/lasso_beta.png", dpi=300, bbox_inches='tight')
+    plt.savefig("../figures/lasso_beta_test.png", dpi=300, bbox_inches='tight')
 
     plt.show()
 
@@ -164,7 +166,7 @@ def main():
     np.random.seed(200)
     noise = np.random.normal(0, std, size=(n+1,n+1)).ravel()
 
-    #compare_beta_lambda(x, y, z, np.logspace(-10, 1, 100))
+    compare_beta_lambda(x, y, z, np.logspace(-10, 1, 100))
 
     run_best_lambda_plots = False
 
