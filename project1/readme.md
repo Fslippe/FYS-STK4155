@@ -19,7 +19,7 @@ To reproduce the results run the python files with
 
 For running g.py the data file located in the data folder needs to be downloaded. The rest should work if all the python files are located in the same folder. To reproduce some results from the report, some changes of parameters in the python files may be needed. To use right parameters change the parameters in the code to match with the parameters used in the plot. There are also descriptions for every function on how they work, what they produce and what arguments they take in. 
 
-#Abstract
+# Abstract
 Central methods in machine learning include regression analysis and resam-
 pling methods, which lately have made a great impact on our understanding of
 the world around us. To gain a fundamental understanding of how these meth-
