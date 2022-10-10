@@ -12,5 +12,7 @@
 *.DS_Store
 *.dat
 *.txt
-
+*.run.xml
+*.toc
+*.bcf
 
