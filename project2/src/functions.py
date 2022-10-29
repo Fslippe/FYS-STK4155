@@ -13,15 +13,27 @@ from sklearn.linear_model import Lasso, Ridge
 plt.rcParams.update({"font.size": 14})
 import time
 
-def OLS(X, z, inversion_method="", iterations=1000, n_epochs=50, batch_size=5):
+def OLS(X, z, inversion_method="", iterations=1000, n_epochs=50, batch_size=5, delta_mom=0, eta=0.1, t0=5, t1=50, rho1=0.9, rho2=0.99):
     """
     Takes in a design matrix and actual data and returning
     an array of best beta for X and z
     """
-    if inversion_method == "SG":
-        beta = SG(X, z, iterations)
-    if inversion_method == "SGD":
-        beta = SGD(X, z, n_epochs, batch_size, t0=5, t1=50)
+    if inversion_method == "GD":
+        beta = GD(X, z, iterations=iterations, eta=eta, delta_mom=delta_mom)
+    elif inversion_method == "SGD":
+        beta = SGD(X, z, n_epochs, batch_size, t0=t0, t1=t1, delta_mom=delta_mom)
+    elif inversion_method == "SGD_ADA":
+        beta = SGD_ADA(X, z, n_epochs, batch_size, eta=eta, delta_mom=delta_mom)
+    elif inversion_method == "GD_ADA":
+        beta = GD_ADA(X, z, iterations=iterations, eta=eta, delta_mom=delta_mom)
+    elif inversion_method == "SGD_RMS":
+        beta = SGD_RMS(X, z, n_epochs, batch_size, eta=eta, rho=rho1, delta_mom=delta_mom)
+    elif inversion_method == "GD_RMS":
+        beta = GD_RMS(X, z, iterations=iterations, eta=eta, rho=rho1, delta_mom=delta_mom)
+    elif inversion_method == "SGD_ADAM":
+        beta = SGD_ADAM(X, z, n_epochs, batch_size, eta=eta, rho1=rho1, rho2=rho2, delta_mom=delta_mom)
+    elif inversion_method == "GD_ADAM":
+        beta = GD_ADAM(X, z, iterations=iterations, eta=eta, rho1=rho1, rho2=rho2, delta_mom=delta_mom)
     else:
         beta = np.linalg.pinv(X.T @ X) @ X.T @ z
 
@@ -55,36 +67,31 @@ def lasso_regression(X, z, lamda, max_iter=int(1e2), tol=1e-2):
     lasso.fit(X, z)
     return lasso
 
-def SG(X, y, iterations):
+def GD(X, y, eta=0.4, iterations=1000, delta_mom=0):
     """
     Stochastic Gradient method to find theta
     """
     n = X.shape[0] #
     N = X.shape[1]
-    H = 2/n * X.T @ X 
-    eigval, eigvec = np.linalg.eig(H)
-    eta = 1 / np.max(eigval)
     theta = np.random.randn(N, 1)
-
+    change = 0
     for i in range(iterations):
         grads = 2/n * X.T @ ((X @ theta) - y)
-        theta -= eta*grads 
+        change = eta*grads + delta_mom*change
+        theta -= change 
 
     return theta
 
-def SGD(X, y, n_epochs, batch_size, t0=5, t1=50):
+def SGD(X, y, n_epochs, batch_size, t0=5, t1=50, delta_mom=0):
     """
     Stochastic Gradient decent method to find theta
     """
     n = X.shape[0] #
     N = X.shape[1]
 
-    m = int(n/batch_size) #minibatches
-    H = 2/n *X.T @ X
-    eigval, eigvec = np.linalg.eig(H)
-    eta = 1 / np.max(eigval)
+    m = int(n/batch_size) # minibatches
     theta = np.random.randn(N,1)
-    
+    change = 0
     for epoch in range(n_epochs):
         X_shuffle, y_shuffle = shuffle(X, y)
 
@@ -93,7 +100,8 @@ def SGD(X, y, n_epochs, batch_size, t0=5, t1=50):
             y_batch = y_shuffle[start:start+batch_size]
             grads = 2/batch_size * X_batch.T @ ((X_batch @ theta) - y_batch)
             eta = learning_schedule(epoch*m + start/batch_size, t0, t1)
-            theta -= eta*grads 
+            change = eta*grads + delta_mom*change 
+            theta -= change
     
     return theta
 
@@ -107,18 +115,167 @@ def C_OLS(X, y, beta, n_div=True):
         n = X.shape[0]
         return 1/n * np.sum((y - X @ beta)**2)
 
-def GD_momentum(X, y, iterations=1000):
+def GD_ADA(X, y, eta=0.4, iterations=1000, delta_mom=0):
+    """
+    Stochastic Gradient method to find theta
+    """
+    n = X.shape[0] #
+    N = X.shape[1] 
+    theta = np.random.randn(N, 1)
+    grad_square = np.zeros((N, 1))
+    change = 0
+    for i in range(iterations):
+        grads = 2/n * X.T @ ((X @ theta) - y)
+        #grad_square += grads**2
+        #alpha = eta/(1e-8 + np.sqrt(grad_square))
+        #change = alpha*grads + delta_mom*change
+        change = AdaGrad(grads, grad_square, eta, change, delta_mom)
+        theta -= change
+
+    return theta
+
+def AdaGrad(grads, grad_square, eta, change, delta_mom):
+    """
+    ADAM tuning method
+    """
+    grad_square += grads**2
+    alpha = eta/(1e-8 + np.sqrt(grad_square))
+    change = alpha*grads + delta_mom*change
+    
+    return change
+
+def SGD_ADA(X, y, n_epochs, batch_size, eta=0.4, delta_mom=0):
+    """
+    Stochastic Gradient decent method to find theta
+    """
+    n = X.shape[0] #
+    N = X.shape[1]
+
+    theta = np.random.randn(N,1)
+    change = 0
+    for epoch in range(n_epochs):
+        X_shuffle, y_shuffle = shuffle(X, y)
+        grad_square = np.zeros((N, 1))
+        for start in range(0, n, batch_size):
+            X_batch = X_shuffle[start:start+batch_size]
+            y_batch = y_shuffle[start:start+batch_size]
+            grads = 2/batch_size * X_batch.T @ ((X_batch @ theta) - y_batch)
+            change = AdaGrad(grads, grad_square, eta, change, delta_mom)
+            theta -= change
+    return theta
+
+def GD_RMS(X, y, eta, iterations, rho, delta_mom):
+    """
+    Stochastic Gradient RMSprop
+    """
+    n = X.shape[0] #
+    N = X.shape[1] 
+    theta = np.random.randn(N, 1)
+    grad_square = np.zeros((N, 1))
+    s_t = np.zeros((N, 1))
+    change = 0
+
+    for i in range(iterations):
+        grads = 2/n * X.T @ ((X @ theta) - y)
+        change = RMSprop(grads, grad_square, rho, eta, change, delta_mom)
+        theta -= change
+    return theta
+
+def SGD_RMS(X, y, n_epochs, batch_size, eta, rho, delta_mom):
+    """
+    Stochastic Gradient decent RMSprop
+    """
+    n = X.shape[0] #
+    N = X.shape[1]
+    change = 0
+
+    theta = np.random.randn(N,1)
+    for epoch in range(n_epochs):
+        X_shuffle, y_shuffle = shuffle(X, y)
+        grad_square = np.zeros((N, 1))
+        for start in range(0, n, batch_size):
+            X_batch = X_shuffle[start:start+batch_size]
+            y_batch = y_shuffle[start:start+batch_size]
+            grads = 2/batch_size * X_batch.T @ ((X_batch @ theta) - y_batch)
+            change = RMSprop(grads, grad_square, rho, eta, change, delta_mom)
+            theta -= change
+    return theta
+
+def GD_ADAM(X, y, eta, iterations, rho1, rho2, delta_mom):
+    """
+    Stochastic Gradient RMSprop
+    """
+    n = X.shape[0] #
+    N = X.shape[1] 
+    theta = np.random.randn(N, 1)
+    grad_square = np.zeros((N, 1))
+    s_t = np.zeros((N, 1))
+    change = 0
+    grads = 0
+    for i in range(iterations):
+        grads_pre = grads
+        grads = 2/n * X.T @ ((X @ theta) - y)
+        change = ADAM(grads_pre, grads, grad_square, rho1, rho2, eta, change, delta_mom)
+        theta -= change
+    return theta
+
+def SGD_ADAM(X, y, n_epochs, batch_size, eta, rho1, rho2, delta_mom):
+    """
+    Stochastic Gradient decent ADAM
+    """
+    n = X.shape[0] #
+    N = X.shape[1]
+    change = 0
+    grads = 0
+    theta = np.random.randn(N,1)
+    for epoch in range(n_epochs):
+        X_shuffle, y_shuffle = shuffle(X, y)
+        grad_square = np.zeros((N, 1))
+        for start in range(0, n, batch_size):
+            X_batch = X_shuffle[start:start+batch_size]
+            y_batch = y_shuffle[start:start+batch_size]
+            grads_pre = grads
+            grads = 2/batch_size * X_batch.T @ ((X_batch @ theta) - y_batch)
+            change = ADAM(grads_pre, grads, grad_square, rho1, rho2, eta, change, delta_mom)
+            theta -= change
+    return theta
+
+def RMSprop(grads, grad_square, rho, eta, change, delta_mom):
+    """
+    RMSprop tuning method
+    """
+    s_t = grad_square
+    grad_square += grads**2
+    s_t = s_t*rho + grad_square*(1 - rho)
+    alpha = eta/(1e-8 + np.sqrt(s_t))
+    change = alpha*grads + delta_mom*change
+    return change
+
+def ADAM(grads_pre, grads, grad_square, rho1, rho2, eta, change, delta_mom):
+    """
+    ADAM tuning method
+    """
+
+    s_t = grad_square
+    m_t = grads_pre
+    m_t = rho1*m_t + (1-rho1)*grads
+    grad_square += grads**2
+    s_t = rho2*s_t + (1-rho2)*grad_square 
+    m_t = m_t / (1-rho1)
+    s_t = s_t / (1-rho2)
+    change = eta * m_t / (1e-8 + np.sqrt(s_t)) + delta_mom*change
+    
+    return change
+def GD_newton(X, y, iterations=1000):
+    """
+    Using Newton's method and autograd
+    """
     n = X.shape[0] 
     N = X.shape[1]
     H = 2/n *X.T @ X 
-    y = y.reshape(n, 1)
     H_inv = np.linalg.pinv(H)
     beta = np.random.randn(N,1)
     train_grad = grad(C_OLS, 2)
-    print(np.shape(beta))
-    print(np.shape(X))
-    print(np.shape(y))
-    print(np.shape(H_inv))
 
     for i in range(iterations):
         grads = train_grad(X, y, beta)
@@ -126,101 +283,11 @@ def GD_momentum(X, y, iterations=1000):
 
     return beta
 
-def SGD_momentum(X, y, n_epochs, batch_size, t0=5, t1=50, delta_mom=0.3):
-    """
-    Stochastic Gradient decent method to find theta
-    """
-    n = X.shape[0] 
-    N = X.shape[1]
-    y = y.reshape(n, 1)
 
-    m = int(n/batch_size) #minibatches
-    H = 2/n *X.T @ X
-    eigval, eigvec = np.linalg.eig(H)
-    eta = 1 / np.max(eigval)
-    theta = np.random.randn(N,1)
-    change = 0 
-
-    train_grad = grad(C_OLS, 2)
-
-    for epoch in range(n_epochs):
-        X_shuffle, y_shuffle = shuffle(X, y)
-        for start in range(0, n, batch_size):
-            X_batch = X_shuffle[start:start+batch_size]
-            y_batch = y_shuffle[start:start+batch_size]
-            grads = 1/batch_size * train_grad(X_batch, y_batch, theta, n_div=False)
-            eta = learning_schedule(epoch*m + start/batch_size, t0, t1)
-            new_change = eta*grads+delta_mom*change
-            # take a step
-            theta -= new_change
-            # save the change
-            change = new_change
-    return theta
-
-def SGD_mom_ex(X, y):
-    n = X.shape[0]
-    H = (2.0/n)* X.T @ X
-    EigValues, EigVectors = np.linalg.eig(H)
-    print(f"Eigenvalues of Hessian Matrix:{EigValues}")
-
-    theta = np.random.randn(2,1)
-    eta = 1.0/np.max(EigValues)
-    Niterations = 100
-
-    # Note that we request the derivative wrt third argument (theta, 2 here)
-    training_gradient = grad(C_OLS,2)
-    n_epochs = 50
-    M = 5   #size of each minibatch
-    m = int(n/M) #number of minibatches
-    t0, t1 = 5, 50
-    def learning_schedule(t):
-        return t0/(t+t1)
-
-    theta = np.random.randn(3,1)
-
-    change = 0.0
-    delta_momentum = 0.3
-
-    for epoch in range(n_epochs):
-        for i in range(m):
-            random_index = M*np.random.randint(m)
-            xi = X[random_index:random_index+M]
-            yi = y[random_index:random_index+M]
-
-            gradients = (1.0/M)*training_gradient(xi, yi, theta, False)
-            eta = learning_schedule(epoch*m+i)
-            # calculate update
-            new_change = eta*gradients+delta_momentum*change
-            # take a step
-            theta -= new_change
-            # save the change
-            change = new_change
-    print("theta from own sdg with momentum")
-    print(theta)
-    return theta
 
 def learning_schedule(t, t0, t1):
     return t0 / (t + t1)
 
-def ex(X, y, t0=5, t1=50):
-    n = X.shape[0] #
-    N = X.shape[1]
-    n_epochs = 50
-    M = 5 #size of each minibatch
-    m = int(n/M) #number of minibatches
-    t0, t1 = 5, 50
-    theta = np.random.randn(N,1)
-
-    for epoch in range(n_epochs):
-    # Can you figure out a better way of setting up the contributions to each batch?
-        for i in range(m):
-            random_index = M*np.random.randint(m)
-            xi = X[random_index:random_index+M]
-            yi = y[random_index:random_index+M]
-            gradients = (2.0/M)* xi.T @ ((xi @ theta)-yi)
-            eta = learning_schedule(epoch*m+i, t0, t1)
-            theta = theta - eta*gradients
-    return theta
 
 def MSE(data, model):
     """
@@ -256,34 +323,75 @@ def main():
     np.random.seed(100)
     n = 100
     x = np.linspace(-1, 1, n)
-    a = np.random.rand(3)
-    f_x = a[0] + a[1]*x + a[2]*x**2
-    y = f_x.reshape(n, 1)
-    X = design_matrix(x, 2)
+
+    a = np.random.rand(5)
+    f_x = a[0] + a[1]*x + a[2]*x**2 + a[3]*x**3 + a[4]*x**4
+    y = (f_x + np.random.normal(0, 0.1, n)).reshape(n, 1)
+    X = design_matrix(x, 4)
+
 
     beta = OLS(X, y)
-    beta_SG = OLS(X, y, inversion_method="SG")
-    beta_SGD = OLS(X, y, inversion_method="SGD")
-    beta_GD_momentum = GD_momentum(X, y)
-    beta_SGD_momentum = SGD_momentum(X, y, n_epochs=50, batch_size=5)
-    beta_SGD_mom_ex = SGD_mom_ex(X, y)
-
-
     pred = X @ beta
-    pred_SG = X @ beta_SG 
-    pred_SGD = X @ beta_SGD 
-    pred_ex = X @ ex(X, y)
+
+    beta_GD = OLS(X, y, inversion_method="GD")
+    pred_GD = X @ beta_GD 
+
+    beta_GD_momentum = OLS(X, y, inversion_method="GD", delta_mom=0.3)
     pred_GD_momentum = X @ beta_GD_momentum
+
+    beta_SGD = OLS(X, y, inversion_method="SGD", n_epochs=50, batch_size=5)
+    pred_SGD = X @ beta_SGD 
+
+    beta_SGD_momentum = OLS(X, y, inversion_method="SGD", n_epochs=50, batch_size=5, delta_mom=0.3)
     pred_SGD_momentum = X @ beta_SGD_momentum
-    pred_SGD_mom_ex = X @ beta_SGD_mom_ex
 
+    beta_GD_ada = OLS(X, y, inversion_method="GD_ADA")
+    pred_GD_ada = X @ beta_GD_ada
 
-    plt.plot(x, pred, label="pred")
-    #plt.plot(x, pred_SGD, label="SGD")
-    #plt.plot(x, pred_ex, label="ex")
-    plt.plot(x, pred_GD_momentum, "--", label="GD mom")
-    plt.plot(x, pred_SGD_momentum, linestyle="dotted", label="SGD mom")
-    plt.plot(x, pred_SGD_mom_ex, label="ex")
+    beta_GD_ada_mom = OLS(X, y, inversion_method="GD_ADA", delta_mom=0.3)
+    pred_GD_ada_mom = X @ beta_GD_ada_mom
+
+    beta_SGD_ada = OLS(X, y, inversion_method="SGD_ADA", n_epochs=50, batch_size=5)
+    pred_SGD_ada = X @ beta_SGD_ada
+
+    beta_SGD_ada_mom = OLS(X, y, inversion_method="SGD_ADA", n_epochs=50, batch_size=5, delta_mom=0.3)
+    pred_SGD_ada_mom = X @ beta_SGD_ada_mom
+    
+    beta_SGD_rms = OLS(X, y, inversion_method="SGD_RMS", n_epochs=50, batch_size=5)
+    pred_SGD_rms = X @ beta_SGD_rms
+
+    beta_SGD_rms_mom = OLS(X, y, inversion_method="SGD_RMS", n_epochs=50, batch_size=5, delta_mom=0.3)
+    pred_SGD_rms_mom = X @ beta_SGD_rms_mom
+
+    beta_GD_rms = OLS(X, y, inversion_method="GD_RMS", n_epochs=50, batch_size=5)
+    pred_GD_rms = X @ beta_GD_rms
+
+    beta_GD_rms_mom = OLS(X, y, inversion_method="GD_RMS", n_epochs=50, batch_size=5, delta_mom=0.3)
+    pred_GD_rms_mom = X @ beta_GD_rms_mom
+
+    beta_GD_ADAM = OLS(X, y, inversion_method="GD_ADAM", n_epochs=50, batch_size=5)
+    pred_GD_ADAM = X @ beta_GD_ADAM
+
+    beta_GD_ADAM_mom = OLS(X, y, inversion_method="GD_ADAM", n_epochs=50, batch_size=5, delta_mom=0.3)
+    pred_GD_ADAM_mom = X @ beta_GD_ADAM_mom
+    
+
+    plt.plot(x, pred, label="pred %.4f" %(MSE(y,pred)))
+    plt.plot(x, f_x, label="actual %.4f" %(MSE(y,f_x)))
+    plt.plot(x, pred_SGD, label="SGD %.4f" %(MSE(y,pred_SGD)))
+    plt.plot(x, pred_GD_ada, linestyle="--",label="GD ada %.4f" %(MSE(y,pred_GD_ada)))
+    plt.plot(x, pred_SGD_ada, label="SGD ada %.4f" %(MSE(y,pred_SGD_ada)))
+    plt.plot(x, pred_GD_ada_mom, linestyle="--",label="GD ada mom %.4f" %(MSE(y,pred_GD_ada_mom)))
+    plt.plot(x, pred_SGD_ada_mom, label="SGD ada mom %.4f" %(MSE(y,pred_SGD_ada_mom)))
+    plt.plot(x, pred_GD, "--", label="GD %.4f" %(MSE(y,pred_GD)))
+    plt.plot(x, pred_GD_momentum, linestyle="dotted", label="GD mom %.4f" %(MSE(y, pred_GD_momentum)))
+    plt.plot(x, pred_SGD_momentum, linestyle="dotted", label="SGD mom %.4f" %(MSE(y, pred_SGD_momentum)))
+    plt.plot(x, pred_SGD_rms_mom, linestyle="dotted", label="SGD RMS mom %.4f" %(MSE(y, pred_SGD_rms_mom)))
+    plt.plot(x, pred_SGD_rms, linestyle="dotted", label="SGD RMS  %.4f" %(MSE(y, pred_SGD_rms)))
+    plt.plot(x, pred_GD_rms_mom, linestyle="dotted", label="GD RMS mom %.4f" %(MSE(y, pred_GD_rms_mom)))
+    plt.plot(x, pred_GD_rms, linestyle="dotted", label="GD RMS  %.4f" %(MSE(y, pred_GD_rms)))
+    plt.plot(x, pred_GD_ADAM_mom, linestyle="dotted", label="GD ADAM mom %.4f" %(MSE(y, pred_GD_ADAM_mom)))
+    plt.plot(x, pred_GD_ADAM, linestyle="dotted", label="GD ADAM  %.4f" %(MSE(y, pred_GD_ADAM)))
     
     plt.legend()
 
