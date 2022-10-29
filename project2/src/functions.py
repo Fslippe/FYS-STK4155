@@ -1,3 +1,6 @@
+
+
+
 import matplotlib.pyplot as plt
 import autograd.numpy as np
 from autograd import grad
@@ -13,27 +16,63 @@ from sklearn.linear_model import Lasso, Ridge
 plt.rcParams.update({"font.size": 14})
 import time
 
-def OLS(X, z, inversion_method="", iterations=1000, n_epochs=50, batch_size=5, delta_mom=0, eta=0.1, t0=5, t1=50, rho1=0.9, rho2=0.99):
+def no_tune(grads_pre, grads, grad_square, rho1, rho2, eta, change, delta_mom, epoch, m, start, batch_size, t0, t1):
+    return eta*grads + delta_mom*change
+
+def no_tune_SGD(grads_pre, grads, grad_square, rho1, rho2, eta, change, delta_mom, epoch, m, start, batch_size, t0, t1):
+    eta = learning_schedule(epoch*m + start/batch_size, t0, t1)
+    change = eta*grads + delta_mom*change 
+    return change
+
+def AdaGrad(grads_pre, grads, grad_square, rho1, rho2, eta, change, delta_mom, epoch, m, start, batch_size, t0, t1):
+    """
+    ADAM tuning method
+    """
+    grad_square += grads**2
+    alpha = eta/(1e-8 + np.sqrt(grad_square))
+    change = alpha*grads + delta_mom*change
+    
+    return change
+
+def RMSprop(grads_pre, grads, grad_square, rho1, rho2, eta, change, delta_mom, epoch, m, start, batch_size, t0, t1):
+    """
+    RMSprop tuning method
+    """
+    s_t = grad_square
+    grad_square += grads**2
+    s_t = s_t*rho1 + grad_square*(1 - rho1)
+    alpha = eta/(1e-8 + np.sqrt(s_t))
+    change = alpha*grads + delta_mom*change
+    return change
+
+def ADAM(grads_pre, grads, grad_square, rho1, rho2, eta, change, delta_mom, epoch, m, start, batch_size, t0, t1):
+    """
+    ADAM tuning method
+    """
+
+    s_t = grad_square
+    m_t = grads_pre
+    m_t = rho1*m_t + (1-rho1)*grads
+    grad_square += grads**2
+    s_t = rho2*s_t + (1-rho2)*grad_square 
+    m_t = m_t / (1-rho1)
+    s_t = s_t / (1-rho2)
+    change = eta * m_t / (1e-8 + np.sqrt(s_t)) + delta_mom*change
+    
+    return change
+
+def OLS(X, z, inversion_method="", iterations=1000, n_epochs=50, tuning_func=no_tune,
+        batch_size=5, delta_mom=0, eta=0.1, t0=5, t1=50, rho1=0.9, rho2=0.99):
     """
     Takes in a design matrix and actual data and returning
     an array of best beta for X and z
     """
     if inversion_method == "GD":
-        beta = GD(X, z, iterations=iterations, eta=eta, delta_mom=delta_mom)
+        beta = GD(X, z, rho1, rho2, eta, iterations, delta_mom, tuning_func)
     elif inversion_method == "SGD":
-        beta = SGD(X, z, n_epochs, batch_size, t0=t0, t1=t1, delta_mom=delta_mom)
-    elif inversion_method == "SGD_ADA":
-        beta = SGD_ADA(X, z, n_epochs, batch_size, eta=eta, delta_mom=delta_mom)
-    elif inversion_method == "GD_ADA":
-        beta = GD_ADA(X, z, iterations=iterations, eta=eta, delta_mom=delta_mom)
-    elif inversion_method == "SGD_RMS":
-        beta = SGD_RMS(X, z, n_epochs, batch_size, eta=eta, rho=rho1, delta_mom=delta_mom)
-    elif inversion_method == "GD_RMS":
-        beta = GD_RMS(X, z, iterations=iterations, eta=eta, rho=rho1, delta_mom=delta_mom)
-    elif inversion_method == "SGD_ADAM":
-        beta = SGD_ADAM(X, z, n_epochs, batch_size, eta=eta, rho1=rho1, rho2=rho2, delta_mom=delta_mom)
-    elif inversion_method == "GD_ADAM":
-        beta = GD_ADAM(X, z, iterations=iterations, eta=eta, rho1=rho1, rho2=rho2, delta_mom=delta_mom)
+        if tuning_func==no_tune:
+            tuning_func = no_tune_SGD
+        beta = SGD(X, z, n_epochs, batch_size, t0, t1, rho1, rho2, eta, iterations, delta_mom, tuning_func)
     else:
         beta = np.linalg.pinv(X.T @ X) @ X.T @ z
 
@@ -67,40 +106,49 @@ def lasso_regression(X, z, lamda, max_iter=int(1e2), tol=1e-2):
     lasso.fit(X, z)
     return lasso
 
-def GD(X, y, eta=0.4, iterations=1000, delta_mom=0):
+
+def GD(X, z, rho1, rho2, eta, iterations, delta_mom, tuning_func, epoch=1, m=1, start=1, batch_size=1, t0=1, t1=1):
     """
     Stochastic Gradient method to find theta
     """
     n = X.shape[0] #
     N = X.shape[1]
     theta = np.random.randn(N, 1)
+    grad_square = np.zeros((N, 1))
     change = 0
+    grads = 0
+
     for i in range(iterations):
-        grads = 2/n * X.T @ ((X @ theta) - y)
-        change = eta*grads + delta_mom*change
+        grads_pre = grads
+        grads = 2/n * X.T @ ((X @ theta) - z)
+        change = tuning_func(grads_pre, grads, grad_square, rho1, rho2, eta, change, delta_mom, epoch, m, start, batch_size, t0, t1)
         theta -= change 
 
     return theta
 
-def SGD(X, y, n_epochs, batch_size, t0=5, t1=50, delta_mom=0):
+
+
+def SGD(X, z, n_epochs, batch_size, t0, t1, rho1, rho2, eta, iterations, delta_mom, tuning_func):
     """
     Stochastic Gradient decent method to find theta
     """
     n = X.shape[0] #
     N = X.shape[1]
-
+    
     m = int(n/batch_size) # minibatches
     theta = np.random.randn(N,1)
     change = 0
-    for epoch in range(n_epochs):
-        X_shuffle, y_shuffle = shuffle(X, y)
+    grads = 0
 
+    for epoch in range(n_epochs):
+        X_shuffle, y_shuffle = shuffle(X, z)
+        grad_square = np.zeros((N, 1))
         for start in range(0, n, batch_size):
             X_batch = X_shuffle[start:start+batch_size]
             y_batch = y_shuffle[start:start+batch_size]
+            grads_pre = grads
             grads = 2/batch_size * X_batch.T @ ((X_batch @ theta) - y_batch)
-            eta = learning_schedule(epoch*m + start/batch_size, t0, t1)
-            change = eta*grads + delta_mom*change 
+            change = tuning_func(grads_pre, grads, grad_square, rho1, rho2, eta, change, delta_mom, epoch, m, start, batch_size, t0, t1)
             theta -= change
     
     return theta
@@ -115,157 +163,7 @@ def C_OLS(X, y, beta, n_div=True):
         n = X.shape[0]
         return 1/n * np.sum((y - X @ beta)**2)
 
-def GD_ADA(X, y, eta=0.4, iterations=1000, delta_mom=0):
-    """
-    Stochastic Gradient method to find theta
-    """
-    n = X.shape[0] #
-    N = X.shape[1] 
-    theta = np.random.randn(N, 1)
-    grad_square = np.zeros((N, 1))
-    change = 0
-    for i in range(iterations):
-        grads = 2/n * X.T @ ((X @ theta) - y)
-        #grad_square += grads**2
-        #alpha = eta/(1e-8 + np.sqrt(grad_square))
-        #change = alpha*grads + delta_mom*change
-        change = AdaGrad(grads, grad_square, eta, change, delta_mom)
-        theta -= change
 
-    return theta
-
-def AdaGrad(grads, grad_square, eta, change, delta_mom):
-    """
-    ADAM tuning method
-    """
-    grad_square += grads**2
-    alpha = eta/(1e-8 + np.sqrt(grad_square))
-    change = alpha*grads + delta_mom*change
-    
-    return change
-
-def SGD_ADA(X, y, n_epochs, batch_size, eta=0.4, delta_mom=0):
-    """
-    Stochastic Gradient decent method to find theta
-    """
-    n = X.shape[0] #
-    N = X.shape[1]
-
-    theta = np.random.randn(N,1)
-    change = 0
-    for epoch in range(n_epochs):
-        X_shuffle, y_shuffle = shuffle(X, y)
-        grad_square = np.zeros((N, 1))
-        for start in range(0, n, batch_size):
-            X_batch = X_shuffle[start:start+batch_size]
-            y_batch = y_shuffle[start:start+batch_size]
-            grads = 2/batch_size * X_batch.T @ ((X_batch @ theta) - y_batch)
-            change = AdaGrad(grads, grad_square, eta, change, delta_mom)
-            theta -= change
-    return theta
-
-def GD_RMS(X, y, eta, iterations, rho, delta_mom):
-    """
-    Stochastic Gradient RMSprop
-    """
-    n = X.shape[0] #
-    N = X.shape[1] 
-    theta = np.random.randn(N, 1)
-    grad_square = np.zeros((N, 1))
-    s_t = np.zeros((N, 1))
-    change = 0
-
-    for i in range(iterations):
-        grads = 2/n * X.T @ ((X @ theta) - y)
-        change = RMSprop(grads, grad_square, rho, eta, change, delta_mom)
-        theta -= change
-    return theta
-
-def SGD_RMS(X, y, n_epochs, batch_size, eta, rho, delta_mom):
-    """
-    Stochastic Gradient decent RMSprop
-    """
-    n = X.shape[0] #
-    N = X.shape[1]
-    change = 0
-
-    theta = np.random.randn(N,1)
-    for epoch in range(n_epochs):
-        X_shuffle, y_shuffle = shuffle(X, y)
-        grad_square = np.zeros((N, 1))
-        for start in range(0, n, batch_size):
-            X_batch = X_shuffle[start:start+batch_size]
-            y_batch = y_shuffle[start:start+batch_size]
-            grads = 2/batch_size * X_batch.T @ ((X_batch @ theta) - y_batch)
-            change = RMSprop(grads, grad_square, rho, eta, change, delta_mom)
-            theta -= change
-    return theta
-
-def GD_ADAM(X, y, eta, iterations, rho1, rho2, delta_mom):
-    """
-    Stochastic Gradient RMSprop
-    """
-    n = X.shape[0] #
-    N = X.shape[1] 
-    theta = np.random.randn(N, 1)
-    grad_square = np.zeros((N, 1))
-    s_t = np.zeros((N, 1))
-    change = 0
-    grads = 0
-    for i in range(iterations):
-        grads_pre = grads
-        grads = 2/n * X.T @ ((X @ theta) - y)
-        change = ADAM(grads_pre, grads, grad_square, rho1, rho2, eta, change, delta_mom)
-        theta -= change
-    return theta
-
-def SGD_ADAM(X, y, n_epochs, batch_size, eta, rho1, rho2, delta_mom):
-    """
-    Stochastic Gradient decent ADAM
-    """
-    n = X.shape[0] #
-    N = X.shape[1]
-    change = 0
-    grads = 0
-    theta = np.random.randn(N,1)
-    for epoch in range(n_epochs):
-        X_shuffle, y_shuffle = shuffle(X, y)
-        grad_square = np.zeros((N, 1))
-        for start in range(0, n, batch_size):
-            X_batch = X_shuffle[start:start+batch_size]
-            y_batch = y_shuffle[start:start+batch_size]
-            grads_pre = grads
-            grads = 2/batch_size * X_batch.T @ ((X_batch @ theta) - y_batch)
-            change = ADAM(grads_pre, grads, grad_square, rho1, rho2, eta, change, delta_mom)
-            theta -= change
-    return theta
-
-def RMSprop(grads, grad_square, rho, eta, change, delta_mom):
-    """
-    RMSprop tuning method
-    """
-    s_t = grad_square
-    grad_square += grads**2
-    s_t = s_t*rho + grad_square*(1 - rho)
-    alpha = eta/(1e-8 + np.sqrt(s_t))
-    change = alpha*grads + delta_mom*change
-    return change
-
-def ADAM(grads_pre, grads, grad_square, rho1, rho2, eta, change, delta_mom):
-    """
-    ADAM tuning method
-    """
-
-    s_t = grad_square
-    m_t = grads_pre
-    m_t = rho1*m_t + (1-rho1)*grads
-    grad_square += grads**2
-    s_t = rho2*s_t + (1-rho2)*grad_square 
-    m_t = m_t / (1-rho1)
-    s_t = s_t / (1-rho2)
-    change = eta * m_t / (1e-8 + np.sqrt(s_t)) + delta_mom*change
-    
-    return change
 def GD_newton(X, y, iterations=1000):
     """
     Using Newton's method and autograd
@@ -282,8 +180,6 @@ def GD_newton(X, y, iterations=1000):
         beta -= H_inv @ grads 
 
     return beta
-
-
 
 def learning_schedule(t, t0, t1):
     return t0 / (t + t1)
@@ -345,34 +241,34 @@ def main():
     beta_SGD_momentum = OLS(X, y, inversion_method="SGD", n_epochs=50, batch_size=5, delta_mom=0.3)
     pred_SGD_momentum = X @ beta_SGD_momentum
 
-    beta_GD_ada = OLS(X, y, inversion_method="GD_ADA")
+    beta_GD_ada = OLS(X, y, inversion_method="GD", tuning_func=AdaGrad)
     pred_GD_ada = X @ beta_GD_ada
 
-    beta_GD_ada_mom = OLS(X, y, inversion_method="GD_ADA", delta_mom=0.3)
+    beta_GD_ada_mom = OLS(X, y, inversion_method="GD", delta_mom=0.3, tuning_func=AdaGrad)
     pred_GD_ada_mom = X @ beta_GD_ada_mom
 
-    beta_SGD_ada = OLS(X, y, inversion_method="SGD_ADA", n_epochs=50, batch_size=5)
+    beta_SGD_ada = OLS(X, y, inversion_method="SGD", n_epochs=50, batch_size=5, tuning_func=AdaGrad)
     pred_SGD_ada = X @ beta_SGD_ada
 
-    beta_SGD_ada_mom = OLS(X, y, inversion_method="SGD_ADA", n_epochs=50, batch_size=5, delta_mom=0.3)
+    beta_SGD_ada_mom = OLS(X, y, inversion_method="SGD", n_epochs=50, batch_size=5, delta_mom=0.3, tuning_func=AdaGrad)
     pred_SGD_ada_mom = X @ beta_SGD_ada_mom
     
-    beta_SGD_rms = OLS(X, y, inversion_method="SGD_RMS", n_epochs=50, batch_size=5)
+    beta_SGD_rms = OLS(X, y, inversion_method="SGD", n_epochs=50, batch_size=5, tuning_func=RMSprop)
     pred_SGD_rms = X @ beta_SGD_rms
 
-    beta_SGD_rms_mom = OLS(X, y, inversion_method="SGD_RMS", n_epochs=50, batch_size=5, delta_mom=0.3)
+    beta_SGD_rms_mom = OLS(X, y, inversion_method="SGD", n_epochs=50, batch_size=5, delta_mom=0.3, tuning_func=RMSprop)
     pred_SGD_rms_mom = X @ beta_SGD_rms_mom
 
-    beta_GD_rms = OLS(X, y, inversion_method="GD_RMS", n_epochs=50, batch_size=5)
+    beta_GD_rms = OLS(X, y, inversion_method="GD", n_epochs=50, batch_size=5, tuning_func=RMSprop)
     pred_GD_rms = X @ beta_GD_rms
 
-    beta_GD_rms_mom = OLS(X, y, inversion_method="GD_RMS", n_epochs=50, batch_size=5, delta_mom=0.3)
+    beta_GD_rms_mom = OLS(X, y, inversion_method="GD", n_epochs=50, batch_size=5, delta_mom=0.3, tuning_func=RMSprop)
     pred_GD_rms_mom = X @ beta_GD_rms_mom
 
-    beta_GD_ADAM = OLS(X, y, inversion_method="GD_ADAM", n_epochs=50, batch_size=5)
+    beta_GD_ADAM = OLS(X, y, inversion_method="GD", n_epochs=50, batch_size=5, tuning_func=ADAM)
     pred_GD_ADAM = X @ beta_GD_ADAM
 
-    beta_GD_ADAM_mom = OLS(X, y, inversion_method="GD_ADAM", n_epochs=50, batch_size=5, delta_mom=0.3)
+    beta_GD_ADAM_mom = OLS(X, y, inversion_method="GD", n_epochs=50, batch_size=5, delta_mom=0.3, tuning_func=ADAM)
     pred_GD_ADAM_mom = X @ beta_GD_ADAM_mom
     
 
