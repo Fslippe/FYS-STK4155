@@ -233,6 +233,27 @@ def design_matrix_1D(x, degree):
 
     return X
 
+def make_data(n, noise_std, seed=1, terrain=False):
+    """
+    Make data z=f(x)+noise for n steps and normal distributed
+    noise with standard deviation equal to noise_std
+    """
+    np.random.seed(seed)
+    x = np.linspace(0, 1, n+1)
+    y = np.linspace(0, 1, n+1)
+    x, y = np.meshgrid(x, y)
+
+    noise = np.random.normal(0, noise_std, size=(n+1,n+1))
+    z = FrankeFunction(x, y) + noise
+    return x, y, z.ravel()
+
+def FrankeFunction(x, y):
+    term1 = 0.75*np.exp(-(0.25*(9*x-2)**2) - 0.25*((9*y-2)**2))
+    term2 = 0.75*np.exp(-((9*x+1)**2)/49.0 - 0.1*(9*y+1))
+    term3 = 0.5*np.exp(-(9*x-7)**2/4.0 - 0.25*((9*y-3)**2))
+    term4 = -0.2*np.exp(-(9*x-4)**2 - (9*y-7)**2)
+    return term1 + term2 + term3 + term4
+    
 def design_matrix(x, y, degree):
     """
     Setting up design matrix with dependency on x and y for a chosen degree

@@ -52,10 +52,6 @@ class NeuralNetwork :
 
 
     def feed_forward(self):
-        #iniitialize a_l and z_l for hidden layers
-        #self.a_l[0] = np.zeros((self.batch_size, self.input_dim))
-        #self.z_l[0] = np.zeros((self.batch_size, self.input_dim))
-
         for i in range(self.n_layers):
             self.a_l[i] = np.zeros((self.batch_size, self.neurons[i]))
             self.z_l[i] = np.zeros((self.batch_size, self.neurons[i]))
@@ -75,8 +71,6 @@ class NeuralNetwork :
         self.z_l[-1] = self.a_l[-2] @ self.weight[-1].T + self.bias[-1]
         self.a_l[-1] = self.sigmoid(self.z_l[-1])
 
-
-
     def SGD(self):
          for epoch in range(self.epochs):
             X_shuffle, Y_shuffle = shuffle(self.X, self.Y)
@@ -85,11 +79,14 @@ class NeuralNetwork :
                 self.Y_batch = Y_shuffle[start:start+self.batch_size]
                 self.feed_forward()
                 self.backprop()
-                for i in range(self.n_layers + 1):
-                    delta_w = self.weight[i] * self.moment - self.eta / self.batch_size *self.weight_grad[i]
-                    delta_b = self.bias[i] *self.moment - self.eta / self.batch_size * self.bias_grad[i]
-                    self.weight[i] += delta_w
-                    self.bias[i] += delta_b
+                self.update()
+
+    def update(self):
+        for i in range(self.n_layers + 1):
+            delta_w = self.weight[i] * self.moment - self.eta / self.batch_size *self.weight_grad[i]
+            delta_b = self.bias[i] *self.moment - self.eta / self.batch_size * self.bias_grad[i]
+            self.weight[i] += delta_w
+            self.bias[i] += delta_b
     
     def backprop(self):
         for i in range(self.n_layers):
@@ -156,14 +153,14 @@ def test_func_1D(x, degree, noise):
     a = np.random.rand(degree + 1)
     f_x = 0
     for i in range(degree + 1):
-        f_x += np.abs(a[i])*x**i
+        f_x += a[i]*x**i
 
     return f_x + noise
 
 def main():
     """Simple test of NN using 1D func to check for problems"""
     np.random.seed(100)
-    n = 100
+    n = 1000
     degree = 4
     x = np.linspace(0, 1, n)
     noise = np.random.normal(0, 0.1, n)
@@ -173,15 +170,15 @@ def main():
 
     X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, shuffle=False)
     print(np.shape(X_train), np.shape(Y_train))
-    neurons = np.array([100, 100, 100, 100]) # in hidden layers 
-    epochs = 300
+    neurons = np.array([300, 300, 300]) # in hidden layers 
+    epochs = 30
     batch_size = 25
-    eta = 0.1
+    eta = 0.2
     NN = NeuralNetwork(X_train, Y_train, neurons, epochs, batch_size, eta)
     NN.SGD()
-    pred = (NN.predict(X_train))
-    print(mean_squared_error(Y_train, pred))
-    plt.plot(Y_train)
+    pred = (NN.predict(X_test))*np.max(Y)
+    print(mean_squared_error(Y_test, pred))
+    plt.plot(Y_test)
     plt.plot(pred.ravel())
     plt.show()
 if __name__ == "__main__":
