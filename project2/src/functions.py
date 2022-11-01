@@ -1,8 +1,10 @@
+from re import A
 import matplotlib.pyplot as plt
 import seaborn as sns
 import matplotlib.ticker as tkr
 import autograd.numpy as np
 import pandas as pd
+from autograd import elementwise_grad
 from autograd import grad
 from random import random, seed
 from sklearn.metrics import mean_squared_error, r2_score, mean_squared_log_error, mean_absolute_error
@@ -17,15 +19,14 @@ import time
 
 plt.rcParams.update({"font.size": 14})
 
-def no_tune(grads_pre, grads, grad_square, rho1, rho2, eta, change, delta_mom, epoch, m, start, batch_size, t0, t1):
+def no_tune(grads_pre, grads, grad_square, rho1, rho2, eta, change, delta_mom, epoch, m, start, batch_size):
     return eta*grads + delta_mom*change
 
-def no_tune_SGD(grads_pre, grads, grad_square, rho1, rho2, eta, change, delta_mom, epoch, m, start, batch_size, t0, t1):
-    #eta = learning_schedule(epoch*m + start/batch_size, t0, t1)
+def no_tune_SGD(grads_pre, grads, grad_square, rho1, rho2, eta, change, delta_mom, epoch, m, start, batch_size):
     change = eta*grads + delta_mom*change 
     return change
 
-def AdaGrad(grads_pre, grads, grad_square, rho1, rho2, eta, change, delta_mom, epoch, m, start, batch_size, t0, t1):
+def AdaGrad(grads_pre, grads, grad_square, rho1, rho2, eta, change, delta_mom, epoch, m, start, batch_size):
     """
     AdaGrad tuning method
     """
@@ -35,7 +36,7 @@ def AdaGrad(grads_pre, grads, grad_square, rho1, rho2, eta, change, delta_mom, e
     
     return change
 
-def RMSprop(grads_pre, grads, grad_square, rho1, rho2, eta, change, delta_mom, epoch, m, start, batch_size, t0, t1):
+def RMSprop(grads_pre, grads, grad_square, rho1, rho2, eta, change, delta_mom, epoch, m, start, batch_size):
     """
     RMSprop tuning method
     """
@@ -46,7 +47,7 @@ def RMSprop(grads_pre, grads, grad_square, rho1, rho2, eta, change, delta_mom, e
     change = alpha*grads + delta_mom*change
     return change
 
-def ADAM(grads_pre, grads, grad_square, rho1, rho2, eta, change, delta_mom, epoch, m, start, batch_size, t0, t1):
+def ADAM(grads_pre, grads, grad_square, rho1, rho2, eta, change, delta_mom, epoch, m, start, batch_size):
     """
     ADAM tuning method
     """
@@ -71,7 +72,7 @@ def OLS(X, z, inversion_method="", iterations=1000, n_epochs=50, tuning_func=no_
     elif inversion_method == "SGD":
         if tuning_func==no_tune:
             tuning_func = no_tune_SGD
-        beta = SGD(X, z, n_epochs, batch_size, t0, t1, rho1, rho2, eta, iterations, delta_mom, tuning_func)
+        beta = SGD(X, z, n_epochs, batch_size, rho1, rho2, eta, iterations, delta_mom, tuning_func)
     else:
         beta = np.linalg.pinv(X.T @ X) @ X.T @ z
 
@@ -89,7 +90,7 @@ def ridge_regression(X, z, lamda, inversion_method="", iterations=1000, n_epochs
     elif inversion_method == "SGD":
         if tuning_func==no_tune:
             tuning_func = no_tune_SGD
-        beta = SGD(X, z, n_epochs, batch_size, t0, t1, rho1, rho2, eta, iterations, delta_mom, tuning_func, lamda=lamda)
+        beta = SGD(X, z, n_epochs, batch_size, rho1, rho2, eta, iterations, delta_mom, tuning_func, lamda=lamda)
     else:
         N = X.shape[1]
         beta = np.linalg.pinv(X.T @ X + lamda*np.eye(N)) @ X.T @ z
@@ -126,13 +127,13 @@ def GD(X, z, rho1, rho2, eta, iterations, delta_mom, tuning_func, epoch=1, m=1, 
     for i in range(iterations):
         grads_pre = grads
         grads = 2/n * X.T @ (X @ theta - z) + 2*lamda*theta
-        change = tuning_func(grads_pre, grads, grad_square, rho1, rho2, eta, change, delta_mom, epoch, m, start, batch_size, t0, t1)
+        change = tuning_func(grads_pre, grads, grad_square, rho1, rho2, eta, change, delta_mom, epoch, m, start, batch_size)
         theta -= change 
 
     return theta
 
 
-def SGD(X, z, n_epochs, batch_size, t0, t1, rho1, rho2, eta, iterations, delta_mom, tuning_func, lamda=0):
+def SGD(X, z, n_epochs, batch_size, rho1, rho2, eta, iterations, delta_mom, tuning_func, lamda=0):
     """
     Stochastic Gradient decent method to find theta for OLS and Ridge
     """
@@ -153,7 +154,7 @@ def SGD(X, z, n_epochs, batch_size, t0, t1, rho1, rho2, eta, iterations, delta_m
             y_batch = y_shuffle[start:start+batch_size]
             grads_pre = grads
             grads = 2/batch_size * X_batch.T @ ((X_batch @ theta) - y_batch) + 2*lamda*theta       
-            change = tuning_func(grads_pre, grads, grad_square, rho1, rho2, eta, change, delta_mom, epoch, m, start, batch_size, t0, t1)
+            change = tuning_func(grads_pre, grads, grad_square, rho1, rho2, eta, change, delta_mom, epoch, m, start, batch_size)
             theta -= change
     
     return theta
@@ -205,9 +206,6 @@ def GD_newton(X, y, iterations=1000):
 
     return beta
 
-def learning_schedule(t, t0, t1):
-    return t0 / (t + t1)
-
 
 def MSE(data, model):
     """
@@ -226,16 +224,32 @@ def R2(data, model):
     return R2
 
 
-def design_matrix(x, degree):
-
-    if len(x.shape) > 1:
-        x = np.ravel(x)
-
+def design_matrix_1D(x, degree):
     N = len(x)
     X = np.ones((N, degree+1))
 
     for i in range(1, degree+1):
         X[:,i] = x**i
+
+    return X
+
+def design_matrix(x, y, degree):
+    """
+    Setting up design matrix with dependency on x and y for a chosen degree
+    [x,y,xy,x²,y²,...]
+    """
+    if len(x.shape) > 1:
+        x = np.ravel(x)
+        y = np.ravel(y)
+
+    N = len(x)
+    l = int((degree+1)*(degree+2)/2)		# Number of elements in beta
+    X = np.ones((N,l))
+
+    for i in range(1,degree+1):
+        q = int((i)*(i+1)/2)
+        for k in range(i+1):
+            X[:,q+k] = (x**(i-k))*(y**k)
 
     return X
 
@@ -291,15 +305,23 @@ def test_learning_rate_GD_ridge(X, y, eta, lamda, tune_func=no_tune, iterations=
     plt.ylabel(r"$\eta$")
     plt.show()
 
-def main():
+def test_func_1D(x, degree, noise):
     np.random.seed(100)
-    n = 100
-    x = np.linspace(-1, 1, n)
+    a = np.random.rand(degree + 1)
+    f_x = 0
+    for i in range(degree + 1):
+        f_x += a[i]*x**i
 
-    a = np.random.rand(5)
-    f_x = a[0] + a[1]*x + a[2]*x**2 + a[3]*x**3 + a[4]*x**4
-    y = (f_x + np.random.normal(0, 0.1, n)).reshape(n, 1)
-    X = design_matrix(x, 4)
+    return f_x + noise
+
+def main():
+    n = 100
+    np.random.seed(100)
+
+    x = np.linspace(-1, 1, n)
+    noise = np.random.normal(0, 0.1, n)
+    y = test_func_1D(x, 4, noise).reshape(n, 1)
+    X = design_matrix_1D(x, 4)
     lamda = 0.01
     delta_mom = 0.3
     n_epochs = 50 
@@ -307,24 +329,28 @@ def main():
     eta = np.linspace(0.05, 0.7, 5)
     lamda = np.logspace(-8, -1, 8)
     #test_learning_rate_GD_OLS(X, y, eta, iterations=500, tune_func=no_tune)
-    test_learning_rate_GD_ridge(X, y, eta, lamda, iterations=1000, tune_func=ADAM)
+    #test_learning_rate_GD_ridge(X, y, eta, lamda, iterations=1000, tune_func=ADAM)
 
-    """
+    f_x = y.ravel() - noise
     plt.title("OLS")
     plt.plot(x, f_x,"k", linewidth=10)
+    plt.plot(x, y,"k", linewidth=1)
+
     plot_inversion_compare(X, y, x, OLS, no_tune, delta_mom, lamda, n_epochs, batch_size, label="")
     plot_inversion_compare(X, y, x, OLS, AdaGrad, delta_mom, lamda, n_epochs, batch_size, label="AdaGrad")
     plot_inversion_compare(X, y, x, OLS, ADAM, delta_mom, lamda, n_epochs, batch_size, label="ADAM")
     plot_inversion_compare(X, y, x, OLS, RMSprop, delta_mom, lamda, n_epochs, batch_size, label="RMSprop")
     plt.show()
     plt.title("RIDGE")
+    lamda = 0.00001
     plt.plot(x, f_x,"k", linewidth=10)
+    plt.plot(x, y,"k", linewidth=1)
+
 
     plot_inversion_compare(X, y, x, ridge_regression, no_tune, delta_mom, lamda, n_epochs, batch_size, label="")
     plot_inversion_compare(X, y, x, ridge_regression, AdaGrad, delta_mom, lamda, n_epochs, batch_size, label="AdaGrad")
     plot_inversion_compare(X, y, x, ridge_regression, ADAM, delta_mom, lamda, n_epochs, batch_size, label="ADAM")
     plot_inversion_compare(X, y, x, ridge_regression, RMSprop, delta_mom, lamda, n_epochs, batch_size, label="RMSprop")
     plt.show()
-    """
 if __name__ == "__main__":
     main()
