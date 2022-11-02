@@ -35,7 +35,10 @@ class NeuralNetwork :
         # Initialize Bias
         self.bias = np.zeros(self.n_layers +1, dtype=object)
         for i in range(self.n_layers):
+            #self.bias[i] = np.zeros(self.neurons[i])
             self.bias[i] = np.random.randn(self.neurons[i])
+
+        #self.bias[-1] = np.zeros(self.output_dim)
         self.bias[-1] = np.random.randn(self.output_dim)
 
         # Initialize
@@ -167,6 +170,7 @@ def main():
     Y = test_func_1D(x, 4, noise).reshape(n, 1) 
     Y = Y / np.max(Y)
     X = design_matrix_1D(x, degree)
+    x = x.reshape(n, 1)
 
     X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, shuffle=False)
     print(np.shape(X_train), np.shape(Y_train))

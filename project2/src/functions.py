@@ -4,6 +4,7 @@ import seaborn as sns
 import matplotlib.ticker as tkr
 import autograd.numpy as np
 import pandas as pd
+from matplotlib import cm
 from autograd import elementwise_grad
 from autograd import grad
 from random import random, seed
@@ -16,6 +17,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.utils import resample, shuffle
 from sklearn.linear_model import Lasso, Ridge
 import time
+from matplotlib.ticker import LinearLocator, FormatStrFormatter
 
 plt.rcParams.update({"font.size": 14})
 
@@ -253,7 +255,7 @@ def FrankeFunction(x, y):
     term3 = 0.5*np.exp(-(9*x-7)**2/4.0 - 0.25*((9*y-3)**2))
     term4 = -0.2*np.exp(-(9*x-4)**2 - (9*y-7)**2)
     return term1 + term2 + term3 + term4
-    
+
 def design_matrix(x, y, degree):
     """
     Setting up design matrix with dependency on x and y for a chosen degree
@@ -334,6 +336,24 @@ def test_func_1D(x, degree, noise):
         f_x += a[i]*x**i
 
     return f_x + noise
+
+
+def plot_3d_trisurf(x, y, z, scale_std=1, scale_mean=0, savename=None, azim=110, title=""):
+    fig = plt.figure()
+    ax = fig.gca(projection='3d')
+    plt.title(title)
+    surf = ax.plot_trisurf(x, y, z*scale_std + scale_mean, cmap=cm.coolwarm, linewidth=0.2, antialiased=False)
+    ax.zaxis.set_major_formatter(FormatStrFormatter("%.1f"))
+    ax.set_xlabel(r"$x$")
+    ax.set_ylabel(r"$y$")
+    ax.set_ylabel(r"$y$")
+    ax.view_init(azim=azim)
+
+    fig.colorbar(surf, shrink=0.5, aspect=5)
+    plt.tight_layout(pad=1.5, w_pad=0.7, h_pad=0.2)
+    if savename != None:
+        plt.savefig("../figures/%s.png" %(savename))
+
 
 def main():
     n = 100
