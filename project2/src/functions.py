@@ -352,7 +352,7 @@ def plot_3d_trisurf(x, y, z, scale_std=1, scale_mean=0, savename=None, azim=110,
     fig.colorbar(surf, shrink=0.5, aspect=5)
     plt.tight_layout(pad=1.5, w_pad=0.7, h_pad=0.2)
     if savename != None:
-        plt.savefig("../figures/%s.png" %(savename))
+        plt.savefig("../figures/%s.png" %(savename), dpi=300, bbox_inches='tight')
 
 
 def main():

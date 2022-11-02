@@ -27,16 +27,16 @@ class NeuralNetwork :
     def initialize_arrays(self):
         # Initialize Weight
         self.weight = np.zeros(self.n_layers +1, dtype=object)
-        self.weight[0] = np.random.randn(self.neurons[0], self.input_dim)
+        self.weight[0] = np.random.randn(int(self.neurons[0]), self.input_dim)
         for i in range(1, self.n_layers):
-            self.weight[i] = np.random.randn(self.neurons[i], self.neurons[i-1])
-        self.weight[-1] = np.random.randn(self.output_dim, self.neurons[-1])
+            self.weight[i] = np.random.randn(int(self.neurons[i]), int(self.neurons[i-1]))
+        self.weight[-1] = np.random.randn(self.output_dim, int(self.neurons[-1]))
 
         # Initialize Bias
         self.bias = np.zeros(self.n_layers +1, dtype=object)
         for i in range(self.n_layers):
             #self.bias[i] = np.zeros(self.neurons[i])
-            self.bias[i] = np.random.randn(self.neurons[i])
+            self.bias[i] = np.random.randn(int(self.neurons[i]))
 
         #self.bias[-1] = np.zeros(self.output_dim)
         self.bias[-1] = np.random.randn(self.output_dim)
@@ -56,8 +56,8 @@ class NeuralNetwork :
 
     def feed_forward(self):
         for i in range(self.n_layers):
-            self.a_l[i] = np.zeros((self.batch_size, self.neurons[i]))
-            self.z_l[i] = np.zeros((self.batch_size, self.neurons[i]))
+            self.a_l[i] = np.zeros((self.batch_size, int(self.neurons[i])))
+            self.z_l[i] = np.zeros((self.batch_size, int(self.neurons[i])))
         
         #output layer
         self.a_l[-1] = np.zeros((self.batch_size, self.output_dim))
@@ -93,7 +93,7 @@ class NeuralNetwork :
     
     def backprop(self):
         for i in range(self.n_layers):
-            self.error[i] = np.zeros((self.batch_size, self.neurons[i]))
+            self.error[i] = np.zeros((self.batch_size, int(self.neurons[i])))
         self.error[-1] = self.error_cost_grad(self.a_l[-1], self.Y_batch) * self.sigmoid_grad(self.z_l[-1])
 
         #backpropagation:
@@ -109,8 +109,6 @@ class NeuralNetwork :
         
         if self.lamda != 0:
             for i in range(self.n_layers +1):
-                print(i)
-                print(np.shape(self.weight_grad[i]), np.shape(self.lamda*self.weight[i]))
                 self.weight_grad[i] += self.lamda*self.weight[i]
 
     def feed_forward_out(self, x):
