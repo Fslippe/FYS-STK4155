@@ -8,7 +8,9 @@ from sklearn.metrics import mean_squared_error, r2_score, mean_squared_log_error
 
 class NeuralNetwork :
 
-    def __init__(self, X, Y, neurons, epochs, batch_size, eta, lamda=0., moment=0):
+    def __init__(self, X, Y, neurons, epochs, batch_size, eta, lamda=0., moment=0, seed=None, initialize="random", activation="sigmoid", cost="error", last_activation=None):
+        if seed != None:
+            np.random.seed(seed)
         self.X = X
         self.Y = Y 
         self.n_inputs = X.shape[0]
@@ -22,24 +24,66 @@ class NeuralNetwork :
         self.eta = eta 
         self.lamda = lamda
         self.moment = moment
+        self.initialize = initialize
         self.initialize_arrays()
-  
+
+        # Activation functions
+        self.act = self.activation_function(activation)
+        self.act_grad = self.activation_gradient(activation)
+
+        if last_activation != None:
+            self.act_grad_out = self.activation_gradient(last_activation)
+        else:
+            self.act_grad_out = self.act_grad
+
+        # Cost functions
+        if cost == "error":
+            self.cost = self.error 
+            self.cost_grad = self.error_grad
+        elif cost == "cross entropy":
+            self.cost = self.cross_entropy 
+            self.cost_grad = self.cross_entropy_grad
+
+    def activation_function(self, s):
+        if s == "relu":
+            return self.relu
+        elif s == "lrelu":
+            return self.l_relu
+        else:
+            return self.sigmoid 
+        
+    def activation_gradient(self, s):
+        if s == "relu":
+            return self.relu_grad
+        elif s == "lrelu":
+            return self.l_relu_grad
+        else:
+            return self.sigmoid_grad
+
     def initialize_arrays(self):
         # Initialize Weight
         self.weight = np.zeros(self.n_layers +1, dtype=object)
-        self.weight[0] = np.random.randn(int(self.neurons[0]), self.input_dim)
-        for i in range(1, self.n_layers):
-            self.weight[i] = np.random.randn(int(self.neurons[i]), int(self.neurons[i-1]))
-        self.weight[-1] = np.random.randn(self.output_dim, int(self.neurons[-1]))
-
-        # Initialize Bias
         self.bias = np.zeros(self.n_layers +1, dtype=object)
-        for i in range(self.n_layers):
-            #self.bias[i] = np.zeros(self.neurons[i])
-            self.bias[i] = np.random.randn(int(self.neurons[i]))
 
-        #self.bias[-1] = np.zeros(self.output_dim)
-        self.bias[-1] = np.random.randn(self.output_dim)
+        if self.initialize == "zeros":
+            self.weight[0] = np.zeros(int(self.neurons[0]), self.input_dim)
+            for i in range(1, self.n_layers):
+                self.weight[i] = np.zeros(int(self.neurons[i]), int(self.neurons[i-1]))
+            self.weight[-1] = np.zeros(self.output_dim, int(self.neurons[-1]))
+            # Initialize Bias
+            for i in range(self.n_layers):
+                self.bias[i] = np.zeros(int(self.neurons[i]))
+            self.bias[-1] = np.zeros(self.output_dim)          
+
+        elif self.initialize == "random":
+            self.weight[0] = np.random.randn(int(self.neurons[0]), self.input_dim)
+            for i in range(1, self.n_layers):
+                self.weight[i] = np.random.randn(int(self.neurons[i]), int(self.neurons[i-1]))
+            self.weight[-1] = np.random.randn(self.output_dim, int(self.neurons[-1]))
+            # Initialize Bias
+            for i in range(self.n_layers):
+                self.bias[i] = np.random.randn(int(self.neurons[i]))
+            self.bias[-1] = np.random.randn(self.output_dim)
 
         # Initialize
         self.a_l = np.zeros(self.n_layers + 1, dtype=object)
@@ -64,15 +108,15 @@ class NeuralNetwork :
         self.z_l[-1] = np.zeros((self.batch_size, self.output_dim))
 
         self.z_l[0] = self.X_batch @ self.weight[0].T + self.bias[0]
-        self.a_l[0] = self.sigmoid(self.z_l[0])
+        self.a_l[0] = self.act(self.z_l[0])
 
 
         for i in range(1, self.n_layers):
             self.z_l[i] = self.a_l[i-1] @ self.weight[i].T + self.bias[i]
-            self.a_l[i] = self.sigmoid(self.z_l[i])
+            self.a_l[i] = self.act(self.z_l[i])
 
         self.z_l[-1] = self.a_l[-2] @ self.weight[-1].T + self.bias[-1]
-        self.a_l[-1] = self.sigmoid(self.z_l[-1])
+        self.a_l[-1] = self.act(self.z_l[-1])
 
     def SGD(self):
          for epoch in range(self.epochs):
@@ -94,11 +138,11 @@ class NeuralNetwork :
     def backprop(self):
         for i in range(self.n_layers):
             self.error[i] = np.zeros((self.batch_size, int(self.neurons[i])))
-        self.error[-1] = self.error_cost_grad(self.a_l[-1], self.Y_batch) * self.sigmoid_grad(self.z_l[-1])
+        self.error[-1] = self.cost_grad(self.a_l[-1], self.Y_batch) * self.act_grad_out(self.z_l[-1])
 
         #backpropagation:
         for i in range(self.n_layers - 1, -1, -1):
-            self.error[i] = (self.error[i + 1] @ self.weight[i + 1]) * self.sigmoid_grad(self.z_l[i])
+            self.error[i] = (self.error[i + 1] @ self.weight[i + 1]) * self.act_grad(self.z_l[i])
         
         self.weight_grad[0] = self.error[0].T @ self.X_batch 
         self.bias_grad[0] = np.sum(self.error[0], axis=0) #######
@@ -113,14 +157,14 @@ class NeuralNetwork :
 
     def feed_forward_out(self, x):
         z_o = x @ self.weight[0].T + self.bias[0]
-        a_o = self.sigmoid(z_o)
+        a_o = self.act(z_o)
 
         for i in range(1, self.n_layers):
             z_o = a_o @ self.weight[i].T + self.bias[i]
-            a_o = self.sigmoid(z_o)
+            a_o = self.act(z_o)
 
         z_o = a_o @ self.weight[-1].T + self.bias[-1]
-        a_o = self.sigmoid(z_o)
+        a_o = self.act(z_o)
         return a_o
 
     def predict(self, x):
@@ -133,12 +177,29 @@ class NeuralNetwork :
     def sigmoid_grad(self, x):
         return self.sigmoid(x) * (1 - self.sigmoid(x)) 
     
-    def error_cost(self, a, y):
+    def relu(self, x):
+        return np.max(0, x)
+    
+    def relu_grad(self, x):
+        return np.where(x <= 0, 0, 1)
+    
+    def l_relu(self, x):
+        return np.where(x < 0, 0.01*x, x)
+    
+    def l_relu_grad(self, x):
+        return np.where(x < 0, 0.01, 1)
+
+    def error(self, a, y):
         return np.sum((a - y)**2) / 2
 
-    def error_cost_grad(self, a, y):
+    def error_grad(self, a, y):
         return a - y
 
+    def cross_entropy(self, a, y):
+        return -np.sum(y* np.log(a) + (1 - y) * np.log(1 - a))
+
+    def cross_entropy_grad(self, a, y):
+        return -(y - a) / (a - a**2)
 
 def design_matrix_1D(x, degree):
     N = len(x)
