@@ -2,14 +2,16 @@ from NN import *
 from functions import * 
 from compare import *
 
-def grid_search_eta_lamda(xy, xy_test, z, z_test, eta, lamda, neurons, mn, mx, savename, epochs=50, batch_size=5, init="random", act="sigmoid", seed=100):
+def grid_search_eta_lamda(xy, xy_test, z, z_test, eta, lamda, neurons, mn, mx, savename, epochs=50, batch_size=5, init="random", act="relu", seed=100):
     mse = np.zeros((len(eta), len(lamda)))
     for i in range(len(eta)):
         for j in range(len(lamda)):
             print(lamda[j])
             NN = NeuralNetwork(xy, z.reshape(len(z), 1), neurons, epochs, batch_size, eta[i], lamda[j], seed=seed, initialize=init, activation=act)
             NN.SGD()
-            pred = min_max_unscale(NN.predict(xy_test).ravel(), mn, mx)
+            pred = NN.predict(xy_test).ravel()
+            print(pred)
+            pred = min_max_unscale(pred, mn, mx)
             mse[i, j] = (MSE(z_test, pred))
 
     df = pd.DataFrame(mse, columns=np.log10(lamda), index=eta)
@@ -32,7 +34,7 @@ def grid_search_layer_neurons(xy, xy_test, z, z_test, n_layer, neurons, mn, mx, 
         for j in range(len(n_layer)):
             neur = neuron_array(n_layer[j], neurons[i])
             print(neur)
-            NN = NeuralNetwork(xy, z.reshape(len(z), 1), neur, epochs, batch_size, eta, lamda, seed=seed, initialize=init, activation=act)
+            NN = NeuralNetwork(xy, z.reshape(len(z), 1), neur, epochs, batch_size, eta, lamda, seed=seed, initialize=init, activation=act)#, last_activation="act")
             NN.SGD()
             pred = min_max_unscale(NN.predict(xy_test).ravel(), mn, mx)
             mse[i, j] = (MSE(z_test, pred))
@@ -67,10 +69,21 @@ def main():
     neurons = np.array([91, 91, 91, 91, 91]) # in hidden layers 
     eta = np.array([0.01, 0.05, 0.1, 0.2, 0.4, 1])
     lamda = np.logspace(-9, -3, 7)
-    grid_search_eta_lamda(xy, xy_test, z_s, z, eta, lamda, neurons, mn, mx, "grid_eta_lmb", epochs=50, batch_size=5)
+    eta = np.array([0.0001, 0.1])
+    lamda = np.array([1e-6, 1e-5])
+    neurons = np.array([2]) # in hidden layers 
+
+    #grid_search_eta_lamda(xy, xy_test, z_s, z, eta, lamda, neurons, mn, mx, savename="test", epochs=50, batch_size=5)
 
 
     # layers - neurons
+    eta = 0.1
+    lamda=1e-0
+    batch_size = n+1
+    epochs = 400
+    n_layer = [1, 2, 3, 4]
+    neurons = [5, 10, 20, 30]
+    grid_search_layer_neurons(xy, xy_test, z_s, z, n_layer, neurons, mn, mx, savename="test", epochs=epochs, eta=eta, lamda=lamda, batch_size=batch_size, init="random", act="relu", seed=100)
     """
     neurons = np.array([400, 400]) # in hidden layers 
     epochs = 100

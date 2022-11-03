@@ -1,5 +1,8 @@
 from NN import *
 from functions import *
+import logging, os
+logging.disable(logging.WARNING)
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 import tensorflow as tf
 from tensorflow.keras.layers import Input
 from tensorflow.keras.models import Sequential      #This allows appending layers to existing models

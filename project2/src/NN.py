@@ -31,10 +31,13 @@ class NeuralNetwork :
         self.act = self.activation_function(activation)
         self.act_grad = self.activation_gradient(activation)
 
-        if last_activation != None:
-            self.act_grad_out = self.activation_gradient(last_activation)
-        else:
+        if last_activation == None:
+            self.act_out = self.act
             self.act_grad_out = self.act_grad
+        else:
+            self.act_out = self.activation_function(last_activation)
+            self.act_grad_out = self.activation_gradient(last_activation)
+
 
         # Cost functions
         if cost == "error":
@@ -66,14 +69,14 @@ class NeuralNetwork :
         self.bias = np.zeros(self.n_layers +1, dtype=object)
 
         if self.initialize == "zeros":
-            self.weight[0] = np.zeros(int(self.neurons[0]), self.input_dim)
+            self.weight[0] = np.zeros((int(self.neurons[0]), self.input_dim))
             for i in range(1, self.n_layers):
-                self.weight[i] = np.zeros(int(self.neurons[i]), int(self.neurons[i-1]))
-            self.weight[-1] = np.zeros(self.output_dim, int(self.neurons[-1]))
+                self.weight[i] = np.zeros((int(self.neurons[i]), int(self.neurons[i-1])))
+            self.weight[-1] = np.zeros((self.output_dim, int(self.neurons[-1])))
             # Initialize Bias
             for i in range(self.n_layers):
                 self.bias[i] = np.zeros(int(self.neurons[i]))
-            self.bias[-1] = np.zeros(self.output_dim)          
+            self.bias[-1] = np.zeros((self.output_dim))          
 
         elif self.initialize == "random":
             self.weight[0] = np.random.randn(int(self.neurons[0]), self.input_dim)
@@ -116,7 +119,7 @@ class NeuralNetwork :
             self.a_l[i] = self.act(self.z_l[i])
 
         self.z_l[-1] = self.a_l[-2] @ self.weight[-1].T + self.bias[-1]
-        self.a_l[-1] = self.act(self.z_l[-1])
+        self.a_l[-1] = self.act_out(self.z_l[-1])
 
     def SGD(self):
          for epoch in range(self.epochs):
@@ -157,14 +160,14 @@ class NeuralNetwork :
 
     def feed_forward_out(self, x):
         z_o = x @ self.weight[0].T + self.bias[0]
-        a_o = self.act(z_o)
+        a_o = self.act_out(z_o)
 
         for i in range(1, self.n_layers):
             z_o = a_o @ self.weight[i].T + self.bias[i]
-            a_o = self.act(z_o)
+            a_o = self.act_out(z_o)
 
         z_o = a_o @ self.weight[-1].T + self.bias[-1]
-        a_o = self.act(z_o)
+        a_o = self.act_out(z_o)
         return a_o
 
     def predict(self, x):
@@ -178,10 +181,10 @@ class NeuralNetwork :
         return self.sigmoid(x) * (1 - self.sigmoid(x)) 
     
     def relu(self, x):
-        return np.max(0, x)
+        return np.maximum(0, x)
     
     def relu_grad(self, x):
-        return np.where(x <= 0, 0, 1)
+        return np.where(x < 0, 0, 1)
     
     def l_relu(self, x):
         return np.where(x < 0, 0.01*x, x)
@@ -200,6 +203,8 @@ class NeuralNetwork :
 
     def cross_entropy_grad(self, a, y):
         return -(y - a) / (a - a**2)
+
+    
 
 def design_matrix_1D(x, degree):
     N = len(x)
