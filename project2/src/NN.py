@@ -26,7 +26,7 @@ class NeuralNetwork :
         self.moment = moment
         self.initialize = initialize
         self.initialize_arrays()
-
+        self.last_activation = last_activation
         # Activation functions
         self.act = self.activation_function(activation)
         self.act_grad = self.activation_gradient(activation)
@@ -52,6 +52,8 @@ class NeuralNetwork :
             return self.relu
         elif s == "lrelu":
             return self.l_relu
+        elif s == "softmax":
+            return self.softmax
         else:
             return self.sigmoid 
         
@@ -60,6 +62,8 @@ class NeuralNetwork :
             return self.relu_grad
         elif s == "lrelu":
             return self.l_relu_grad
+        elif s == "softmax":
+            return self.softmax_grad
         else:
             return self.sigmoid_grad
 
@@ -69,14 +73,14 @@ class NeuralNetwork :
         self.bias = np.zeros(self.n_layers +1, dtype=object)
 
         if self.initialize == "zeros":
-            self.weight[0] = np.zeros((int(self.neurons[0]), self.input_dim))
+            self.weight[0] = np.random.randn(int(self.neurons[0]), self.input_dim)
             for i in range(1, self.n_layers):
-                self.weight[i] = np.zeros((int(self.neurons[i]), int(self.neurons[i-1])))
-            self.weight[-1] = np.zeros((self.output_dim, int(self.neurons[-1])))
+                self.weight[i] = np.random.randn(int(self.neurons[i]), int(self.neurons[i-1]))
+            self.weight[-1] = np.random.randn(self.output_dim, int(self.neurons[-1]))
             # Initialize Bias
             for i in range(self.n_layers):
-                self.bias[i] = np.zeros(int(self.neurons[i]))
-            self.bias[-1] = np.zeros((self.output_dim))          
+                self.bias[i] = np.zeros(int(self.neurons[i])) + 0.01
+            self.bias[-1] = np.zeros((self.output_dim)) + 0.01         
 
         elif self.initialize == "random":
             self.weight[0] = np.random.randn(int(self.neurons[0]), self.input_dim)
@@ -87,6 +91,7 @@ class NeuralNetwork :
             for i in range(self.n_layers):
                 self.bias[i] = np.random.randn(int(self.neurons[i]))
             self.bias[-1] = np.random.randn(self.output_dim)
+
 
         # Initialize
         self.a_l = np.zeros(self.n_layers + 1, dtype=object)
@@ -141,7 +146,11 @@ class NeuralNetwork :
     def backprop(self):
         for i in range(self.n_layers):
             self.error[i] = np.zeros((self.batch_size, int(self.neurons[i])))
-        self.error[-1] = self.cost_grad(self.a_l[-1], self.Y_batch) * self.act_grad_out(self.z_l[-1])
+
+        if self.last_activation == "softmax":
+            self.error[-1] = self.a_l[-1] - self.Y_batch
+        else:
+            self.error[-1] = self.cost_grad(self.a_l[-1], self.Y_batch) * self.act_grad_out(self.z_l[-1])
 
         #backpropagation:
         for i in range(self.n_layers - 1, -1, -1):
@@ -192,6 +201,12 @@ class NeuralNetwork :
     def l_relu_grad(self, x):
         return np.where(x < 0, 0.01, 1)
 
+    def softmax(self, x):
+        return np.exp(x) / np.sum(np.exp(x), axis=1, keepdims=True)
+
+    def softmax_grad(self, x):
+        return self.softmax(x) - self.softmax(x)**2
+
     def error(self, a, y):
         return np.sum((a - y)**2) / 2
 
@@ -204,7 +219,6 @@ class NeuralNetwork :
     def cross_entropy_grad(self, a, y):
         return -(y - a) / (a - a**2)
 
-    
 
 def design_matrix_1D(x, degree):
     N = len(x)
