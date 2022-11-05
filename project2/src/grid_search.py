@@ -2,21 +2,27 @@ from NN import *
 from functions import * 
 from compare import *
 
-def grid_search_eta_lamda(xy, xy_test, z, z_test, eta, lamda, neurons, mn, mx, savename, epochs=50, batch_size=5, init="random", act="relu", seed=100):
-    mse = np.zeros((len(eta), len(lamda)))
+def grid_search_eta_lamda(xy, xy_test, z, z_test, validate, eta, lamda, neurons, mn, mx, savename, epochs=50, batch_size=5, init="random", act="sigmoid", act_out="sigmoid", seed=100):
+    val = np.zeros((len(eta), len(lamda)))
     for i in range(len(eta)):
         for j in range(len(lamda)):
             print(lamda[j])
             NN = NeuralNetwork(xy, z.reshape(len(z), 1), neurons, epochs, batch_size, eta[i], lamda[j], seed=seed, initialize=init, activation=act)
             NN.SGD()
             pred = NN.predict(xy_test).ravel()
-            print(pred)
             pred = min_max_unscale(pred, mn, mx)
-            mse[i, j] = (MSE(z_test, pred))
-
-    df = pd.DataFrame(mse, columns=np.log10(lamda), index=eta)
+            if validate == "MSE":
+                val[i, j] = (MSE(z_test, pred))
+            elif validate == "ACC":
+                val[i, j] = (accuracy(z_test, pred))
     plt.figure()
-    sns.heatmap(df, annot=True, cbar_kws={"label": r"$MSE$"}, vmin=0.025, vmax=0.2)
+    df = pd.DataFrame(val, columns=np.log10(lamda), index=eta)
+
+    if validate == "MSE":
+        sns.heatmap(df, annot=True, cbar_kws={"label": r"$MSE$"}, vmin=0.025, vmax=0.2)
+    elif validate == "ACC":
+        sns.heatmap(df, annot=True, cbar_kws={"label": r"$Accuracy$"}, vmin=0.8, vmax=1)
+
     plt.xlabel(r"log$_{10}(\lambda$)")
     plt.ylabel(r"$\eta$")
     plt.savefig("../figures/%s.png" %(savename), dpi=300, bbox_inches='tight')

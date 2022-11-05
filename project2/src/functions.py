@@ -1,4 +1,3 @@
-from re import A
 import matplotlib.pyplot as plt
 import seaborn as sns
 import matplotlib.ticker as tkr
@@ -216,6 +215,10 @@ def MSE(data, model):
     """
     MSE = mean_squared_error(data.ravel(), model.ravel())
     return MSE
+
+def accuracy(y_test, pred):
+    """Accuracy score for binary prediction"""
+    return np.sum(np.where(pred==y_test.ravel(), 1, 0)) / len(y_test)
 
 def R2(data, model):
     """

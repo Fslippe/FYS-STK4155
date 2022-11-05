@@ -97,7 +97,14 @@ class NeuralNetwork :
         self.a_l = np.zeros(self.n_layers + 1, dtype=object)
         self.z_l = np.zeros(self.n_layers + 1, dtype=object)
         self.error = np.zeros(self.n_layers + 1, dtype=object)
-
+        for i in range(self.n_layers):
+            self.a_l[i] = np.zeros((self.batch_size, int(self.neurons[i])))
+            self.z_l[i] = np.zeros((self.batch_size, int(self.neurons[i])))
+        
+        #output layer
+        self.a_l[-1] = np.zeros((self.batch_size, self.output_dim))
+        self.z_l[-1] = np.zeros((self.batch_size, self.output_dim))    
+        
         # Initialize gradients
         self.weight_grad = np.zeros(self.n_layers + 1, dtype=object)
         self.bias_grad = np.zeros(self.n_layers + 1, dtype=object)
@@ -107,17 +114,8 @@ class NeuralNetwork :
 
 
     def feed_forward(self):
-        for i in range(self.n_layers):
-            self.a_l[i] = np.zeros((self.batch_size, int(self.neurons[i])))
-            self.z_l[i] = np.zeros((self.batch_size, int(self.neurons[i])))
-        
-        #output layer
-        self.a_l[-1] = np.zeros((self.batch_size, self.output_dim))
-        self.z_l[-1] = np.zeros((self.batch_size, self.output_dim))
-
         self.z_l[0] = self.X_batch @ self.weight[0].T + self.bias[0]
         self.a_l[0] = self.act(self.z_l[0])
-
 
         for i in range(1, self.n_layers):
             self.z_l[i] = self.a_l[i-1] @ self.weight[i].T + self.bias[i]
