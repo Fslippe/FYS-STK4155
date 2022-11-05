@@ -1,31 +1,7 @@
 from NN import *
 from functions import * 
-from compare import *
-
-def grid_search_eta_lamda(xy, xy_test, z, z_test, validate, eta, lamda, neurons, mn, mx, savename, epochs=50, batch_size=5, init="random", act="sigmoid", act_out="sigmoid", seed=100):
-    val = np.zeros((len(eta), len(lamda)))
-    for i in range(len(eta)):
-        for j in range(len(lamda)):
-            print(lamda[j])
-            NN = NeuralNetwork(xy, z.reshape(len(z), 1), neurons, epochs, batch_size, eta[i], lamda[j], seed=seed, initialize=init, activation=act)
-            NN.SGD()
-            pred = NN.predict(xy_test).ravel()
-            pred = min_max_unscale(pred, mn, mx)
-            if validate == "MSE":
-                val[i, j] = (MSE(z_test, pred))
-            elif validate == "ACC":
-                val[i, j] = (accuracy(z_test, pred))
-    plt.figure()
-    df = pd.DataFrame(val, columns=np.log10(lamda), index=eta)
-
-    if validate == "MSE":
-        sns.heatmap(df, annot=True, cbar_kws={"label": r"$MSE$"}, vmin=0.025, vmax=0.2)
-    elif validate == "ACC":
-        sns.heatmap(df, annot=True, cbar_kws={"label": r"$Accuracy$"}, vmin=0.8, vmax=1)
-
-    plt.xlabel(r"log$_{10}(\lambda$)")
-    plt.ylabel(r"$\eta$")
-    plt.savefig("../figures/%s.png" %(savename), dpi=300, bbox_inches='tight')
+from franke_compare import *
+from gradient_decent import *
 
 def neuron_array(layers, neurons):
     n = np.zeros(layers)
@@ -34,24 +10,77 @@ def neuron_array(layers, neurons):
 
     return n
 
-def grid_search_layer_neurons(xy, xy_test, z, z_test, n_layer, neurons, mn, mx, savename, epochs=50, eta=0.1, lamda=0, batch_size=5, init="random", act="sigmoid", seed=100):
-    mse = np.zeros((len(neurons), len(n_layer)))
+def grid_search_eta_lambda(X_train, y_train, X_test, y_test, savename, neurons, epochs, batch_size, eta, lamda, mom, seed, init, act, cost, last_act, validate):
+    val = np.zeros((len(eta), len(lamda)))
+    for i in range(len(eta)):
+        for j in range(len(lamda)):
+            print(lamda[j])
+            NN = NeuralNetwork(X_train, y_train, neurons, epochs, batch_size, eta[i], lamda[j], moment=mom, cost=cost, seed=seed, initialize=init, activation=act, last_activation=last_act)
+            NN.SGD()
+            pred = NN.predict(X_test).ravel()
+            if validate == "MSE":
+                val[i, j] = (MSE(y_test, pred))
+            elif validate == "ACC":
+                pred = np.where(pred < 0.5, 0, 1) 
+                val[i, j] = (accuracy(y_test, pred))
+
+    plt.figure()
+    df = pd.DataFrame(val, columns=np.log10(lamda), index=eta)
+    if validate == "MSE":
+        sns.heatmap(df, annot=True, cbar_kws={"label": r"$MSE$"}, vmin=0.001, vmax=0.1)
+    elif validate == "ACC":
+        sns.heatmap(df, annot=True, cbar_kws={"label": r"$Accuracy$"}, vmin=0.8, vmax=1)
+
+    plt.xlabel(r"log$_{10}(\lambda$)")
+    plt.ylabel(r"$\eta$")
+    plt.savefig("../figures/%s.png" %(savename), dpi=300, bbox_inches='tight')
+
+def grid_search_layer_neurons(X_train, y_train, X_test, y_test, savename, n_layer, neurons, epochs, batch_size, eta, lamda, mom, seed, init, act, cost, last_act, validate):
+    val = np.zeros((len(neurons), len(n_layer)))
     for i in range(len(neurons)):
         for j in range(len(n_layer)):
             neur = neuron_array(n_layer[j], neurons[i])
-            print(neur)
-            NN = NeuralNetwork(xy, z.reshape(len(z), 1), neur, epochs, batch_size, eta, lamda, seed=seed, initialize=init, activation=act)#, last_activation="act")
+            print(neurons[i])
+            NN = NeuralNetwork(X_train, y_train, neur, epochs, batch_size, eta, lamda, moment=mom, cost=cost, seed=seed, initialize=init, activation=act, last_activation=last_act)
             NN.SGD()
-            pred = min_max_unscale(NN.predict(xy_test).ravel(), mn, mx)
-            mse[i, j] = (MSE(z_test, pred))
+            if validate == "MSE":
+                pred = NN.predict(X_test).ravel()
+                val[i, j] = (MSE(y_test, pred))
+            elif validate == "ACC":
+                val[i, j] = NN.predict_accuracy(X_test, y_test)
 
-
-    df = pd.DataFrame(mse, columns=n_layer, index=neurons)
     plt.figure()
-    sns.heatmap(df, annot=True, cbar_kws={"label": r"$MSE$"}, vmin=0.025, vmax=0.2)
+    df = pd.DataFrame(val, columns=n_layer, index=neurons)
+
+    if validate == "MSE":
+        sns.heatmap(df, annot=True, cbar_kws={"label": r"$MSE$"}, vmin=0.001, vmax=0.1)
+    elif validate == "ACC":
+        sns.heatmap(df, annot=True, cbar_kws={"label": r"$Accuracy$"}, vmin=0.8, vmax=1)
     plt.xlabel("layers")
     plt.ylabel("neurons per layer")
     plt.savefig("../figures/%s.png" %(savename), dpi=300, bbox_inches='tight')
+      
+def grid_search_logreg(X_train, y_train, X_test, y_test, gradient, lamda, eta, method, iterations, batch_size, moment, savename):
+    acc = np.zeros((len(eta), len(lamda)))
+    for i in range(len(eta)):
+        for j in range(len(lamda)):
+            print(lamda[j])
+            logreg = GradientDescent(cost="LOGREG", method=method, iterations=iterations, eta=eta[i], lamda=lamda[j], moment=moment)
+            if gradient == "SGD":
+                logreg.SGD(X_train, y_train, batch_size)
+            elif gradient == "GD":
+                logreg.GD(X_train, y_train)
+            
+            acc[i,j] = logreg.predict_accuracy(X_test, y_test)
+    plt.figure()
+    plt.title(method)
+    df = pd.DataFrame(acc, columns=np.log10(lamda), index=eta)
+    sns.heatmap(df, annot=True, cbar_kws={"label": r"$Accuracy$"}, vmin=0.8, vmax=1)
+
+    plt.xlabel(r"log$_{10}(\lambda$)")
+    plt.ylabel(r"$\eta$")
+    plt.savefig("../figures/%s.png" %(savename), dpi=300, bbox_inches='tight')
+
 
 def main():
     #Setting up data

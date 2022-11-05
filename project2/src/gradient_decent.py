@@ -21,7 +21,7 @@ class GradientDescent:
             self.gradient = grad(self.cost_Ridge, 2)
         elif cost =="LOGREG":
             self.gradient = self.logreg_grad
-            
+
         if method == "RMSprop":
             self.method = self.RMSprop 
         elif method == "ADAM":
@@ -40,7 +40,7 @@ class GradientDescent:
             for start in range(0, n, batch_size):
                 X_batch = X_shuffle[start:start+batch_size]
                 y_batch = y_shuffle[start:start+batch_size]    
-                self.grads = self.gradient(X_batch, y_batch, self.theta) / batch_size
+                self.grads = self.gradient(X_batch, y_batch, self.theta) 
                 self.method()
         return self.theta
 
@@ -49,7 +49,7 @@ class GradientDescent:
         self.theta = np.random.randn(N, 1)
         self.t = 0
         for i in range(self.iter):
-            self.grads = self.gradient(X, y, self.theta) / n
+            self.grads = self.gradient(X, y, self.theta) 
             self.method()
         return self.theta
 
@@ -76,12 +76,19 @@ class GradientDescent:
         self.delta = self.eta*self.grads - self.moment*self.delta
         self.theta -= self.delta
 
+    def predict_accuracy(self, X, t):
+        pred = np.exp(X @ self.theta) / (1+ np.exp(X @ self.theta))
+        accuracy = np.sum(np.where(pred < 0.5, 0, 1) == t, axis=0) / t.shape[0]
+        return accuracy
+
+
     def cost_OLS(self, X, y, beta):
         n = X.shape[0]
         return np.sum((X @ beta - y)**2) /n 
 
     def cost_Ridge(self, X, y, beta):
-        return np.sum((X @ beta - y)**2) + self.lamda*np.sum(beta)**2
+        n = X.shape[0]
+        return (np.sum((X @ beta - y)**2) + self.lamda*np.sum(beta)**2) / n
 
     def logreg_grad(self, X, y, beta):
         gradient = - X.T @ (y - np.exp(X @ beta) / (1+ np.exp(X @ beta))) + 2*self.lamda*beta 
@@ -106,7 +113,7 @@ def main():
     plt.plot(x, f_x,"k", linewidth=10)
     plt.plot(x, y,"k", linewidth=1)
 
-    G = GradientDescent(cost="OLS", method="", eta = 0.1, moment=0, lamda=0, iterations=5000)
+    G = GradientDescent(cost="OLS", method="", eta = 0.1, moment=0, lamda=0, iterations=1000)
     pred_GD = G.GD(X, y)
     pred_SGD = G.SGD(X, y, 50)
 

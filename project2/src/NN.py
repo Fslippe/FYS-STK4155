@@ -122,7 +122,9 @@ class NeuralNetwork :
             self.a_l[i] = self.act(self.z_l[i])
 
         self.z_l[-1] = self.a_l[-2] @ self.weight[-1].T + self.bias[-1]
+
         self.a_l[-1] = self.act_out(self.z_l[-1])
+
 
     def SGD(self):
          for epoch in range(self.epochs):
@@ -134,6 +136,31 @@ class NeuralNetwork :
                 self.backprop()
                 self.update()
 
+    def backprop(self):
+        for i in range(self.n_layers):
+            self.error[i] = np.zeros((self.batch_size, int(self.neurons[i])))
+        self.error[-1] = np.zeros((self.batch_size, self.output_dim))
+
+        if self.last_activation == "softmax":
+            self.error[-1] = self.a_l[-1] - self.Y_batch
+        else:
+            self.error[-1] = self.cost_grad(self.a_l[-1], self.Y_batch) * self.act_grad_out(self.z_l[-1])
+
+        #backpropagation: 
+        for i in range(self.n_layers - 1, -1, -1):
+            self.error[i] = (self.error[i + 1] @ self.weight[i + 1]) * self.act_grad(self.z_l[i])
+        
+        self.weight_grad[0] = self.error[0].T @ self.X_batch 
+        self.bias_grad[0] = np.sum(self.error[0], axis=0) 
+
+        for i in range(1, self.n_layers+1):
+            self.weight_grad[i] = self.error[i].T @ self.a_l[i-1] 
+            self.bias_grad[i] = np.sum(self.error[i], axis=0) 
+        
+        if self.lamda != 0:
+            for i in range(self.n_layers +1):
+                self.weight_grad[i] += self.lamda*self.weight[i]
+
     def update(self):
         for i in range(self.n_layers + 1):
             delta_w = self.weight[i] * self.moment - self.eta / self.batch_size *self.weight_grad[i]
@@ -141,45 +168,28 @@ class NeuralNetwork :
             self.weight[i] += delta_w
             self.bias[i] += delta_b
     
-    def backprop(self):
-        for i in range(self.n_layers):
-            self.error[i] = np.zeros((self.batch_size, int(self.neurons[i])))
-
-        if self.last_activation == "softmax":
-            self.error[-1] = self.a_l[-1] - self.Y_batch
-        else:
-            self.error[-1] = self.cost_grad(self.a_l[-1], self.Y_batch) * self.act_grad_out(self.z_l[-1])
-
-        #backpropagation:
-        for i in range(self.n_layers - 1, -1, -1):
-            self.error[i] = (self.error[i + 1] @ self.weight[i + 1]) * self.act_grad(self.z_l[i])
-        
-        self.weight_grad[0] = self.error[0].T @ self.X_batch 
-        self.bias_grad[0] = np.sum(self.error[0], axis=0) #######
-
-        for i in range(1, self.n_layers+1):
-            self.weight_grad[i] = self.error[i].T @ self.a_l[i-1] 
-            self.bias_grad[i] = np.sum(self.error[i], axis=0) #######
-        
-        if self.lamda != 0:
-            for i in range(self.n_layers +1):
-                self.weight_grad[i] += self.lamda*self.weight[i]
 
     def feed_forward_out(self, x):
         z_o = x @ self.weight[0].T + self.bias[0]
-        a_o = self.act_out(z_o)
+        a_o = self.act(z_o)#self.act_out(z_o)
 
         for i in range(1, self.n_layers):
             z_o = a_o @ self.weight[i].T + self.bias[i]
-            a_o = self.act_out(z_o)
+            a_o = self.act(z_o)
 
         z_o = a_o @ self.weight[-1].T + self.bias[-1]
         a_o = self.act_out(z_o)
+
         return a_o
 
     def predict(self, x):
         a_o = self.feed_forward_out(x)
         return a_o
+
+    def predict_accuracy(self, X, t):
+        pred = self.predict(X)
+        accuracy = np.sum(np.where(pred < 0.5, 0, 1) == t, axis=0) / t.shape[0]
+        return accuracy
 
     def sigmoid(self, x):
         return 1 / (1 + np.exp(-x))
@@ -212,7 +222,7 @@ class NeuralNetwork :
         return a - y
 
     def cross_entropy(self, a, y):
-        return -np.sum(y* np.log(a) + (1 - y) * np.log(1 - a))
+        return -(y * np.log(a)) + (1-y) * np.log(1-y)#-np.sum(y* np.log(a) + (1 - y) * np.log(1 - a))
 
     def cross_entropy_grad(self, a, y):
         return -(y - a) / (a - a**2)
