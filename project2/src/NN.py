@@ -8,7 +8,7 @@ from sklearn.metrics import mean_squared_error, r2_score, mean_squared_log_error
 
 class NeuralNetwork :
 
-    def __init__(self, X, Y, neurons, epochs, batch_size, eta, lamda=0., moment=0, seed=None, initialize="random", activation="sigmoid", cost="error", last_activation=None):
+    def __init__(self, X, Y, neurons, epochs, batch_size, eta, lamda=0., moment=0, seed=None, initialize_weight="random", initialize_bias="zeros", activation="sigmoid", cost="error", last_activation=None):
         if seed != None:
             np.random.seed(seed)
         self.X = X
@@ -24,9 +24,11 @@ class NeuralNetwork :
         self.eta = eta 
         self.lamda = lamda
         self.moment = moment
-        self.initialize = initialize
+        self.initialize_weight = initialize_weight
+        self.initialize_bias = initialize_bias
         self.initialize_arrays()
         self.last_activation = last_activation
+        self.activation = activation
         # Activation functions
         self.act = self.activation_function(activation)
         self.act_grad = self.activation_gradient(activation)
@@ -54,6 +56,8 @@ class NeuralNetwork :
             return self.l_relu
         elif s == "softmax":
             return self.softmax
+        elif s == "none":
+            return self.none
         else:
             return self.sigmoid 
         
@@ -64,6 +68,8 @@ class NeuralNetwork :
             return self.l_relu_grad
         elif s == "softmax":
             return self.softmax_grad
+        elif s == "none":
+            return self.none_grad
         else:
             return self.sigmoid_grad
 
@@ -72,26 +78,35 @@ class NeuralNetwork :
         self.weight = np.zeros(self.n_layers +1, dtype=object)
         self.bias = np.zeros(self.n_layers +1, dtype=object)
 
-        if self.initialize == "zeros":
+        if self.initialize_weight == "zeros":
+            self.weight[0] = np.zeros((int(self.neurons[0]), self.input_dim))*np.sqrt(2) / np.sqrt(self.input_dim)
+            for i in range(1, self.n_layers):
+                self.weight[i] = np.zeros((int(self.neurons[i]), int(self.neurons[i-1])))*np.sqrt(2) / np.sqrt(self.neurons[i-1])
+            self.weight[-1] = np.zeros((self.output_dim, int(self.neurons[-1])))*np.sqrt(2) / np.sqrt(self.neurons[-1])
+
+        elif self.initialize_weight == "random":
             self.weight[0] = np.random.randn(int(self.neurons[0]), self.input_dim)
             for i in range(1, self.n_layers):
                 self.weight[i] = np.random.randn(int(self.neurons[i]), int(self.neurons[i-1]))
             self.weight[-1] = np.random.randn(self.output_dim, int(self.neurons[-1]))
-            # Initialize Bias
+
+            
+        elif self.initialize_weight == "random scaled":
+            self.weight[0] = np.random.randn(int(self.neurons[0]), self.input_dim) * np.sqrt(2) / np.sqrt(self.input_dim)
+            for i in range(1, self.n_layers):
+                self.weight[i] = np.random.randn(int(self.neurons[i]), int(self.neurons[i-1])) * np.sqrt(2) / np.sqrt(self.neurons[i-1])
+            self.weight[-1] = np.random.randn(self.output_dim, int(self.neurons[-1])) * np.sqrt(2) / np.sqrt(self.neurons[-1])
+
+        # Initialize Bias
+        if self.initialize_bias == "zeros":   
             for i in range(self.n_layers):
                 self.bias[i] = np.zeros(int(self.neurons[i])) + 0.01
-            self.bias[-1] = np.zeros((self.output_dim)) + 0.01         
+            self.bias[-1] = np.zeros((self.output_dim)) + 0.01      
 
-        elif self.initialize == "random":
-            self.weight[0] = np.random.randn(int(self.neurons[0]), self.input_dim)
-            for i in range(1, self.n_layers):
-                self.weight[i] = np.random.randn(int(self.neurons[i]), int(self.neurons[i-1]))
-            self.weight[-1] = np.random.randn(self.output_dim, int(self.neurons[-1]))
-            # Initialize Bias
+        elif self.initialize_bias == "random":
             for i in range(self.n_layers):
                 self.bias[i] = np.random.randn(int(self.neurons[i]))
-            self.bias[-1] = np.random.randn(self.output_dim)
-
+            self.bias[-1] = np.random.randn(self.output_dim) 
 
         # Initialize
         self.a_l = np.zeros(self.n_layers + 1, dtype=object)
@@ -141,11 +156,10 @@ class NeuralNetwork :
             self.error[i] = np.zeros((self.batch_size, int(self.neurons[i])))
         self.error[-1] = np.zeros((self.batch_size, self.output_dim))
 
-        if self.last_activation == "softmax":
+        if self.last_activation == "softmax" or self.activation == "relu":
             self.error[-1] = self.a_l[-1] - self.Y_batch
         else:
             self.error[-1] = self.cost_grad(self.a_l[-1], self.Y_batch) * self.act_grad_out(self.z_l[-1])
-
         #backpropagation: 
         for i in range(self.n_layers - 1, -1, -1):
             self.error[i] = (self.error[i + 1] @ self.weight[i + 1]) * self.act_grad(self.z_l[i])
@@ -154,13 +168,9 @@ class NeuralNetwork :
         self.bias_grad[0] = np.sum(self.error[0], axis=0) 
 
         for i in range(1, self.n_layers+1):
-            self.weight_grad[i] = self.error[i].T @ self.a_l[i-1] 
-            self.bias_grad[i] = np.sum(self.error[i], axis=0) 
-        
-        if self.lamda != 0:
-            for i in range(self.n_layers +1):
-                self.weight_grad[i] += self.lamda*self.weight[i]
-
+            self.weight_grad[i] = self.error[i].T @ self.a_l[i-1]  + self.lamda*self.weight[i]
+            self.bias_grad[i] = np.sum(self.error[i], axis=0) + self.lamda*self.bias[i]
+ 
     def update(self):
         for i in range(self.n_layers + 1):
             delta_w = self.weight[i] * self.moment - self.eta / self.batch_size *self.weight_grad[i]
@@ -198,7 +208,7 @@ class NeuralNetwork :
         return self.sigmoid(x) * (1 - self.sigmoid(x)) 
     
     def relu(self, x):
-        return np.maximum(0, x)
+        return np.where(x > 0, x, 0)
     
     def relu_grad(self, x):
         return np.where(x < 0, 0, 1)
@@ -215,17 +225,23 @@ class NeuralNetwork :
     def softmax_grad(self, x):
         return self.softmax(x) - self.softmax(x)**2
 
+    def none(self, x):
+        return x
+
+    def none_grad(self, x):
+        return 0
+
     def error(self, a, y):
-        return np.sum((a - y)**2) / 2
+        return (a - y)**2 / 2
 
     def error_grad(self, a, y):
         return a - y
 
     def cross_entropy(self, a, y):
-        return -(y * np.log(a)) + (1-y) * np.log(1-y)#-np.sum(y* np.log(a) + (1 - y) * np.log(1 - a))
+        return -(y * np.log(a)) + (1-y) * np.log(1-a)#-np.sum(y* np.log(a) + (1 - y) * np.log(1 - a))
 
     def cross_entropy_grad(self, a, y):
-        return -(y - a) / (a - a**2)
+        return a-y#-(y - a) / (a - a**2)
 
 
 def design_matrix_1D(x, degree):

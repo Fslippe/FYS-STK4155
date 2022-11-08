@@ -44,12 +44,17 @@ def create_neural_network_scikit(hidden_layer_sizes, lamda, eta, epochs):
     return dnn
 
 
-def grid_search_franke(xy, xy_test, z, z_test, neurons, epochs, batch_size):
-    savename = "franke_L_n_test"
+def grid_search_franke(xy, xy_test, z, z_test, neurons, epochs, batch_size, act):
+    savename = "franke_L_n_test_%s" %(act)
     neur = np.array( [60, 80, 100, 120, 140, 160, 180, 200, 220])
     n_layer = np.array([1, 2, 3, 4, 5, 6, 7, 8])
     #neur = np.array([120])
     #n_layer = np.array([5])
+    if act != "sigmoid":
+        last_act = "none"
+    else:
+        last_act = "sigmoid"
+
     grid_search_layer_neurons(xy,
                               z,
                               xy_test,
@@ -64,12 +69,12 @@ def grid_search_franke(xy, xy_test, z, z_test, neurons, epochs, batch_size):
                               mom=0,
                               seed=100,
                               init="zeros",
-                              act="sigmoid",
+                              act=act,
                               cost="error",
-                              last_act="sigmoid",
+                              last_act=last_act,
                               validate="MSE")
     plt.show()
-    savename = "franke_eta_lmb"
+    savename = "franke_eta_lmb_%s" %(act)
     eta = np.logspace(-3, 0, 4)
     lamda = np.logspace(-6, -1, 6)
     grid_search_eta_lambda(xy,
@@ -85,9 +90,9 @@ def grid_search_franke(xy, xy_test, z, z_test, neurons, epochs, batch_size):
                         mom=0,
                         seed=100,
                         init="zeros",
-                        act="sigmoid",
+                        act=act,
                         cost="error",
-                        last_act="sigmoid",
+                        last_act=last_act,
                         validate="MSE")
     plt.show()
 
@@ -95,40 +100,38 @@ def main():
     #Setting up data
     n = 30
     noise_std = 0.2
-    degree = 6
 
     # train data
-    x, y, z = make_data(n, noise_std, seed=100)
-    x_s = x.ravel()
-    y_s = y.ravel()
-    z_s, mn, mx = min_max_scale(z)
-    z_s = z_s.reshape(len(z_s), 1)
+    x_train, y_train, z_train = make_data(n, noise_std, seed=100)
+    x_train = x_train.ravel()
+    y_train = y_train.ravel()
+    z_train_scaled, mn, mx = min_max_scale(z_train)
+    z_train_scaled = z_train_scaled.reshape(len(z_train_scaled), 1)
 
     # Test data
-    x, y, z = make_data(n, noise_std, seed=200)
-    x_s_test = x.ravel()
-    y_s_test = y.ravel()
-    z_test = z.reshape(len(z), 1)
-    z_test_scaled = ((z - mn) / (mx - mn)).reshape(len(z), 1)
+    x_test, y_test, z_test = make_data(n, noise_std, seed=200)
+    x_test = x_test.ravel()
+    y_test = y_test.ravel()
+    z_test = z_test.reshape(len(z_test), 1)
+    z_test_scaled = ((z_test - mn) / (mx - mn)).reshape(len(z_test), 1)
     
-    xy = np.array([x_s, y_s]).T
-    xy_s_test = np.array([x_s_test, y_s_test]).T
+    # train and test data for Neural Network
+    xy_train = np.array([x_train, y_train]).T
+    xy_test = np.array([x_test, y_test]).T
 
     # OLS
-    X_s = design_matrix(x_s, y_s, degree)
-    X_s_test = design_matrix(x_s_test, y_s_test, degree)
-    beta_OLS = OLS(X_s, z_s)
-    pred_OLS = X_s_test @ beta_OLS 
-    pred_OLS = min_max_unscale(pred_OLS, mn, mx)
-    OLS_mse = (MSE(pred_OLS, z_test))
+    X_train = design_matrix(x_train, y_train, degree=6)
+    X_test = design_matrix(x_test, y_test, degree=6)
+    beta_OLS = OLS(X_train, z_train)
+    pred_OLS = X_test @ beta_OLS 
+    OLS_mse = MSE(pred_OLS, z_test)
 
     # Ridge
-    X_s = design_matrix(x_s, y_s, 8)
-    X_s_test = design_matrix(x_s_test, y_s_test, 8)
-    beta_RIDGE = ridge_regression(X_s, z_s, lamda=1.61e-7)
-    pred_RIDGE = X_s_test @ beta_RIDGE 
-    pred_RIDGE = min_max_unscale(pred_RIDGE, mn, mx)
-    RIDGE_mse = (MSE(pred_RIDGE, z_test))
+    X_train_ridge = design_matrix(x_train, y_train, degree=8)
+    X_test_ridge = design_matrix(x_test, y_test, degree=8)
+    beta_RIDGE = ridge_regression(X_train_ridge, z_train, lamda=1.61e-7)
+    pred_RIDGE = X_test_ridge @ beta_RIDGE 
+    RIDGE_mse = MSE(pred_RIDGE, z_test)
 
     # Own NeuralNetwork
     neurons = np.array([140, 140, 140, 140, 140, 140]) # in hidden layers 
@@ -137,24 +140,28 @@ def main():
     eta = 0.1
     lamda=1e-5
 
-    #grid_search_franke(xy, xy_s_test, z_s, z_test_scaled, neurons, epochs, batch_size)
+    grid_search_franke(xy_train, xy_test, z_train_scaled, z_test_scaled, neurons, epochs, batch_size, act="relu")
 
 
 
-    NN = NeuralNetwork(xy,
-                       z_s,
+    NN = NeuralNetwork(xy_train,
+                       z_train.reshape(len(z_train),1),
                        neurons,
                        epochs,
                        batch_size,
-                       eta,
-                       lamda,
+                       eta=0.01,
+                       lamda=1e-5,
                        moment=0,
                        cost="error",
                        seed=100,
-                       initialize="zeros",
-                       activation="sigmoid")
+                       initialize_weight="random scaled",
+                       activation="relu",
+                       last_activation="none")
     NN.SGD()
-    pred = min_max_unscale(NN.predict(xy_s_test).ravel(), mn, mx)
+    pred = NN.predict(xy_test).ravel()
+    print(pred)
+    #pred = min_max_unscale(pred, mn, mx)
+
     print(np.max(pred))
     print(np.max(z_test))
     NN_mse = (MSE(z_test, pred))
@@ -166,17 +173,17 @@ def main():
     tf_NN_mse = (MSE(z_test, pred_tf))
     """
     # plot predictions
-    plot_3d_trisurf(x_s_test, y_s_test, z_test.ravel(), azim=45, title="n=%i, std=%.1f, MSE=%.5f" %(n, noise_std, NN_mse))
+    plot_3d_trisurf(x_test, y_test, z_test.ravel(), azim=45, title="n=%i, std=%.1f, MSE=%.5f" %(n, noise_std, NN_mse))
     plt.show()
-    plot_3d_trisurf(x_s_test, y_s_test, pred, azim=45,savename="test_NN", title="n=%i, std=%.1f, MSE=%.5f" %(n, noise_std, NN_mse))
+    plot_3d_trisurf(x_test, y_test, pred, azim=45,savename="test_NN", title="n=%i, std=%.1f, MSE=%.5f" %(n, noise_std, NN_mse))
     plt.show()
-    #plot_3d_trisurf(x_s_test, y_s_test, pred_tf, azim=45,savename="test_NN_tf", title="n=%i, std=%.1f, MSE=%.5f" %(n, noise_std, tf_NN_mse))
+    #plot_3d_trisurf(x_test, y_test, pred_tf, azim=45,savename="test_NN_tf", title="n=%i, std=%.1f, MSE=%.5f" %(n, noise_std, tf_NN_mse))
     #plt.show()
     
-    plot_3d_trisurf(x_s_test, y_s_test, pred_OLS.ravel(), azim=45,savename="test_OLS", title="n=%i, std=%.1f, MSE=%.5f" %(n, noise_std, OLS_mse))
+    plot_3d_trisurf(x_test, y_test, pred_OLS.ravel(), azim=45,savename="test_OLS", title="n=%i, std=%.1f, MSE=%.5f" %(n, noise_std, OLS_mse))
     plt.show()
     
-    plot_3d_trisurf(x_s_test, y_s_test, pred_RIDGE.ravel(), azim=45,savename="test_RIDGE", title="n=%i, std=%.1f, MSE=%.5f" %(n, noise_std, RIDGE_mse))
+    plot_3d_trisurf(x_test, y_test, pred_RIDGE.ravel(), azim=45,savename="test_RIDGE", title="n=%i, std=%.1f, MSE=%.5f" %(n, noise_std, RIDGE_mse))
 
     plt.show()
 

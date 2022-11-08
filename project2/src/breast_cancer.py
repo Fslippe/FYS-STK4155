@@ -34,10 +34,35 @@ def main():
     X_train = (X_train - mean) / std 
     X_test = (X_test - mean) / std 
 
-
+    savename = "cancer_eta_lmb_relu"
+    eta = np.array([0.001, 0.001])
+    lamda = np.logspace(-2, 0, 3)
+    neurons = [50]
+    epochs = 200
+    n_train = np.shape(X_train)
+    batch_size = 25
+    grid_search_eta_lambda(X_train,
+                        y_train,
+                        X_test,
+                        y_test,
+                        savename,
+                        neurons,
+                        epochs,
+                        batch_size,
+                        eta,
+                        lamda,
+                        mom=0,
+                        seed=100,
+                        init="random scaled",
+                        act="relu",
+                        cost="cross entropy",
+                        last_act="sigmoid",
+                        validate="ACC")
+    plt.show()
     n_layers = 2
     n_neuron = 100
     input_size = X_train.shape[1]
+    
     logreg_grid = False 
     grid_NN_lmb_eta = False
     if logreg_grid:

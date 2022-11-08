@@ -2,7 +2,7 @@ from functions import *
 from autograd import grad, elementwise_grad
 
 class GradientDescent:
-    def __init__(self, cost, method, iterations, eta=0.1, lamda=0, moment=0, rho_1=0.9, rho_2=0.99, eps=1e-8):
+    def __init__(self, cost, method, eta=0.1, moment=0, lamda=0, iterations=1000, rho_1=0.9, rho_2=0.99, eps=1e-8):
         self.lamda = lamda 
         self.moment = moment
         self.iter = iterations
@@ -31,10 +31,14 @@ class GradientDescent:
         else:
             self.method = self.constant
 
-    def SGD(self, X, y, batch_size):
+    def SGD(self, X, y, batch_size, eval=False):
         n, N = np.shape(X)
         self.theta = np.random.randn(N, 1)
+        if eval == True:
+            pred = np.zeros((self.iter, n))
+            i = 0
         for epoch in range(self.iter):
+            self.t += 1
             self.grad_square = 0
             X_shuffle, y_shuffle = shuffle(X, y)
             for start in range(0, n, batch_size):
@@ -42,23 +46,41 @@ class GradientDescent:
                 y_batch = y_shuffle[start:start+batch_size]    
                 self.grads = self.gradient(X_batch, y_batch, self.theta) 
                 self.method()
-        return self.theta
 
-    def GD(self, X, y):
+            if eval == True:
+                pred[i] = X @ self.theta[:,0]
+                i += 1
+
+        if eval == True:
+            return pred
+        else:
+            return self.theta
+
+    def GD(self, X, y, eval=False):
         n, N = np.shape(X)
         self.theta = np.random.randn(N, 1)
         self.t = 0
+        if eval == True:
+            pred = np.zeros((self.iter, n))
+
         for i in range(self.iter):
+            self.t += 1
+            self.grad_square = 0
             self.grads = self.gradient(X, y, self.theta) 
             self.method()
-        return self.theta
+            
+            if eval == True:
+                pred[i] = X @ self.theta[:,0]
+
+        if eval == True:
+            return pred
+        else:
+            return self.theta
 
     def ADAM(self):
-        self.t += 1
-        self.grad_square = self.grads**2
+        self.grad_square += self.grads**2
         m = self.rho_1*self.m + (1-self.rho_1)*self.grads
         s = self.rho_2*self.s + (1-self.rho_2)*self.grad_square
-
         self.m = m / (1-self.rho_1**self.t)
         self.s = s / (1-self.rho_2**self.t)
         self.theta -= self.eta * self.m / (np.sqrt(self.s) + self.eps)
@@ -112,11 +134,9 @@ def main():
     plt.title("OLS")
     plt.plot(x, f_x,"k", linewidth=10)
     plt.plot(x, y,"k", linewidth=1)
-
-    G = GradientDescent(cost="OLS", method="", eta = 0.1, moment=0, lamda=0, iterations=1000)
+    G = GradientDescent(cost="RIDGE", method="", eta = 0.1, moment=0, lamda=0, iterations=1000)
     pred_GD = G.GD(X, y)
     pred_SGD = G.SGD(X, y, 50)
-
     pred_GD = X @ pred_GD 
     pred_SGD = X @ pred_SGD 
 
