@@ -95,7 +95,7 @@ class GradientDescent:
         self.theta -= self.eta / (np.sqrt(self.grad_square) + self.eps) *self.grads
 
     def constant(self):
-        self.delta = self.eta*self.grads - self.moment*self.delta
+        self.delta = self.eta*self.grads + self.moment*self.delta
         self.theta -= self.delta
 
     def predict_accuracy(self, X, t):

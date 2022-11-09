@@ -81,36 +81,6 @@ def grid_search_logreg(X_train, y_train, X_test, y_test, gradient, lamda, eta, m
     plt.ylabel(r"$\eta$")
     plt.savefig("../figures/%s.png" %(savename), dpi=300, bbox_inches='tight')
 
-def grid_search_GD_OLS(eta, moment, iterations, X, y, descent, batch_size=0, lamda=0):
-    cost = "Ridge"
-    if lamda == 0:
-        cost = "OLS"
-    
-    mse = np.zeros(y.shape[0])
-    method = ["ADAM", "RMSprop", "AdaGrad", "none", "momentum"]
-    plt.figure()
-    for m in method:
-        G = GradientDescent("RIDGE", m, eta, moment, lamda=lamda,iterations=iterations)
-        if descent == "GD":
-            pred = G.GD(X, y, eval=True)
-        else:
-            pred = G.SGD(X, y, batch_size, eval=True)
-
-        mse = np.zeros(pred.shape[0])
-        for i in range(pred.shape[0]):
-            mse[i] = MSE(y, pred[i])
-        plt.plot(mse, label="%s, mse=%.5f" %(m, np.min(mse))) 
-    
-    plt.legend()
-    if descent == "SGD":
-        plt.title(r"%s %s $\eta=$ %s, batchsize=%i" %(descent, cost, eta, batch_size))
-    else:
-        plt.title(r"%s %s $\eta=$ %s" %(descent, cost, eta))
-
-    plt.ylabel(r"$MSE$")
-    plt.xlabel("iteration") 
-    plt.savefig("../figures/%s_methods_%s_eta_%s.pdf" %(descent, cost, eta), dpi=300, bbox_inches='tight' )
-
 def main():
     #Setting up data
     n = 30
