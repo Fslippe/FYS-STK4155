@@ -2,6 +2,7 @@ from NN import *
 from functions import * 
 from franke_compare import *
 from gradient_decent import *
+plt.rcParams.update({'font.size': 11})
 
 def neuron_array(layers, neurons):
     n = np.zeros(layers)
@@ -10,7 +11,8 @@ def neuron_array(layers, neurons):
 
     return n
 
-def grid_search_eta_lambda(X_train, y_train, X_test, y_test, savename, neurons, epochs, batch_size, eta, lamda, mom, seed, init, act, cost, last_act, validate):
+def grid_search_eta_lambda(X_train, y_train, X_test, y_test, savename, neurons, epochs, batch_size, eta, lamda, mom, seed, init, act, cost, last_act, validate, mn=0, mx=1):
+    plt.rcParams.update({'font.size': 11})
     val = np.zeros((len(eta), len(lamda)))
     for i in range(len(eta)):
         for j in range(len(lamda)):
@@ -19,7 +21,9 @@ def grid_search_eta_lambda(X_train, y_train, X_test, y_test, savename, neurons, 
             NN.SGD()
             pred = NN.predict(X_test).ravel()
             if validate == "MSE":
-                val[i, j] = (MSE(y_test, pred))
+                val[i, j] = (MSE(y_test, min_max_unscale(pred, mn, mx)))
+            if validate == "R2":
+                val[i, j] = (R2(y_test, min_max_unscale(pred, mn, mx)))
             elif validate == "ACC":
                 pred = np.where(pred < 0.5, 0, 1) 
                 val[i, j] = (accuracy(y_test, pred))
@@ -27,7 +31,9 @@ def grid_search_eta_lambda(X_train, y_train, X_test, y_test, savename, neurons, 
     plt.figure()
     df = pd.DataFrame(val, columns=np.log10(lamda), index=eta)
     if validate == "MSE":
-        sns.heatmap(df, annot=True, cbar_kws={"label": r"$MSE$"}, vmin=0.001, vmax=0.1)
+        sns.heatmap(df, annot=True, cbar_kws={"label": r"$MSE$"}, vmin=0.03, vmax=0.1)
+    elif validate == "R2":
+        sns.heatmap(df, annot=True, cbar_kws={"label": r"$R^2$"}, vmin=0.5, vmax=1)
     elif validate == "ACC":
         sns.heatmap(df, annot=True, cbar_kws={"label": r"$Accuracy$"}, vmin=0.8, vmax=1)
 
@@ -35,7 +41,8 @@ def grid_search_eta_lambda(X_train, y_train, X_test, y_test, savename, neurons, 
     plt.ylabel(r"$\eta$")
     plt.savefig("../figures/%s.png" %(savename), dpi=300, bbox_inches='tight')
 
-def grid_search_layer_neurons(X_train, y_train, X_test, y_test, savename, n_layer, neurons, epochs, batch_size, eta, lamda, mom, seed, init, act, cost, last_act, validate):
+def grid_search_layer_neurons(X_train, y_train, X_test, y_test, savename, n_layer, neurons, epochs, batch_size, eta, lamda, mom, seed, init, act, cost, last_act, validate, mn=0, mx=1):
+    plt.rcParams.update({'font.size': 11})
     val = np.zeros((len(neurons), len(n_layer)))
     for i in range(len(neurons)):
         for j in range(len(n_layer)):
@@ -45,7 +52,10 @@ def grid_search_layer_neurons(X_train, y_train, X_test, y_test, savename, n_laye
             NN.SGD()
             if validate == "MSE":
                 pred = NN.predict(X_test).ravel()
-                val[i, j] = (MSE(y_test, pred))
+                val[i, j] = (MSE(y_test, min_max_unscale(pred, mn, mx)))
+            if validate == "R2":
+                pred = NN.predict(X_test).ravel()
+                val[i, j] = (R2(y_test, min_max_unscale(pred, mn, mx)))
             elif validate == "ACC":
                 val[i, j] = NN.predict_accuracy(X_test, y_test)
 
@@ -53,19 +63,24 @@ def grid_search_layer_neurons(X_train, y_train, X_test, y_test, savename, n_laye
     df = pd.DataFrame(val, columns=n_layer, index=neurons)
 
     if validate == "MSE":
-        sns.heatmap(df, annot=True, cbar_kws={"label": r"$MSE$"}, vmin=0.001, vmax=0.1)
+        sns.heatmap(df, annot=True, cbar_kws={"label": r"$MSE$"}, vmin=0.03, vmax=0.1)
+    elif validate == "R2":
+        sns.heatmap(df, annot=True, cbar_kws={"label": r"$R^2$"}, vmin=0.5, vmax=1)
     elif validate == "ACC":
         sns.heatmap(df, annot=True, cbar_kws={"label": r"$Accuracy$"}, vmin=0.8, vmax=1)
     plt.xlabel("layers")
     plt.ylabel("neurons per layer")
     plt.savefig("../figures/%s.png" %(savename), dpi=300, bbox_inches='tight')
       
-def grid_search_logreg(X_train, y_train, X_test, y_test, gradient, lamda, eta, method, iterations, batch_size, moment, savename):
+def grid_search_logreg(X_train, y_train, X_test, y_test, gradient, lamda, eta, method, iterations, batch_size, mom, savename):
+    plt.rcParams.update({'font.size': 10})
     acc = np.zeros((len(eta), len(lamda)))
     for i in range(len(eta)):
         for j in range(len(lamda)):
             print(lamda[j])
-            logreg = GradientDescent(cost="LOGREG", method=method, iterations=iterations, eta=eta[i], lamda=lamda[j], moment=moment)
+            if method == "none":
+                mom = 0
+            logreg = GradientDescent(cost="LOGREG", method=method, iterations=iterations, eta=eta[i], lamda=lamda[j], moment=mom, seed=100)
             if gradient == "SGD":
                 logreg.SGD(X_train, y_train, batch_size)
             elif gradient == "GD":

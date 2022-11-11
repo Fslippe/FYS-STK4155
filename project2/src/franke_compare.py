@@ -24,37 +24,43 @@ def min_max_unscale(X, mn, mx):
     X_s = X* (mx - mn) + mn
     return X_s
 
-def create_neural_network_keras(neurons, xy, z, eta, epochs):
+def create_neural_network_keras(neurons, xy, z, lmb, epochs):
     # Tensor flow keras NN
     model = Sequential()
-    model.add(Input(shape=(2,)))
+    model.add(Dense(500, input_dim=2, activation="relu"))
     for layer in neurons:
-        model.add(Dense(layer, activation='sigmoid'))
-    #model.add(Dense(neurons[1], activation='sigmoid'))
-    #model.add(Dense(neurons[2], activation='sigmoid'))
-    model.add(Dense(1, activation='sigmoid'))
-    sgd = optimizers.SGD(learning_rate=eta)
-    model.compile(loss="mean_squared_error", metrics=['mean_squared_error'], optimizer=sgd)
-    model.fit(xy, z, epochs=epochs, verbose=1)
+        model.add(Dense(layer, activation='relu'))
+    model.add(Dense(1))
+    model.compile(loss="mean_squared_error", metrics=['mean_squared_error'], optimizer="adam")
+    model.fit(xy, z, epochs=epochs, verbose=0)
     return model
 
-def create_neural_network_scikit(hidden_layer_sizes, lamda, eta, epochs):
-    dnn = MLPClassifier(hidden_layer_sizes= hidden_layer_sizes, activation="relu",
-                            alpha=lamda, learning_rate_init=eta, max_iter=epochs)
-    return dnn
 
-
-def grid_search_franke(xy, xy_test, z, z_test, neurons, epochs, batch_size, act):
-    savename = "franke_L_n_test_%s" %(act)
+def grid_search_franke(xy, xy_test, z, z_test, neurons, epochs, batch_size, mn, mx, act, validate):
+    savename = "franke_L_n_test_%s_%s" %(act, validate)
     neur = np.array( [60, 80, 100, 120, 140, 160, 180, 200, 220])
-    n_layer = np.array([1, 2, 3, 4, 5, 6, 7, 8])
+    n_layer = np.array([1, 2, 3, 4, 5, 6, 7, 8])        
     #neur = np.array([120])
     #n_layer = np.array([5])
-    if act != "sigmoid":
+    if act == "relu":
+        neurons = [120, 120, 120, 120, 120, 120, 120]
         last_act = "none"
+        init = "random scaled"
+        eta = 0.01
+        lamda = 1e-4
+
+    elif act == "lrelu":
+        neurons = [120, 120, 120, 120, 120, 120, 120]
+        last_act = "none"
+        init = "random scaled"
+        eta = 0.01
+        lamda = 1e-4
+
     else:
         last_act = "sigmoid"
-
+        init = "random"
+        eta = 0.25
+        lamda = 1e-4
     grid_search_layer_neurons(xy,
                               z,
                               xy_test,
@@ -64,19 +70,29 @@ def grid_search_franke(xy, xy_test, z, z_test, neurons, epochs, batch_size, act)
                               neur,
                               epochs,
                               batch_size,
-                              eta=0.1,
-                              lamda=1e-4,
+                              eta=eta,
+                              lamda=lamda,
                               mom=0,
                               seed=100,
-                              init="zeros",
+                              init=init,
                               act=act,
                               cost="error",
                               last_act=last_act,
-                              validate="MSE")
+                              validate=validate,
+                              mn=mn,
+                              mx=mx)
     plt.show()
-    savename = "franke_eta_lmb_%s" %(act)
-    eta = np.logspace(-3, 0, 4)
-    lamda = np.logspace(-6, -1, 6)
+    print(neurons)
+    savename = "franke_eta_lmb_%s_%s" %(act, validate)
+    if act == "lrelu":
+        eta = np.array([0.001, 0.05, 0.01, 0.02, 0.05, 0.1])
+        lamda = np.logspace(-6, -1, 6)
+    elif act == "relu":
+        eta = np.array([0.001, 0.05, 0.01, 0.02, 0.05, 0.1])
+        lamda = np.logspace(-6, -1, 6)
+    else:
+        eta = np.array([ 0.01, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3])
+        lamda = np.logspace(-6, -1, 6)
     grid_search_eta_lambda(xy,
                         z,
                         xy_test,
@@ -89,11 +105,13 @@ def grid_search_franke(xy, xy_test, z, z_test, neurons, epochs, batch_size, act)
                         lamda,
                         mom=0,
                         seed=100,
-                        init="zeros",
+                        init=init,
                         act=act,
                         cost="error",
                         last_act=last_act,
-                        validate="MSE")
+                        validate=validate,
+                        mn=mn,
+                        mx=mx)
     plt.show()
 
 def main():
@@ -102,14 +120,14 @@ def main():
     noise_std = 0.2
 
     # train data
-    x_train, y_train, z_train = make_data(n, noise_std, seed=100)
+    x_train, y_train, z_train = make_data(n-1, noise_std, seed=100)
     x_train = x_train.ravel()
     y_train = y_train.ravel()
     z_train_scaled, mn, mx = min_max_scale(z_train)
     z_train_scaled = z_train_scaled.reshape(len(z_train_scaled), 1)
 
     # Test data
-    x_test, y_test, z_test = make_data(n, noise_std, seed=200)
+    x_test, y_test, z_test = make_data(n-1, noise_std, seed=200)
     x_test = x_test.ravel()
     y_test = y_test.ravel()
     z_test = z_test.reshape(len(z_test), 1)
@@ -124,58 +142,68 @@ def main():
     X_test = design_matrix(x_test, y_test, degree=6)
     beta_OLS = OLS(X_train, z_train)
     pred_OLS = X_test @ beta_OLS 
-    OLS_mse = MSE(pred_OLS, z_test)
+    OLS_mse = MSE(z_test, pred_OLS)
+    print("R2 OLS:",R2(z_test, pred_OLS))
 
     # Ridge
     X_train_ridge = design_matrix(x_train, y_train, degree=8)
     X_test_ridge = design_matrix(x_test, y_test, degree=8)
     beta_RIDGE = ridge_regression(X_train_ridge, z_train, lamda=1.61e-7)
     pred_RIDGE = X_test_ridge @ beta_RIDGE 
-    RIDGE_mse = MSE(pred_RIDGE, z_test)
+    RIDGE_mse = MSE(z_test, pred_RIDGE)
+    print("R2 ridge:",R2(z_test, pred_RIDGE))
 
     # Own NeuralNetwork
     neurons = np.array([140, 140, 140, 140, 140, 140]) # in hidden layers 
     epochs = 100
-    batch_size = 31
-    eta = 0.1
-    lamda=1e-5
+    batch_size = 60
 
-    grid_search_franke(xy_train, xy_test, z_train_scaled, z_test_scaled, neurons, epochs, batch_size, act="relu")
-
-
+    # NN TF keras
+    NN_tf = create_neural_network_keras([100,100], xy_train, z_train_scaled, lmb=1e-5, epochs=100)
+    pred_tf = min_max_unscale(NN_tf.predict(xy_test), mn, mx)
+    NN_tf_mse = MSE(z_test, pred_tf)
+    print("R2:",R2(z_test, pred_tf))
+    grid_search_franke(xy_train, xy_test, z_train_scaled, z_test, neurons, epochs, batch_size, mn, mx, act="lrelu", validate="MSE")
+    
+    act = "lrelu"
+    if act == "sigmoid":
+        init = "random"
+        last_act = act
+        eta = 0.2
+        lamda=1e-5
+    else:
+        neurons = np.array([120, 120, 120, 120, 120, 120, 120])
+        init = "random scaled"
+        last_act = "none"
+        eta = 0.02
+        lamda=1e-2
 
     NN = NeuralNetwork(xy_train,
-                       z_train.reshape(len(z_train),1),
+                       z_train_scaled,
                        neurons,
                        epochs,
                        batch_size,
-                       eta=0.01,
-                       lamda=1e-5,
+                       eta=eta,
+                       lamda=lamda,
                        moment=0,
                        cost="error",
                        seed=100,
-                       initialize_weight="random scaled",
-                       activation="relu",
-                       last_activation="none")
+                       initialize_weight=init,
+                       activation=act,
+                       last_activation=last_act)
     NN.SGD()
     pred = NN.predict(xy_test).ravel()
-    print(pred)
-    #pred = min_max_unscale(pred, mn, mx)
-
-    print(np.max(pred))
-    print(np.max(z_test))
+    pred = min_max_unscale(pred, mn, mx)
     NN_mse = (MSE(z_test, pred))
     eta = 0.1
-    """
-    # Tensor flow keras sequential NN
-    NN_tf = create_neural_network_keras(neurons, xy, z_s, eta, epochs)
-    pred_tf = min_max_unscale(NN_tf.predict(xy_s_test).ravel(), mn, mx)
-    tf_NN_mse = (MSE(z_test, pred_tf))
-    """
+
     # plot predictions
+    print(R2(z_test,pred))
+    plot_3d_trisurf(x_test, y_test, pred_tf.ravel(), savename="NN_tf_franke", azim=45, title="n=%i, std=%.1f, MSE=%.5f" %(n, noise_std, NN_tf_mse))
+    plt.show()
     plot_3d_trisurf(x_test, y_test, z_test.ravel(), azim=45, title="n=%i, std=%.1f, MSE=%.5f" %(n, noise_std, NN_mse))
     plt.show()
-    plot_3d_trisurf(x_test, y_test, pred, azim=45,savename="test_NN", title="n=%i, std=%.1f, MSE=%.5f" %(n, noise_std, NN_mse))
+    plot_3d_trisurf(x_test, y_test, pred, azim=45,savename="NN_%s_franke" %(act), title="n=%i, std=%.1f, MSE=%.5f" %(n, noise_std, NN_mse))
     plt.show()
     #plot_3d_trisurf(x_test, y_test, pred_tf, azim=45,savename="test_NN_tf", title="n=%i, std=%.1f, MSE=%.5f" %(n, noise_std, tf_NN_mse))
     #plt.show()

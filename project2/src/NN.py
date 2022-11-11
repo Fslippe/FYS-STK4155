@@ -11,6 +11,9 @@ class NeuralNetwork :
     def __init__(self, X, Y, neurons, epochs, batch_size, eta, lamda=0., moment=0, seed=None, initialize_weight="random", initialize_bias="zeros", activation="sigmoid", cost="error", last_activation=None):
         if seed != None:
             np.random.seed(seed)
+            self.seed = seed 
+        else:
+            self.seed = 0
         self.X = X
         self.Y = Y 
         self.n_inputs = X.shape[0]
@@ -142,8 +145,10 @@ class NeuralNetwork :
 
 
     def SGD(self):
-         for epoch in range(self.epochs):
-            X_shuffle, Y_shuffle = shuffle(self.X, self.Y)
+        i = self.seed
+        for epoch in range(self.epochs):
+            X_shuffle, Y_shuffle = shuffle(self.X, self.Y, random_state=i)
+            i += 1
             for start in range(0, self.n_inputs, self.batch_size):
                 self.X_batch = X_shuffle[start:start+self.batch_size]
                 self.Y_batch = Y_shuffle[start:start+self.batch_size]
@@ -156,7 +161,7 @@ class NeuralNetwork :
             self.error[i] = np.zeros((self.batch_size, int(self.neurons[i])))
         self.error[-1] = np.zeros((self.batch_size, self.output_dim))
 
-        if self.last_activation == "softmax" or self.activation == "relu":
+        if self.last_activation == "softmax" or self.activation == "relu" or self.activation == "lrelu":
             self.error[-1] = self.a_l[-1] - self.Y_batch
         else:
             self.error[-1] = self.cost_grad(self.a_l[-1], self.Y_batch) * self.act_grad_out(self.z_l[-1])
@@ -214,10 +219,10 @@ class NeuralNetwork :
         return np.where(x < 0, 0, 1)
     
     def l_relu(self, x):
-        return np.where(x < 0, 0.01*x, x)
+        return np.where(x >= 0, x, 0.01*x)
     
     def l_relu_grad(self, x):
-        return np.where(x < 0, 0.01, 1)
+        return np.where(x >= 0, 1, 0.01)
 
     def softmax(self, x):
         return np.exp(x) / np.sum(np.exp(x), axis=1, keepdims=True)

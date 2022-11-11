@@ -2,7 +2,7 @@ from functions import *
 from autograd import grad, elementwise_grad
 
 class GradientDescent:
-    def __init__(self, cost, method, eta=0.1, moment=0, lamda=0, iterations=1000, rho_1=0.9, rho_2=0.99, eps=1e-8):
+    def __init__(self, cost, method, eta=0.1, moment=0, lamda=0, iterations=1000, rho_1=0.9, rho_2=0.99, eps=1e-8, seed=None):
         self.lamda = lamda 
         self.moment = moment
         self.iter = iterations
@@ -15,6 +15,12 @@ class GradientDescent:
         self.m = 0
         self.t = 0
         self.delta = 0
+        if seed != None:
+            np.random.seed(seed)
+            self.seed = seed
+        else:
+            self.seed = np.random.randint(1000) 
+
         if cost == "OLS":
             self.gradient = grad(self.cost_OLS, 2)
         elif cost == "RIDGE":
@@ -31,16 +37,18 @@ class GradientDescent:
         else:
             self.method = self.constant
 
-    def SGD(self, X, y, batch_size, eval=False):
+    def SGD(self, X, y, batch_size, eval=False, X_test=np.zeros(1)):
         n, N = np.shape(X)
         self.theta = np.random.randn(N, 1)
+        random = self.seed
         if eval == True:
-            pred = np.zeros((self.iter, n))
+            pred = np.zeros((self.iter, X_test.shape[0]))
             i = 0
         for epoch in range(self.iter):
             self.t += 1
             self.grad_square = 0
-            X_shuffle, y_shuffle = shuffle(X, y)
+            X_shuffle, y_shuffle = shuffle(X, y, random_state=random)
+            random += 1
             for start in range(0, n, batch_size):
                 X_batch = X_shuffle[start:start+batch_size]
                 y_batch = y_shuffle[start:start+batch_size]    
@@ -48,7 +56,7 @@ class GradientDescent:
                 self.method()
 
             if eval == True:
-                pred[i] = X @ self.theta[:,0]
+                pred[i] = X_test @ self.theta[:,0]
                 i += 1
 
         if eval == True:
@@ -56,12 +64,12 @@ class GradientDescent:
         else:
             return self.theta
 
-    def GD(self, X, y, eval=False):
+    def GD(self, X, y, eval=False, X_test=np.zeros(1)):
         n, N = np.shape(X)
         self.theta = np.random.randn(N, 1)
         self.t = 0
         if eval == True:
-            pred = np.zeros((self.iter, n))
+            pred = np.zeros((self.iter, X_test.shape[0]))
 
         for i in range(self.iter):
             self.t += 1
@@ -70,7 +78,7 @@ class GradientDescent:
             self.method()
             
             if eval == True:
-                pred[i] = X @ self.theta[:,0]
+                pred[i] = X_test @ self.theta[:,0]
 
         if eval == True:
             return pred
@@ -79,11 +87,11 @@ class GradientDescent:
 
     def ADAM(self):
         self.grad_square += self.grads**2
-        m = self.rho_1*self.m + (1-self.rho_1)*self.grads
-        s = self.rho_2*self.s + (1-self.rho_2)*self.grad_square
-        self.m = m / (1-self.rho_1**self.t)
-        self.s = s / (1-self.rho_2**self.t)
-        self.theta -= self.eta * self.m / (np.sqrt(self.s) + self.eps)
+        self.m = self.rho_1*self.m + (1-self.rho_1)*self.grads
+        self.s = self.rho_2*self.s + (1-self.rho_2)*self.grad_square
+        m = self.m / (1-self.rho_1**self.t)
+        s = self.s / (1-self.rho_2**self.t)
+        self.theta -= self.eta * m / (np.sqrt(s) + self.eps)
     
     def RMSprop(self):
         self.grad_square += self.grads**2
@@ -110,11 +118,11 @@ class GradientDescent:
 
     def cost_Ridge(self, X, y, beta):
         n = X.shape[0]
-        return (np.sum((X @ beta - y)**2) + self.lamda*np.sum(beta)**2) / n
+        return (np.sum((X @ beta - y)**2) + self.lamda*np.sum(beta**2)) / n
 
     def logreg_grad(self, X, y, beta):
         gradient = - X.T @ (y - np.exp(X @ beta) / (1+ np.exp(X @ beta))) + 2*self.lamda*beta 
-        return gradient
+        return gradient 
 
 def main():
     n = 100

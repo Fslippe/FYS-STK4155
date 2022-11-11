@@ -2,8 +2,10 @@ from NN import *
 from functions import * 
 from franke_compare import *
 from sklearn.datasets import load_breast_cancer
+from sklearn.linear_model import LogisticRegression
 from grid_search import *
 from gradient_decent import *
+plt.rcParams.update({'font.size': 11})
 
 def choose_inputs(idx, data):
     inputs = data.data 
@@ -14,12 +16,9 @@ def choose_inputs(idx, data):
 
     X = np.hstack((temp))
     return X
-
-def NN_model(n_hidden_neurons, epochs, lamda, eta):
-    dnn = MLPClassifier(hidden_layer_sizes=(n_hidden_neurons), activation='logistic',
-                            alpha=lamda, learning_rate_init=eta, max_iter=epochs)
-    dnn.fit(X_train, Y_train)
-
+def scikit_logreg(X_train, y_train):
+    clf = LogisticRegression(random_state=0).fit(X_train, y_train)
+    return clf 
 
 def main():
     data = load_breast_cancer()
@@ -41,34 +40,20 @@ def main():
     epochs = 200
     n_train = np.shape(X_train)
     batch_size = 25
-    grid_search_eta_lambda(X_train,
-                        y_train,
-                        X_test,
-                        y_test,
-                        savename,
-                        neurons,
-                        epochs,
-                        batch_size,
-                        eta,
-                        lamda,
-                        mom=0,
-                        seed=100,
-                        init="random scaled",
-                        act="relu",
-                        cost="cross entropy",
-                        last_act="sigmoid",
-                        validate="ACC")
-    plt.show()
     n_layers = 2
     n_neuron = 100
     input_size = X_train.shape[1]
     
     logreg_grid = False 
-    grid_NN_lmb_eta = False
+    grid_NN_lmb_eta = True
+    grid_layer_neurons = True
+    logreg_skl = scikit_logreg(X_train, y_train.ravel())
+    acc_skl = logreg_skl.score(X_test, y_test.ravel())
+    print("SKlearn accuracy:", acc_skl)
     if logreg_grid:
         eta = np.logspace(-4, 0, 5)
         lamda = np.logspace(-6, 0, 7)
-        method = ["none", "ADAM", "Adagrad", "RMSprop"]
+        method = ["none", "momentum","ADAM", "Adagrad", "RMSprop"]
         #method = ["ADAM"]
         for m in method:
             grid_search_logreg(X_train,
@@ -81,7 +66,7 @@ def main():
                             method=m,
                             iterations=100,
                             batch_size= 10,
-                            moment=0,
+                            mom=0.3,
                             savename="logreg_%s" %(m))
         plt.show()
     #NN_keras = NN_model(input_size, n_layers, n_neuron, eta, lamda)
@@ -90,11 +75,11 @@ def main():
     #print(test)
 
     neurons = [40, 40, 40]
-    eta = 0.1
-    lamda = 1e-3
-    epochs = 200
+
+    epochs = 400
     n_train = np.shape(X_train)
-    batch_size = 25
+    batch_size = 45
+    print(np.shape(X_train))
 
     """eta-lambda grid search own Neural Network"""
     if grid_NN_lmb_eta:
@@ -112,8 +97,8 @@ def main():
                             eta,
                             lamda,
                             mom=0,
-                            seed=100,
-                            init="zeros",
+                            seed=50,
+                            init="random",
                             act="sigmoid",
                             cost="cross entropy",
                             last_act="sigmoid",
@@ -121,27 +106,30 @@ def main():
         plt.show()
 
     """layer-neurons grid search own Neural Network"""
-    savename = "cancer_L_n_test"
-    neurons = np.array([10,40,60,80,100])
-    n_layer = np.array([1,2,3,4,5])
-    grid_search_layer_neurons(X_train,
-                              y_train,
-                              X_test,
-                              y_test,
-                              savename,
-                              n_layer,
-                              neurons,
-                              epochs,
-                              batch_size,
-                              eta=0.1,
-                              lamda=1e-1,
-                              mom=0,
-                              seed=100,
-                              init="zeros",
-                              act="sigmoid",
-                              cost="cross entropy",
-                              last_act="sigmoid",
-                              validate="ACC")
-    plt.show()
+    if grid_layer_neurons:
+        eta = 0.1
+        lamda = 1e-1
+        savename = "cancer_L_n_test"
+        neurons = np.array([10,40,60,80,100])
+        n_layer = np.array([1,2,3,4,5])
+        grid_search_layer_neurons(X_train,
+                                y_train,
+                                X_test,
+                                y_test,
+                                savename,
+                                n_layer,
+                                neurons,
+                                epochs,
+                                batch_size,
+                                eta=0.1,
+                                lamda=1e-1,
+                                mom=0,
+                                seed=50,
+                                init="random",
+                                act="sigmoid",
+                                cost="cross entropy",
+                                last_act="sigmoid",
+                                validate="ACC")
+        plt.show()
 if __name__ == "__main__":
     main()
