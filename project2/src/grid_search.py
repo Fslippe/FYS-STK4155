@@ -35,7 +35,7 @@ def grid_search_eta_lambda(X_train, y_train, X_test, y_test, savename, neurons, 
     elif validate == "R2":
         sns.heatmap(df, annot=True, cbar_kws={"label": r"$R^2$"}, vmin=0.5, vmax=1)
     elif validate == "ACC":
-        sns.heatmap(df, annot=True, cbar_kws={"label": r"$Accuracy$"}, vmin=0.8, vmax=1)
+        sns.heatmap(df, annot=True, cbar_kws={"label": r"$Accuracy$"}, fmt=".3f", vmin=0.8, vmax=1)
 
     plt.xlabel(r"log$_{10}(\lambda$)")
     plt.ylabel(r"$\eta$")
@@ -67,7 +67,7 @@ def grid_search_layer_neurons(X_train, y_train, X_test, y_test, savename, n_laye
     elif validate == "R2":
         sns.heatmap(df, annot=True, cbar_kws={"label": r"$R^2$"}, vmin=0.5, vmax=1)
     elif validate == "ACC":
-        sns.heatmap(df, annot=True, cbar_kws={"label": r"$Accuracy$"}, vmin=0.8, vmax=1)
+        sns.heatmap(df, annot=True, cbar_kws={"label": r"$Accuracy$"}, fmt=".3f", vmin=0.8, vmax=1)
     plt.xlabel("layers")
     plt.ylabel("neurons per layer")
     plt.savefig("../figures/%s.png" %(savename), dpi=300, bbox_inches='tight')
@@ -90,7 +90,7 @@ def grid_search_logreg(X_train, y_train, X_test, y_test, gradient, lamda, eta, m
     plt.figure()
     plt.title(method)
     df = pd.DataFrame(acc, columns=np.log10(lamda), index=eta)
-    sns.heatmap(df, annot=True, cbar_kws={"label": r"$Accuracy$"}, vmin=0.8, vmax=1)
+    sns.heatmap(df, annot=True, cbar_kws={"label": r"$Accuracy$"}, fmt=".3f", vmin=0.8, vmax=1)
 
     plt.xlabel(r"log$_{10}(\lambda$)")
     plt.ylabel(r"$\eta$")
