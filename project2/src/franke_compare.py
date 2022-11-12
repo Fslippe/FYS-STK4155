@@ -85,7 +85,7 @@ def grid_search_franke(xy, xy_test, z, z_test, neurons, epochs, batch_size, mn, 
     print(neurons)
     savename = "franke_eta_lmb_%s_%s" %(act, validate)
     if act == "lrelu":
-        eta = np.array([0.001, 0.05, 0.01, 0.02, 0.05, 0.1])
+        eta = np.array([0.001, 0.05, 0.01, 0.02, 0.05])
         lamda = np.logspace(-6, -1, 6)
     elif act == "relu":
         eta = np.array([0.001, 0.05, 0.01, 0.02, 0.05, 0.1])
@@ -163,7 +163,7 @@ def main():
     pred_tf = min_max_unscale(NN_tf.predict(xy_test), mn, mx)
     NN_tf_mse = MSE(z_test, pred_tf)
     print("R2:",R2(z_test, pred_tf))
-    grid_search_franke(xy_train, xy_test, z_train_scaled, z_test, neurons, epochs, batch_size, mn, mx, act="lrelu", validate="MSE")
+    #grid_search_franke(xy_train, xy_test, z_train_scaled, z_test, neurons, epochs, batch_size, mn, mx, act="lrelu", validate="R2")
     
     act = "lrelu"
     if act == "sigmoid":
@@ -171,6 +171,12 @@ def main():
         last_act = act
         eta = 0.2
         lamda=1e-5
+    elif act == "lrelu":
+        neurons = np.array([120, 120, 120, 120, 120, 120, 120])
+        init = "random scaled"
+        last_act = act
+        eta = 0.02
+        lamda=1e-1
     else:
         neurons = np.array([120, 120, 120, 120, 120, 120, 120])
         init = "random scaled"

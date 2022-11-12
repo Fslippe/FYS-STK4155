@@ -105,12 +105,12 @@ def main():
     moment = 0.3
     iterations=100
     method = ["ADAM", "RMSprop", "AdaGrad", "none", "momentum"]
-    grid_search_GD_OLS(eta, moment, iterations, X_train, X_test, y_train, y_test, method=method, descent="GD" )
-    grid_search_GD_OLS(eta, moment, iterations, X_train, X_test, y_train, y_test, method=method, batch_size=16, descent="SGD" )
-    plt.show()
+    #grid_search_GD_OLS(eta, moment, iterations, X_train, X_test, y_train, y_test, method=method, descent="GD" )
+    #grid_search_GD_OLS(eta, moment, iterations, X_train, X_test, y_train, y_test, method=method, batch_size=16, descent="SGD" )
+    #plt.show()
     eta = 0.01 
-    grid_search_GD_OLS(eta, moment, iterations, X_train, X_test, y_train, y_test, method=method, descent="GD" )
-    grid_search_GD_OLS(eta, moment, iterations, X_train, X_test, y_train, y_test, method=method, batch_size=16, descent="SGD" )
+    #grid_search_GD_OLS(eta, moment, iterations, X_train, X_test, y_train, y_test, method=method, descent="GD" )
+    #grid_search_GD_OLS(eta, moment, iterations, X_train, X_test, y_train, y_test, method=method, batch_size=16, descent="SGD" )
     plt.show()
     beta = OLS(X_train, y_train)
     pred_OLS = X_test @ beta
@@ -119,8 +119,8 @@ def main():
     eta = np.array([0.01, 0.1, 0.2, 0.5, 0.8])
     batch_sizes = [4, 8, 16, 20, 40]
     for m in method:
-        compare_ridge(eta, moment, iterations, X_train, X_test, y_train, y_test, "GD", lamda, m, batch_size=0)
-        compare_ridge(eta, moment, iterations, X_train, X_test, y_train, y_test, "SGD", lamda, m, batch_size=16)
+        #compare_ridge(eta, moment, iterations, X_train, X_test, y_train, y_test, "GD", lamda, m, batch_size=0)
+        #compare_ridge(eta, moment, iterations, X_train, X_test, y_train, y_test, "SGD", lamda, m, batch_size=16)
         compare_batch_size(eta=0.1, moment=0, iterations=20, X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test, lamda=0, method=m, batch_sizes=batch_sizes)
     plt.show()
 

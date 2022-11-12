@@ -44,7 +44,7 @@ def main():
     n_neuron = 100
     input_size = X_train.shape[1]
     
-    logreg_grid = True 
+    logreg_grid = False 
     grid_NN_lmb_eta = True
     grid_layer_neurons = True
     logreg_skl = scikit_logreg(X_train, y_train.ravel())
@@ -53,7 +53,7 @@ def main():
     if logreg_grid:
         eta = np.logspace(-4, 0, 5)
         lamda = np.logspace(-6, 0, 7)
-        method = ["none", "momentum","ADAM", "Adagrad", "RMSprop"]
+        method = ["none", "momentum","ADAM", "AdaGrad", "RMSprop"]
         #method = ["ADAM"]
         for m in method:
             grid_search_logreg(X_train,
@@ -74,9 +74,9 @@ def main():
     #test = NN_keras.evaluate(X_test,y_test)[1]
     #print(test)
 
-    neurons = [40, 40, 40]
+    neurons = [80, 80, 80]
 
-    epochs = 400
+    epochs = 200
     n_train = np.shape(X_train)
     batch_size = 45
     print(np.shape(X_train))
@@ -85,7 +85,7 @@ def main():
     if grid_NN_lmb_eta:
         savename = "cancer_eta_lmb"
         eta = np.array([0.01, 0.05, 0.1, 0.2, 0.5])
-        lamda = np.logspace(-2, 0, 5)
+        lamda = np.logspace(-5, 0, 6)
         grid_search_eta_lambda(X_train,
                             y_train,
                             X_test,
@@ -97,7 +97,7 @@ def main():
                             eta,
                             lamda,
                             mom=0,
-                            seed=50,
+                            seed=100,
                             init="random",
                             act="sigmoid",
                             cost="cross entropy",
@@ -107,7 +107,7 @@ def main():
 
     """layer-neurons grid search own Neural Network"""
     if grid_layer_neurons:
-        eta = 0.1
+        eta = 0.2
         lamda = 1e-1
         savename = "cancer_L_n_test"
         neurons = np.array([10,40,60,80,100])
@@ -121,10 +121,10 @@ def main():
                                 neurons,
                                 epochs,
                                 batch_size,
-                                eta=0.1,
-                                lamda=1e-1,
+                                eta=eta,
+                                lamda=lamda,
                                 mom=0,
-                                seed=50,
+                                seed=100,
                                 init="random",
                                 act="sigmoid",
                                 cost="cross entropy",
