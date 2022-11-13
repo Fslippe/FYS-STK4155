@@ -16,6 +16,7 @@ def choose_inputs(idx, data):
 
     X = np.hstack((temp))
     return X
+
 def scikit_logreg(X_train, y_train):
     clf = LogisticRegression(random_state=0).fit(X_train, y_train)
     return clf 
@@ -25,7 +26,7 @@ def main():
     outputs = data.target 
     X = choose_inputs(range(1,30), data)
     y = outputs.reshape(len(outputs), 1)
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=5) #10
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=5) #=10) 
     std = np.std(X_train, axis=0)
     mean = np.mean(X_train, axis=0)
 
@@ -44,9 +45,9 @@ def main():
     n_neuron = 100
     input_size = X_train.shape[1]
     
-    logreg_grid = False 
+    logreg_grid = True 
     grid_NN_lmb_eta = True
-    grid_layer_neurons = True
+    grid_layer_neurons = False
     logreg_skl = scikit_logreg(X_train, y_train.ravel())
     acc_skl = logreg_skl.score(X_test, y_test.ravel())
     print("SKlearn accuracy:", acc_skl)
