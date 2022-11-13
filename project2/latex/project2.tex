@@ -10,8 +10,8 @@
 \usepackage[english]{babel}
 \usepackage{caption}
 \usepackage{hyperref}
-%\usepackage{biblatex}
-%\addbibresource{report.bib}
+\usepackage{biblatex}
+\addbibresource{project2.bib}
 \usepackage{setspace}
 \usepackage{wrapfig}
 \usepackage{lipsum}
@@ -63,9 +63,13 @@
 \begin{abstract}
     a
 \end{abstract}
+\newpage
 \tableofcontents
 \newpage
 \section{Introduction}
+The human brain and how it functions is something we still not fully understand. Its ability to recognize patterns, feel emotion and learn is what makes us unique and what we are. This does not mean we are perfect, and this can easily be seen when we want to analyze data or do predictions based on just some numbers. This is where computers come in as a big helper for us humans to better understand the world around us. But in order to improve these computers and the algorithms they run, we can use some inspiration from our own brain. This is exactly what a neural network does. A neural network has in the same way as our brains layers by layers of neurons connected to each other. In order to test such a network we will in this report implement a Feed Forward Neural Network. We will look into both classification and regression problems and comparing our neural network's performance to logistic regression, ordinary least squares and ridge regression. To help us on the way we will implement different gradient descent algorithms to use in both our neural network and logistic regression, and we will in the end give an evaluation of which methods are superior in different cases.
+
+First in the method section of this report, we will derive the equations and algorithms used to produce the different algorithms. Then we will present our results in the result section before discussing and in the end give a conclusion of what we have found.
 \section{Method}
 \subsection{Gradient descent}\label{sec:GD}
 In order to perform both logistic regression and regression of a continuous function, we implement both Gradient Descent and Stochastic Gradient Descent (GD and SGD). Both these methods are based on minimizing some cost function to reduce the error of predictions. This can be done by following the negative gradient of this function and thereby reaching either a global or local minimum. For Gradient Descent this can be written in terms of a step size or learning rate $\eta_k$ with the total stepping process for $k$ iterations:
@@ -89,7 +93,7 @@ To further optimize the Gradient descent we shuffle and split up our design matr
     \theta_{j+1} = \theta_j - \eta_j \sum_{i\in B_k}^M \nabla_\theta C(\boldsymbol{x}_i, \theta)
 \end{align}
 
-\subsection{Optimized methods}
+\subsection{Optimizing methods}
 \subsubsection*{AdaGrad}
 AdaGrad reduces the learning rate over time by dividing by an accumulative gradient of the last iterations. For GD, we have implemented this as follows:
 \begin{align*}
@@ -273,7 +277,7 @@ and the Leaky ReLU:
 For both ReLU and leaky ReLU we use no activation for the output layer when predicting the Franke function. We do not perform any analysis of a classification problem using any of the ReLU function, but the sigmoid or another activation function like softmax makes it possible to do predictions with ReLU and leaky ReLU as activation functions for the hidden layers
 
 \subsection{Weight and bias initialization}
-We implement the possibility to initialize the biases and weights differently. For the bias the Neural Network takes in either an argument "zeros" meaning every bias is initialized with the value 0.01, and "random" where the biases are randomly chosen from a normal distribution $N(0,1)$. For the weights we have three possibilities. An option "zeros" initializing all weights with the value 0, "random" for initalizing all values with values randomly chosen from a normal distrubution $N(0,1)$, and "random scaled" which is the same process as for "random" only that a scaling factor $s$ is multiplied equalling $s^{(l)}=\sqrt{2/n^{(l-1)}}$ where $n^{(l-1)}$ is the number of neurons in the last layer. This is called He initialization and helps solve a exploding gradient problem often seen while using ReLU as activation function \url{https://towardsdatascience.com/weight-initialization-techniques-in-neural-networks-26c649eb3b78} (\url{https://www.deeplearningwizard.com/deep_learning/boosting_models_pytorch/weight_initialization_activation_functions/})
+We implement the possibility to initialize the biases and weights differently. For the bias the Neural Network takes in either an argument "zeros" meaning every bias is initialized with the value 0.01, and "random" where the biases are randomly chosen from a normal distribution $N(0,1)$. For the weights we have three possibilities. An option "zeros" initializing all weights with the value 0, "random" for initalizing all values with values randomly chosen from a normal distrubution $N(0,1)$, and "random scaled" which is the same process as for "random" only that a scaling factor $s$ is multiplied equalling $s^{(l)}=\sqrt{2/n^{(l-1)}}$ where $n^{(l-1)}$ is the number of neurons in the last layer. This is called He initialization and helps solve a exploding gradient problem often seen while using ReLU as activation function \cite{he}\cite{he_2}.
 
 \subsection{Datasets}
 In order to test and compare the different regression methods, gradient descent, and our Neural Network, we look at a simple $x$ dependent function, the $x$ and $y$ dependent Franke function, and in the end breast cancer data.
@@ -330,7 +334,7 @@ We also perform an analysis
 In the end we compare Logistic regression with our neural network looking at breast cancer data containing 569 data points for a total of 30 features containing attributes of the tumour, and an output value of 0 for a malignant, and 1 for a benign tumour. When using the sigmoid function as an output activation function we again gain Predictions in the interval [0,1] and perform (\ref{eq:sigmoid_out}).For Logistic regression we use only SGD and test different tuning functions. We perform an accuracy grid search for both logistic regression and our neural network, and let scikit learn's logistic regression use it's default parameters.
 
 \section{Results}
-\subsection{Gradient descent}
+\subsection{Gradient descent on a one dimensional function}
 We look into how the different scaling methods perform compared to standard ordinary least squares. In figure \ref{fig:compare_GD_SGD} we see the performance of the different methods at each iteration where the mean squared error has been evaluated using test data:
 \begin{figure}[H]
     \begin{subfigure}{.5\textwidth}
@@ -390,7 +394,23 @@ The minimum $MSE$ values for the different methods in figure \ref{fig:compare_GD
 \end{table}
 In table \ref{tab:OLS_compare} above we see that the overall best performer is SGD with AdaGrad as tuning function reaching the lowest $MSE$ of 0.00774 which is better than the OLS $MSE$. We also see that $SGD$ performs the best, and that AdaGrad, RMSprop and ADAM are the tuning methods with generally best results.
 
-The same analysis using Ridge regression for different choices of $\lambda$ fcan be seen in figure \ref{fig:compare_ridge_2} and \ref{fig:compare_ridge}
+The same analysis using Ridge regression for different choices of $\lambda$ can be seen in figure \ref{fig:compare_ridge_1}, \ref{fig:compare_ridge_2} and \ref{fig:compare_ridge}.
+\begin{figure}[H]
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../figures/none_SGD_eta_lmb.png}
+        \caption{SGD no tune}
+        \label{fig:}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../figures/none_GD_eta_lmb.png}
+        \caption{GD no tune}
+        \label{fig:}
+    \end{subfigure}
+    \caption{$MSE$ for different methods for different choices of $\eta$ and $\lambda$ for both SGD (figures on the left) and GD (figures on the right) using $n=100$ data points from a 4th order polynomial with a batch size of 16 for SGD giving 5 mini batches}
+    \label{fig:compare_ridge_1}
+\end{figure}
 \begin{figure}[H]
     \begin{subfigure}{.5\textwidth}
         \centering
@@ -416,10 +436,6 @@ The same analysis using Ridge regression for different choices of $\lambda$ fcan
         \caption{GD momentum}
         \label{fig:}
     \end{subfigure}
-    \caption{}
-    \label{fig:compare_ridge_2}
-\end{figure}
-\begin{figure}[H]
     \begin{subfigure}{.5\textwidth}
         \centering
         \includegraphics[width=\textwidth]{../figures/AdaGrad_SGD_eta_lmb.png}
@@ -432,6 +448,11 @@ The same analysis using Ridge regression for different choices of $\lambda$ fcan
         \caption{GD AdaGrad}
         \label{fig:}
     \end{subfigure}
+    \caption{$MSE$ for different methods for different choices of $\eta$ and $\lambda$ for both SGD (figures on the left) and GD (figures on the right) using $n=100$ data points from a 4th order polynomial with a batch size of 16 for SGD giving 5 mini batches}
+    \label{fig:compare_ridge_2}
+\end{figure}
+\begin{figure}[H]
+
     \begin{subfigure}{.5\textwidth}
         \centering
         \includegraphics[width=\textwidth]{../figures/ADAM_SGD_eta_lmb.png}
@@ -459,7 +480,7 @@ The same analysis using Ridge regression for different choices of $\lambda$ fcan
     \caption{$MSE$ for different methods for different choices of $\eta$ and $\lambda$ for both SGD (figures on the left) and GD (figures on the right) using $n=100$ data points from a 4th order polynomial with a batch size of 16 for SGD giving 5 mini batches}
     \label{fig:compare_ridge}
 \end{figure}
-In figure \ref{fig:compare_ridge} and \ref{fig:compare_ridge_2} we see that the methods have changes in $MSE$ both when changing the learning rate $\eta$ aswell as when changing the L2 norm $\lambda$. In table \ref{tab:ridge_compare_GD} and \ref{tab:ridge_compare_SGD} we see the lowest $MSE$ for each method together with the parameters used.
+In figure  \ref{fig:compare_ridge_1}, \ref{fig:compare_ridge} and \ref{fig:compare_ridge_2} we see that the methods have changes in $MSE$ both when changing the learning rate $\eta$ aswell as when changing the L2 norm $\lambda$. In table \ref{tab:ridge_compare_GD} and \ref{tab:ridge_compare_SGD} we see the lowest $MSE$ for each method together with the parameters used.
 \begin{table}[H]
     \centering
     \caption{$MSE$ of ridge and the best performing tuning methods for SGD after 100 iterations}
@@ -492,46 +513,44 @@ In figure \ref{fig:compare_ridge} and \ref{fig:compare_ridge_2} we see that the 
         \hline
     \end{tabular}
 \end{table}
-We see in table \ref{tab:ridge_compare_SGD} and \ref{tab:ridge_compare_GD} that the gradient descent methods do not perform as well as ridge regression. We also see that the $MSE$s are not as small as we saw for OLS in figure \ref{tab:OLS_compare}.
 
-We look into how the batch sizes influences the performance of the different methods as shown in figure \ref{fig:compare_batch_size}
 \begin{figure}[H]
     \begin{subfigure}{.5\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{../figures/SGD_batch_size_AdaGrad.png}
+        \includegraphics[width=.9\textwidth]{../figures/SGD_batch_size_AdaGrad.png}
         \caption{AdaGrad}
         \label{fig:}
     \end{subfigure}
     \begin{subfigure}{.5\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{../figures/SGD_batch_size_none.png}
+        \includegraphics[width=.9\textwidth]{../figures/SGD_batch_size_none.png}
         \caption{no tune}
         \label{fig:}
     \end{subfigure}
     \begin{subfigure}{.5\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{../figures/SGD_batch_size_momentum.png}
+        \includegraphics[width=.9\textwidth]{../figures/SGD_batch_size_momentum.png}
         \caption{momentum}
         \label{fig:}
     \end{subfigure}
     \begin{subfigure}{.5\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{../figures/SGD_batch_size_RMSprop.png}
+        \includegraphics[width=.9\textwidth]{../figures/SGD_batch_size_RMSprop.png}
         \caption{RMSprop}
         \label{fig:}
     \end{subfigure}
-    \begin{subfigure}{\textwidth}
+    \begin{subfigure}{.9\textwidth}
         \centering
         \includegraphics[width=.5\textwidth]{../figures/SGD_batch_size_ADAM.png}
         \caption{ADAM}
         \label{fig:}
     \end{subfigure}
-    \caption{$MSE$ for different tuning functions and batch sizes when using SGD found using test data. }
+    \caption{$MSE$ for different tuning functions and batch sizes for SGD.}
     \label{fig:compare_batch_size}
 \end{figure}
 In figure \ref{fig:compare_batch_size} we see that the convergence of SGD is greatly influenced by the batch size. We see that a batch size of 20 generally performs worse and that a lower batch size equals a faster convergence.
 
-\subsection{Neural Network and Franke function}
+\subsection{Neural Network and the Franke function}
 A grid search for our own neural network can be seen in figure \ref{fig:franke_grid} for sigmoid as activation function
 \begin{figure}[H]
     \begin{subfigure}{.5\textwidth}
@@ -639,37 +658,37 @@ We see in table \ref{tab:franke_best} that we manage to perform better than OLS 
 \begin{figure}[H]
     \begin{subfigure}{.5\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{../figures/test_OLS.png}
+        \includegraphics[width=.92\textwidth]{../figures/test_OLS.png}
         \caption{OLS}
         \label{fig:}
     \end{subfigure}
     \begin{subfigure}{.5\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{../figures/test_RIDGE.png}
+        \includegraphics[width=.92\textwidth]{../figures/test_RIDGE.png}
         \caption{Ridge}
         \label{fig:}
     \end{subfigure}
     \begin{subfigure}{.5\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{../figures/NN_lrelu_franke.png}
+        \includegraphics[width=.92\textwidth]{../figures/NN_lrelu_franke.png}
         \caption{own NN leaky relu}
         \label{fig:}
     \end{subfigure}
     \begin{subfigure}{.5\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{../figures/NN_relu_franke.png}
+        \includegraphics[width=.92\textwidth]{../figures/NN_relu_franke.png}
         \caption{own NN relu}
         \label{fig:}
     \end{subfigure}
     \begin{subfigure}{.5\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{../figures/NN_sigmoid_franke.png}
+        \includegraphics[width=.92\textwidth]{../figures/NN_sigmoid_franke.png}
         \caption{own NN sigmoid}
         \label{fig:}
     \end{subfigure}
     \begin{subfigure}{.5\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{../figures/NN_tf_franke.png}
+        \includegraphics[width=.92\textwidth]{../figures/NN_tf_franke.png}
         \caption{NN keras}
         \label{fig:}
     \end{subfigure}
@@ -677,34 +696,34 @@ We see in table \ref{tab:franke_best} that we manage to perform better than OLS 
     \label{fig:franke_pred}
 \end{figure}
 
-\subsection{Cancer data}
+\subsection{Neural network, Logistic regression and Cancer data}
 A grid search for the different gradient descent methods using logistic regression cancer data is shown in figure \ref{fig:logreg_comp}
 \begin{figure}[H]
     \begin{subfigure}{.5\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{../figures/logreg_none.png}
+        \includegraphics[width=.95\textwidth]{../figures/logreg_none.png}
         \caption{No tune}
         \label{fig:}
     \end{subfigure}
     \begin{subfigure}{.5\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{../figures/logreg_momentum.png}
+        \includegraphics[width=.95\textwidth]{../figures/logreg_momentum.png}
         \caption{Momentum}
         \label{fig:}
     \end{subfigure}
     \begin{subfigure}{.5\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{../figures/logreg_AdaGrad.png}
+        \includegraphics[width=.95\textwidth]{../figures/logreg_AdaGrad.png}
         \caption{AdaGrad}
         \label{fig:}
     \end{subfigure}
     \begin{subfigure}{.5\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{../figures/logreg_RMSprop.png}
+        \includegraphics[width=.95\textwidth]{../figures/logreg_RMSprop.png}
         \caption{RMSprop}
         \label{fig:}
     \end{subfigure}
-    \begin{subfigure}{\textwidth}
+    \begin{subfigure}{.95\textwidth}
         \centering
         \includegraphics[width=.5\textwidth]{../figures/logreg_ADAM.png}
         \caption{ADAM}
@@ -774,7 +793,7 @@ We see in figure \ref{fig:cancer_best} that a different shuffle in the train-tes
 When looking at figure \ref{fig:compare_GD_SGD} and \ref{fig:compare_GD_SGD_2} we saw that the SGD both performed better and converged faster than normal GD. This leaves us with SGD generally being the method of choice when performing gradient descent. Here it is still worth noticing that the $MSE$ for GD has been calculated as a minimum over all iterations and for SGD at the last iteration. We are therefore not left with a good comparison between the two methods for any given number of iteration, but rather a general indication of performance.
 We also see that the different tuning methods have spikes in their $MSE$ at different iterations meaning that a direct comparison at one iteration would not give us any valuable information about the general performance of the methods. These spikes show us the importance of also choosing the right number of iterations or even stop the iterating process when the computed gradient reaches some minimal value $\epsilon$. This has not been done in both the gradient descent methods and the neural network which may have given us worse results from a never stopping oscillating behavior around the global minimum.
 
-When comparing the different tuning methods in table \ref{tab:OLS_compare} it is clear that no tuning has a great cost of performance. No tuning performs in almost all cases worse than all the other tuning functions with ADAM, RMSprop and ADAM taking turn in performing the best. This can be explained by how these methods perform their stepping process. They all change the learning rate depending on the gradient which makes the algorithms converge faster towards the global minimum both ignoring local minima and minimizing oscillations when a global minimum is found. These methods come with a minimal cost of computing time and can at the same time as seen greatly improve performance.
+When comparing the different tuning methods in table \ref{tab:OLS_compare} it is clear that no tuning has a great cost of performance. No tuning performs in almost all cases worse than all the other tuning functions with ADAM, RMSprop and AdaGrad taking turn in performing the best. This can be explained by how these methods perform their stepping process. They all change the stepping rate depending on the gradient which for ADAM and RMSprop get greatly reduced in regions with gradients of large magnitude. The same can be said about AdaGrad when using SGD. This gives the possibility to use larger learning rates and thereby make the algorithms converge faster towards the global minimum ignoring local minima. They also minimize oscillations around a global minimum from the reduction in the stepping process where the gradient is small.  These methods come with a minimal cost of computing time and can at the same time as seen greatly improve performance.
 
 In table \ref{tab:OLS_compare} we saw that SGD with AdaGrad, RMSprop and ADAM performed better than OLS. Here it is worth noticing that we have not made any optimalizations for OLS and used a design matrix of degree 6 when analyzing 4th degree data. In project 1 (GITHUB) we saw when analyzing OLS that we can have a great increase in $MSE$ from overfitting which may be the case here. Our results do therefore not tell us that SGD is generally better than OLS, but that it may outperform OLS when a wrong design matrix is chosen.
 
@@ -784,7 +803,7 @@ When looking at our results from Ridge regression from table \ref{tab:ridge_comp
 In all earlier analysis of our one dimensional function we have used a batch size of 16 giving us 5 minibatches. This choice is made based on a balance between computation time and performance, and as we saw in figure \ref{fig:compare_batch_size} this batch size generally converges fast and performs well. We see that larger batch sizes performs worse and that smaller batch sizes only equals small performance gains. We also saw that a batch size of 40 in most cases outperforms a batch size of 20. This can be explained by the shuffle algorithm of the input and target data for each minibatch. This shuffle has been made with a seed to be able to reproduce the results, but when the size of the minibatch varies, the shuffle will too. Because of this it is hard to gain anything more than an indication of what batch size gives the best performance to compute time ratio. A more statistical analysis using for example bootstrap could on the other hand given us information helping us choose the best possible batch size fitting our needs.
 
 \subsection{Franke function}
-For the Franke function we saw in figure \ref{fig:franke_grid}, \ref{fig:franke_grid_2} and \ref{fig:franke_grid_3} together with table \ref{tab:franke_best} that our own neural network using sigmoid as activation function performed best. Here all the target data was scaled to the interval [0,1] for simplicity, which may not have been beneficial for ReLU and leaky ReLU. These methods would prefer to have standard scaled input data (\url{https://machinelearningmastery.com/rectified-linear-activation-function-for-deep-learning-neural-networks/}) to avoid the weights of the neural network growing large. So even if we have performed a grid search finding the optimal parameters for ReLU and leaky ReLU, we have not used optimal input data and have in that way compromised their performance. An indication of this can be seen in table \ref{tab:franke_best} where the two ReLU functions have optimal learning rates of $\eta=0.02$ which is 10 times lower than sigmoid. Higher learning rates may have started seeing an exploding gradient followed by too fast-growing weights. To improve performance, methods such as batch normalization is used. This method normalizes the data of each minibatch making it possible to use much higher learning rates both improving performance and allowing for up to 14 times fewer training steps \url{https://arxiv.org/abs/1502.03167}.
+For the Franke function we saw in figure \ref{fig:franke_grid}, \ref{fig:franke_grid_2} and \ref{fig:franke_grid_3} together with table \ref{tab:franke_best} that our own neural network using sigmoid as activation function performed best. Here all the target data was scaled to the interval [0,1] for simplicity, which may not have been beneficial for ReLU and leaky ReLU. These methods would prefer to have standard scaled input data \cite{deeplearning} to avoid the weights of the neural network growing large. So even if we have performed a grid search finding the optimal parameters for ReLU and leaky ReLU, we have not used optimal input data and have in that way compromised their performance. An indication of this can be seen in table \ref{tab:franke_best} where the two ReLU functions have optimal learning rates of $\eta=0.02$ which is 10 times lower than sigmoid. Higher learning rates may have started seeing an exploding gradient followed by too fast-growing weights. To improve performance, methods such as batch normalization is used. This method normalizes the data of each minibatch making it possible to use much higher learning rates both improving performance and allowing for up to 14 times fewer training steps \cite{batchnormalization}.
 
 When comparing figure \ref{fig:franke_grid} for sigmoid to \ref{fig:franke_grid_2} for ReLU we saw that different learning rates have been used in the grid search. This is because of the ReLU functions encountering overflow for learning rates higher than 0.1. In total does our results not show that the sigmoid function is superior for a regression problem, but that it for a min-max scaling between 0 and 1 would outperform the ReLU activation functions. Another way to reduce the performance issues for ReLU could be to let the model run over more iterations which would in the gradient descent process allow for lower learning rates. An implementation of a scaling function such as ADAM, RMSprop or AdaGrad could also be of help, and is left as possible improvements for our neural network.
 
@@ -799,4 +818,9 @@ When analyzing the cancer data, only the sigmoid activation was used. This means
 
 \section{Conclusion}
 We have looked at different gradient descent methods and seen that stochastic gradient descent together with a tuning function such as ADAM, RMSprop or AdaGrad generally performs best. In the case of a one-dimensional function this was especially true, but for logistic regression on cancer data no tuning performed just as well. We ended up using no tuning function in the stochastic gradient descent of our neural network which ends up being a possible improvement, especially when using ReLU and leaky ReLU which showed poor performance on predicting the Franke function. Furthermore, a scaling in form of methods such as standard scaling or batch normalization are also possibilities for performance improvement of the neural network, which especially may help the ReLU functions in performing better. When it comes to the classification case of predicting breast cancer data we saw great performance for both our neural network and our logistic regression both outperforming scikit learn's built in logistic regression functionality. We have seen that an accurate evaluation of which methods perform the best needs further statistical analysis in both the regression and classification case. This means that we do not have any clear indication of which methods perform best both for regression and classification. We are on the other hand left with indications of our neural network being better than both OLS and Ridge for regression, and logistic regression being the method of choice for a classification case as a result of its simple implementation and fast computation.
+
+\nocite{nielsen}
+\nocite{Mehta_2019}
+\nocite{hastie}
+\printbibliography
 \end{document}
