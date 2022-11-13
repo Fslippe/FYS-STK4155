@@ -46,7 +46,7 @@ def main():
     input_size = X_train.shape[1]
     
     logreg_grid = True 
-    grid_NN_lmb_eta = True
+    grid_NN_lmb_eta = False
     grid_layer_neurons = False
     logreg_skl = scikit_logreg(X_train, y_train.ravel())
     acc_skl = logreg_skl.score(X_test, y_test.ravel())

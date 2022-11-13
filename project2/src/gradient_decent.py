@@ -15,6 +15,7 @@ class GradientDescent:
         self.m = 0
         self.t = 0
         self.delta = 0
+        self.method_s = method
         if seed != None:
             np.random.seed(seed)
             self.seed = seed
@@ -52,7 +53,7 @@ class GradientDescent:
             for start in range(0, n, batch_size):
                 X_batch = X_shuffle[start:start+batch_size]
                 y_batch = y_shuffle[start:start+batch_size]    
-                self.grads = self.gradient(X_batch, y_batch, self.theta) 
+                self.grads = self.gradient(X_batch, y_batch, self.theta)
                 self.method()
 
             if eval == True:
@@ -73,7 +74,8 @@ class GradientDescent:
 
         for i in range(self.iter):
             self.t += 1
-            self.grad_square = 0
+            if self.method_s != "AdaGrad":
+                self.grad_square = 0
             self.grads = self.gradient(X, y, self.theta) 
             self.method()
             

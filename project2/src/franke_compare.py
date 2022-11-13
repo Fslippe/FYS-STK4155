@@ -163,7 +163,7 @@ def main():
     pred_tf = min_max_unscale(NN_tf.predict(xy_test), mn, mx)
     NN_tf_mse = MSE(z_test, pred_tf)
     print("R2:",R2(z_test, pred_tf))
-    #grid_search_franke(xy_train, xy_test, z_train_scaled, z_test, neurons, epochs, batch_size, mn, mx, act="lrelu", validate="R2")
+    grid_search_franke(xy_train, xy_test, z_train_scaled, z_test, neurons, epochs, batch_size, mn, mx, act="relu", validate="MSE")
     
     act = "lrelu"
     if act == "sigmoid":
