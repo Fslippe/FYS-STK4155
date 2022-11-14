@@ -4,7 +4,21 @@ from gradient_decent import *
 from matplotlib.ticker import MaxNLocator
 plt.rcParams.update({'font.size': 11})
 
-def grid_search_GD_OLS(eta, moment, iterations, X_train, X_test, y_train, y_test, descent, method, batch_size=0, lamda=0):
+def compare_OLS(eta, moment, iterations, X_train, X_test, y_train, y_test, descent, method, batch_size=0, lamda=0):
+    """
+    Using OLS cost function to compare gradient descent methods
+    - eta               learning rate  
+    - moment            momentum
+    - iterations        iterations in gradient descent
+    - X_train           training input data 
+    - X_test            test input data 
+    - y_train           train target data
+    - y_test            test target data    
+    - descent           descent method either GD or SGD
+    - method            Tuning method
+    - batch_size=0      Batch size if using SGD
+    - lamda=0           lamda to add - becomes ridge regression
+    """
     cost = "Ridge"
     if lamda == 0:
         cost = "OLS"
@@ -36,6 +50,22 @@ def grid_search_GD_OLS(eta, moment, iterations, X_train, X_test, y_train, y_test
     plt.savefig("../figures/%s_methods_%s_eta_%s.png" %(descent, cost, eta), dpi=300, bbox_inches='tight' )
 
 def compare_ridge(eta, moment, iterations, X_train, X_test, y_train, y_test, descent, lamda, method, batch_size=0):
+    """
+    Using ridge cost function to compare gradient descent methods
+    by performing a grid search for different etas and lambdas
+    - eta               list of learning rates to test
+    - moment            momentum
+    - iterations        iterations in gradient descent
+    - X_train           training input data 
+    - X_test            test input data 
+    - y_train           train target data
+    - y_test            test target data    
+    - descent           descent method either GD or SGD
+    - lamda             list of lamdas to test 
+    - method            Tuning method
+    - batch_size=0      Batch size if using SGD
+    """
+    
     mse = np.zeros((len(eta), len(lamda)))
     mse_ridge = np.zeros(len(lamda))
     for i in range(len(eta)):
@@ -71,6 +101,20 @@ def compare_ridge(eta, moment, iterations, X_train, X_test, y_train, y_test, des
     plt.savefig("../figures/ridge_mse_lamda.png", dpi=300, bbox_inches='tight')
     
 def compare_batch_size(eta, moment, iterations, X_train, X_test, y_train, y_test, lamda, method, batch_sizes):
+    """
+    Using ridge cost function to compare gradient descent methods
+    by performing a grid search for different etas and lambdas
+    - eta               list of learning rates to test
+    - moment            momentum
+    - iterations        iterations in gradient descent
+    - X_train           training input data 
+    - X_test            test input data 
+    - y_train           train target data
+    - y_test            test target data    
+    - lamda             lambda for ridge regression
+    - method            Tuning method
+    - batch_sizes       List of batch sizes to test
+    """
     if method =="moment":
         G = GradientDescent("RIDGE", method, eta, moment=moment, lamda=lamda,iterations=iterations, seed=100)
     else:
@@ -91,6 +135,7 @@ def compare_batch_size(eta, moment, iterations, X_train, X_test, y_train, y_test
     plt.savefig("../figures/SGD_batch_size_%s.png" %(method), dpi=300, bbox_inches='tight' )
 
 def main():
+    """Generate data"""
     n = 100
     np.random.seed(100)
     x = np.linspace(-1, 1, n)
@@ -100,21 +145,30 @@ def main():
     y = (y - np.mean(y))
     X = design_matrix_1D(x, 6) 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=100)
-    print(np.max(np.abs(X)))
+   
+    """Setting up parameters"""
     eta = 0.1
     moment = 0.3
     iterations=100
     method = ["ADAM", "RMSprop", "AdaGrad", "none", "momentum"]
-    grid_search_GD_OLS(eta, moment, iterations, X_train, X_test, y_train, y_test, method=method, descent="GD" )
-    grid_search_GD_OLS(eta, moment, iterations, X_train, X_test, y_train, y_test, method=method, batch_size=16, descent="SGD" )
+
+    # comparing methods for eta=0.1
+    compare_OLS(eta, moment, iterations, X_train, X_test, y_train, y_test, method=method, descent="GD" )
+    compare_OLS(eta, moment, iterations, X_train, X_test, y_train, y_test, method=method, batch_size=16, descent="SGD" )
     plt.show()
     eta = 0.01
-    grid_search_GD_OLS(eta, moment, iterations, X_train, X_test, y_train, y_test, method=method, descent="GD" )
-    grid_search_GD_OLS(eta, moment, iterations, X_train, X_test, y_train, y_test, method=method, batch_size=16, descent="SGD" )
+    
+    # comparing methods for eta=0.01
+    compare_OLS(eta, moment, iterations, X_train, X_test, y_train, y_test, method=method, descent="GD" )
+    compare_OLS(eta, moment, iterations, X_train, X_test, y_train, y_test, method=method, batch_size=16, descent="SGD" )
     plt.show()
+
+    """Finding MSE for normal OLS"""
     beta = OLS(X_train, y_train)
     pred_OLS = X_test @ beta
     print("MSE OLS", MSE(y_test, pred_OLS))
+
+    """lamdas, etas and batch sizes to test for each method"""
     lamda = np.array([ 1e-6, 1e-4, 1e-2, 1e-1, 10**(-0.2)])
     eta = np.array([0.01, 0.1, 0.2, 0.5, 0.8])
     batch_sizes = [4, 8, 16, 20, 40]

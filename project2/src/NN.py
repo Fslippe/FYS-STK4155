@@ -7,7 +7,25 @@ from sklearn.metrics import mean_squared_error, r2_score, mean_squared_log_error
 
 
 class NeuralNetwork :
+    """
+    Feed Forward Neural Network to use for either clasification of regression problems
 
+    Takes in:
+    - X (n x N array):              Design matrix with input features 
+    - Y (n x N array):              Target data with target features 
+    - neurons (list):               list of neurons of each hidden layer 
+    - epochs (int):                 iterations in SGD
+    - batch_size (int):             Size of each batch size in SGD 
+    - eta (int):                    Learning rate >0 
+    - lamda (int,opt):              L2 Norm to add when updating weights and biases 
+    - moment(int,opt):              Add momentum to update of theta 
+    - seed(int,opt):                seed for initialization of weights, biases and shuffle in SGD
+    - initialize_weights(str,opt):  how to initialize weights, default random. opt zeros or random scaled
+    - initialize_biases(str,opr):   how to initialize biases, default zeros. opt random
+    - activattion(str,op):          activation of hidden layers. default sigmoid. opt relu, lrelu 
+    - cost(str,opt):                cost function. default error. opt cross validation
+    - last_activation(str,opt):     activation of output, default same as for hidden layers.            
+    """
     def __init__(self, X, Y, neurons, epochs, batch_size, eta, lamda=0., moment=0, seed=None, initialize_weight="random", initialize_bias="zeros", activation="sigmoid", cost="error", last_activation=None):
         if seed != None:
             np.random.seed(seed)
@@ -111,7 +129,7 @@ class NeuralNetwork :
                 self.bias[i] = np.random.randn(int(self.neurons[i]))
             self.bias[-1] = np.random.randn(self.output_dim) 
 
-        # Initialize
+        # Initialize a and z
         self.a_l = np.zeros(self.n_layers + 1, dtype=object)
         self.z_l = np.zeros(self.n_layers + 1, dtype=object)
         self.error = np.zeros(self.n_layers + 1, dtype=object)
@@ -132,6 +150,7 @@ class NeuralNetwork :
 
 
     def feed_forward(self):
+        """Feed forward for training"""
         self.z_l[0] = self.X_batch @ self.weight[0].T + self.bias[0]
         self.a_l[0] = self.act(self.z_l[0])
 
@@ -145,6 +164,7 @@ class NeuralNetwork :
 
 
     def SGD(self):
+        """Stochastic gradient descent for training"""
         i = self.seed
         for epoch in range(self.epochs):
             X_shuffle, Y_shuffle = shuffle(self.X, self.Y, random_state=i)
@@ -157,6 +177,7 @@ class NeuralNetwork :
                 self.update()
 
     def backprop(self):
+        """Backpropagation to find weight and biase gradients"""
         for i in range(self.n_layers):
             self.error[i] = np.zeros((self.batch_size, int(self.neurons[i])))
         self.error[-1] = np.zeros((self.batch_size, self.output_dim))
@@ -177,6 +198,7 @@ class NeuralNetwork :
             self.bias_grad[i] = np.sum(self.error[i], axis=0) + self.lamda*self.bias[i]
  
     def update(self):
+        """update all weights and biases"""
         for i in range(self.n_layers + 1):
             delta_w = self.weight[i] * self.moment - self.eta / self.batch_size *self.weight_grad[i]
             delta_b = self.bias[i] *self.moment - self.eta / self.batch_size * self.bias_grad[i]
@@ -185,6 +207,10 @@ class NeuralNetwork :
     
 
     def feed_forward_out(self, x):
+        """
+        Feed forward to do predictions
+   
+        """
         z_o = x @ self.weight[0].T + self.bias[0]
         a_o = self.act(z_o)#self.act_out(z_o)
 
@@ -198,14 +224,31 @@ class NeuralNetwork :
         return a_o
 
     def predict(self, x):
+        """
+        predict using optimal values found while training
+        Takes in
+        - x (array): test input data
+
+        returns
+        - prediction
+        """
         a_o = self.feed_forward_out(x)
         return a_o
 
     def predict_accuracy(self, X, t):
+        """
+        predicting accuracy given
+        - X:    input data
+        - t:    target data
+
+        returns:
+        Accuracy score
+        """
         pred = self.predict(X)
         accuracy = np.sum(np.where(pred < 0.5, 0, 1) == t, axis=0) / t.shape[0]
         return accuracy
 
+    """Activation functions"""
     def sigmoid(self, x):
         return 1 / (1 + np.exp(-x))
     
@@ -236,6 +279,7 @@ class NeuralNetwork :
     def none_grad(self, x):
         return 0
 
+    """Cost functions"""
     def error(self, a, y):
         return (a - y)**2 / 2
 
@@ -250,6 +294,7 @@ class NeuralNetwork :
 
 
 def design_matrix_1D(x, degree):
+    """produce simple design matrix to test NN"""
     N = len(x)
     X = np.ones((N, degree+1))
 
@@ -259,6 +304,7 @@ def design_matrix_1D(x, degree):
     return X
 
 def test_func_1D(x, degree, noise):
+    """produce simple 1D test function to test NN"""
     np.random.seed(100)
     a = np.random.rand(degree + 1)
     f_x = 0
@@ -268,7 +314,10 @@ def test_func_1D(x, degree, noise):
     return f_x + noise
 
 def main():
-    """Simple test of NN using 1D func to check for problems"""
+    """
+    Simple test of NN using 1D func to check for problems.
+    Results not used in report.
+    """
     np.random.seed(100)
     n = 1000
     degree = 4

@@ -8,8 +8,16 @@ from gradient_decent import *
 plt.rcParams.update({'font.size': 11})
 
 def choose_inputs(idx, data):
+    """
+    Choose input features of data
+    - idx:       last feature index to use
+    - data:      scikit learn data set
+    returns
+    - input data matrix
+    """
     inputs = data.data 
     labels = data.feature_names
+    print(labels)
     temp = np.zeros(len(idx), dtype=object)
     for i in range(len(idx)):
         temp[i] = np.reshape(inputs[:,idx[i]],(len(inputs[:,idx[i]]),1))
@@ -18,14 +26,23 @@ def choose_inputs(idx, data):
     return X
 
 def scikit_logreg(X_train, y_train):
+    """
+    scikit learn logistic regression functionality
+    trained using X_train and y_train
+    returns
+    scikit learn logreg model object
+    """
     clf = LogisticRegression(random_state=0).fit(X_train, y_train)
     return clf 
 
 def main():
+    """Setup of data"""
     data = load_breast_cancer()
     outputs = data.target 
     X = choose_inputs(range(1,30), data)
     y = outputs.reshape(len(outputs), 1)
+    
+    # A random state of 10 makes it possible to gain a 100% accuracy
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=5) #=10) 
     std = np.std(X_train, axis=0)
     mean = np.mean(X_train, axis=0)
@@ -34,28 +51,22 @@ def main():
     X_train = (X_train - mean) / std 
     X_test = (X_test - mean) / std 
 
-    savename = "cancer_eta_lmb_relu"
-    eta = np.array([0.001, 0.001])
-    lamda = np.logspace(-2, 0, 3)
-    neurons = [50]
-    epochs = 200
-    n_train = np.shape(X_train)
-    batch_size = 25
-    n_layers = 2
-    n_neuron = 100
-    input_size = X_train.shape[1]
-    
+    """Which grid search to run"""
     logreg_grid = True 
-    grid_NN_lmb_eta = False
-    grid_layer_neurons = False
+    grid_NN_lmb_eta = True
+    grid_layer_neurons = True
+
+    """Scikit logistic regression"""
     logreg_skl = scikit_logreg(X_train, y_train.ravel())
     acc_skl = logreg_skl.score(X_test, y_test.ravel())
     print("SKlearn accuracy:", acc_skl)
+
+
+    """Grid search for own logistic regression"""
     if logreg_grid:
         eta = np.logspace(-4, 0, 5)
         lamda = np.logspace(-6, 0, 7)
         method = ["none", "momentum","ADAM", "AdaGrad", "RMSprop"]
-        #method = ["ADAM"]
         for m in method:
             grid_search_logreg(X_train,
                             y_train,
@@ -70,15 +81,9 @@ def main():
                             mom=0.3,
                             savename="logreg_%s" %(m))
         plt.show()
-    #NN_keras = NN_model(input_size, n_layers, n_neuron, eta, lamda)
-    #NN_keras.fit(X_train, y_train, epochs=epochs, batch_size=batch_size, verbose=1)
-    #test = NN_keras.evaluate(X_test,y_test)[1]
-    #print(test)
 
     neurons = [80, 80, 80]
-
     epochs = 200
-    n_train = np.shape(X_train)
     batch_size = 45
     print(np.shape(X_train))
 

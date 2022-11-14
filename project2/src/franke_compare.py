@@ -14,6 +14,13 @@ from tensorflow.keras.utils import to_categorical   #This allows using categoric
 from sklearn.neural_network import MLPClassifier
 
 def min_max_scale(X):
+    """
+    Min max scale input X to interval [0,1]
+    returns
+    - scaled X
+    - min of X
+    - max of X
+    """
     mx = np.max(X)
     mn = np.min(X)
     X_std = (X - mn) / (mx - mn)
@@ -21,10 +28,29 @@ def min_max_scale(X):
     return X_scaled, mn, mx
 
 def min_max_unscale(X, mn, mx):
+    """
+    unscale data scaled by function min_max_scale 
+    takes in
+    - X to be scaled
+    - min of X before scaled
+    - max of X before scaled
+    returns:
+    - scaled X
+    """
     X_s = X* (mx - mn) + mn
     return X_s
 
-def create_neural_network_keras(neurons, xy, z, lmb, epochs):
+def create_neural_network_keras(neurons, xy, z, epochs):
+    """
+    Create a Neural network in keras
+    takes in:
+    - neurons:      list of neurons of hidden layers 
+    - xy:           Train design matrix
+    - z:            target data
+    - epochs:       iterations in training
+    returns:
+    - model object to use for predictions
+    """
     # Tensor flow keras NN
     model = Sequential()
     model.add(Dense(500, input_dim=2, activation="relu"))
@@ -37,6 +63,21 @@ def create_neural_network_keras(neurons, xy, z, lmb, epochs):
 
 
 def grid_search_franke(xy, xy_test, z, z_test, neurons, epochs, batch_size, mn, mx, act, validate):
+    """
+    Perform grid search on franke function.
+    Different parameters are tested depending on activation function.
+    - xy:               train design matrix
+    - xy_test:          test design matrix
+    - z                 train target data
+    - z_test            test target data 
+    - neurons           list of neurons for each hidden layer
+    - epochs            iterations to perform in SGD
+    - batch_size        batch size for SGD
+    - mn                min of data before scaling
+    - mx                max of data before scaling
+    - act               activation function
+    - validate          how to validate performance, MSE, ACC or R2
+    """
     savename = "franke_L_n_test_%s_%s" %(act, validate)
     neur = np.array( [60, 80, 100, 120, 140, 160, 180, 200, 220])
     n_layer = np.array([1, 2, 3, 4, 5, 6, 7, 8])        
@@ -115,7 +156,7 @@ def grid_search_franke(xy, xy_test, z, z_test, neurons, epochs, batch_size, mn, 
     plt.show()
 
 def main():
-    #Setting up data
+    """Making data to analyze"""
     n = 30
     noise_std = 0.2
 
@@ -137,6 +178,7 @@ def main():
     xy_train = np.array([x_train, y_train]).T
     xy_test = np.array([x_test, y_test]).T
 
+    """Regression analysis"""
     # OLS
     X_train = design_matrix(x_train, y_train, degree=6)
     X_test = design_matrix(x_test, y_test, degree=6)
@@ -153,19 +195,24 @@ def main():
     RIDGE_mse = MSE(z_test, pred_RIDGE)
     print("R2 ridge:",R2(z_test, pred_RIDGE))
 
+    """Setting up neural networks"""
     # Own NeuralNetwork
     neurons = np.array([140, 140, 140, 140, 140, 140]) # in hidden layers 
     epochs = 100
     batch_size = 60
 
     # NN TF keras
-    NN_tf = create_neural_network_keras([100,100], xy_train, z_train_scaled, lmb=1e-5, epochs=100)
+    NN_tf = create_neural_network_keras([100,100], xy_train, z_train_scaled, epochs=100)
     pred_tf = min_max_unscale(NN_tf.predict(xy_test), mn, mx)
     NN_tf_mse = MSE(z_test, pred_tf)
     print("R2:",R2(z_test, pred_tf))
-    grid_search_franke(xy_train, xy_test, z_train_scaled, z_test, neurons, epochs, batch_size, mn, mx, act="relu", validate="MSE")
-    
+
+    """Performing grid search depending on activation and validation"""
     act = "lrelu"
+    validate="MSE"
+    grid_search_franke(xy_train, xy_test, z_train_scaled, z_test, neurons, epochs, batch_size, mn, mx, act=act, validate=validate)
+    
+    """Setting up optimal values depending on activation function"""
     if act == "sigmoid":
         init = "random"
         last_act = act
@@ -197,13 +244,15 @@ def main():
                        initialize_weight=init,
                        activation=act,
                        last_activation=last_act)
+
+    """Train and prediction"""                     
     NN.SGD()
     pred = NN.predict(xy_test).ravel()
     pred = min_max_unscale(pred, mn, mx)
     NN_mse = (MSE(z_test, pred))
     eta = 0.1
 
-    # plot predictions
+    """Plot all predictions"""
     print(R2(z_test,pred))
     plot_3d_trisurf(x_test, y_test, pred_tf.ravel(), savename="NN_tf_franke", azim=45, title="n=%i, std=%.1f, MSE=%.5f" %(n, noise_std, NN_tf_mse))
     plt.show()
@@ -211,16 +260,10 @@ def main():
     plt.show()
     plot_3d_trisurf(x_test, y_test, pred, azim=45,savename="NN_%s_franke" %(act), title="n=%i, std=%.1f, MSE=%.5f" %(n, noise_std, NN_mse))
     plt.show()
-    #plot_3d_trisurf(x_test, y_test, pred_tf, azim=45,savename="test_NN_tf", title="n=%i, std=%.1f, MSE=%.5f" %(n, noise_std, tf_NN_mse))
-    #plt.show()
-    
     plot_3d_trisurf(x_test, y_test, pred_OLS.ravel(), azim=45,savename="test_OLS", title="n=%i, std=%.1f, MSE=%.5f" %(n, noise_std, OLS_mse))
     plt.show()
-    
     plot_3d_trisurf(x_test, y_test, pred_RIDGE.ravel(), azim=45,savename="test_RIDGE", title="n=%i, std=%.1f, MSE=%.5f" %(n, noise_std, RIDGE_mse))
-
     plt.show()
-
 
 if __name__ == "__main__":
     main()

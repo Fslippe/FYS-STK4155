@@ -2,6 +2,21 @@ from functions import *
 from autograd import grad, elementwise_grad
 
 class GradientDescent:
+    """
+    Gradient descent method for GD and SGD using different tuning methods and momentum
+
+    - cost                  Cost function to use
+    - method                Tuning method
+    - eta=0.1               learning rate
+    - moment=0              momentum
+    - lamda=0               L2 norm lambda 
+    - iterations=1000       iterations
+    - rho_1=0.9             rho_1 used in RMSprop and ADAM
+    - rho_2=0.99            rho_" used in ADAM
+    - eps=1e-8              value to avoid divide by 0
+    - seed=None             Seed for initialization of random values
+    """   
+
     def __init__(self, cost, method, eta=0.1, moment=0, lamda=0, iterations=1000, rho_1=0.9, rho_2=0.99, eps=1e-8, seed=None):
         self.lamda = lamda 
         self.moment = moment
@@ -39,6 +54,14 @@ class GradientDescent:
             self.method = self.constant
 
     def SGD(self, X, y, batch_size, eval=False, X_test=np.zeros(1)):
+        """
+        Stochastic gradient descent method
+        - X             Train input matrix
+        - y             Train target data 
+        - batch_size    batch size 
+        - eval          if True needs also X_test as input. perform prediction for test data at every iteration
+        - X_test        test data to perform prediction at every iteration
+        """
         n, N = np.shape(X)
         self.theta = np.random.randn(N, 1)
         random = self.seed
@@ -66,6 +89,14 @@ class GradientDescent:
             return self.theta
 
     def GD(self, X, y, eval=False, X_test=np.zeros(1)):
+        """
+        Gradient descent method
+        - X             Train input matrix
+        - y             Train target data 
+        - eval          if True needs also X_test as input. perform prediction for test data at every iteration
+        - X_test        test data to perform prediction at every iteration
+        """
+
         n, N = np.shape(X)
         self.theta = np.random.randn(N, 1)
         self.t = 0
@@ -88,6 +119,7 @@ class GradientDescent:
             return self.theta
 
     def ADAM(self):
+        """ADAM tuning method"""
         self.grad_square += self.grads**2
         self.m = self.rho_1*self.m + (1-self.rho_1)*self.grads
         self.s = self.rho_2*self.s + (1-self.rho_2)*self.grad_square
@@ -96,65 +128,48 @@ class GradientDescent:
         self.theta -= self.eta * m / (np.sqrt(s) + self.eps)
     
     def RMSprop(self):
+        """RMSprop tuning method"""
         self.grad_square += self.grads**2
         self.s = self.rho_1*self.s + (1-self.rho_1)*self.grad_square 
         self.theta -= self.eta * self.grads / (np.sqrt(self.s) + self.eps)
     
     def AdaGrad(self):
+        """AdaGrad tuning method"""
         self.grad_square += self.grads**2
         self.theta -= self.eta / (np.sqrt(self.grad_square) + self.eps) *self.grads
 
     def constant(self):
+        """No tuning method - can use momentum"""
         self.delta = self.eta*self.grads + self.moment*self.delta
         self.theta -= self.delta
 
     def predict_accuracy(self, X, t):
+        """
+        Predict accuracy for test and target data 
+        - X     input matrix
+        - t     target matrix
+        returns
+        - accuracy
+        """
         pred = np.exp(X @ self.theta) / (1+ np.exp(X @ self.theta))
         accuracy = np.sum(np.where(pred < 0.5, 0, 1) == t, axis=0) / t.shape[0]
         return accuracy
 
 
     def cost_OLS(self, X, y, beta):
+        """OLS cost function for any given input X, target y, and parameter beta"""
         n = X.shape[0]
         return np.sum((X @ beta - y)**2) /n 
 
     def cost_Ridge(self, X, y, beta):
+        """Ridge cost function for any given input X, target y, and parameter beta"""
         n = X.shape[0]
         return (np.sum((X @ beta - y)**2) + self.lamda*np.sum(beta**2)) / n
 
     def logreg_grad(self, X, y, beta):
+        """
+        Gradient of the logistic cost function
+        for any given input X, target y, and parameter beta
+        """
         gradient = - X.T @ (y - np.exp(X @ beta) / (1+ np.exp(X @ beta))) + 2*self.lamda*beta 
         return gradient 
-
-def main():
-    n = 100
-    np.random.seed(100)
-    x = np.linspace(-1, 1, n)
-    noise = np.random.normal(0, 0.1, n)
-    y = test_func_1D(x, 4, noise).reshape(n, 1)
-    X = design_matrix_1D(x, 4)
-    lamda = 0.01
-    delta_mom = 0.3
-    n_epochs = 50 
-    batch_size = 5 
-    eta = np.linspace(0.05, 0.7, 5)
-    lamda = np.logspace(-8, -1, 8)
-
-    f_x = y.ravel() - noise
-    plt.title("OLS")
-    plt.plot(x, f_x,"k", linewidth=10)
-    plt.plot(x, y,"k", linewidth=1)
-    G = GradientDescent(cost="RIDGE", method="", eta = 0.1, moment=0, lamda=0, iterations=1000)
-    pred_GD = G.GD(X, y)
-    pred_SGD = G.SGD(X, y, 50)
-    pred_GD = X @ pred_GD 
-    pred_SGD = X @ pred_SGD 
-
-
-    plt.plot(x, pred_GD, label="GD")
-    plt.plot(x, pred_SGD, label="SGD")
-    plt.legend()
-    plt.show()
-
-if __name__ == "__main__":
-    main()

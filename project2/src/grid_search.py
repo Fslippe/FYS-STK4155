@@ -5,6 +5,13 @@ from gradient_decent import *
 plt.rcParams.update({'font.size': 11})
 
 def neuron_array(layers, neurons):
+    """
+    Set up neuron list of each hidden layer depending on input
+    - layers    number of hidden layers 
+    - neurons   number of neurons per hidden layer
+    returns
+    - n         list containing neurons at each layer 
+    """
     n = np.zeros(layers)
     for i in range(layers):
         n[i] = int(neurons)
@@ -12,6 +19,29 @@ def neuron_array(layers, neurons):
     return n
 
 def grid_search_eta_lambda(X_train, y_train, X_test, y_test, savename, neurons, epochs, batch_size, eta, lamda, mom, seed, init, act, cost, last_act, validate, mn=0, mx=1):
+    """
+    Perform grid search for different eta and lambda and plot a heatmap
+    - X_train:          train design matrix
+    - y_train           train target data
+    - X_test:           test design matrix
+    - y_test            test target data 
+    - savename          savename of heatmap produced
+    - neurons           list of neurons for each hidden layer
+    - epochs            iterations to perform in SGD
+    - batch_size        batch size for SGD
+    - eta               learning rate
+    - lamda             array of lambdas to test
+    - mom               add momentum to algorithm
+    - seed              seed of random values computed in NN
+    - init              initialization of weights in NN
+    - act               Activation function of hidden layers
+    - cost              cost function of NN
+    - last_act          Activation function for output layer
+    - validate          Validation for the heatmap, MSE, R2, ACC
+    - mn                min of data before scaling
+    - mx                max of data before scaling
+    - validate          how to validate performance, MSE, ACC or R2
+    """
     plt.rcParams.update({'font.size': 11})
     val = np.zeros((len(eta), len(lamda)))
     for i in range(len(eta)):
@@ -42,6 +72,30 @@ def grid_search_eta_lambda(X_train, y_train, X_test, y_test, savename, neurons, 
     plt.savefig("../figures/%s.png" %(savename), dpi=300, bbox_inches='tight')
 
 def grid_search_layer_neurons(X_train, y_train, X_test, y_test, savename, n_layer, neurons, epochs, batch_size, eta, lamda, mom, seed, init, act, cost, last_act, validate, mn=0, mx=1):
+    """
+    Perform grid search for different number of layers and neurons and plot a heatmap
+    - X_train:          train design matrix
+    - y_train           train target data
+    - X_test:           test design matrix
+    - y_test            test target data 
+    - savename          savename of heatmap produced
+    - n_layers          array of number of layers to test
+    - neurons           array of number of neurons to test
+    - epochs            iterations to perform in SGD
+    - batch_size        batch size for SGD
+    - eta               learning rate
+    - lamda             lambda L2 norm
+    - mom               add momentum to algorithm
+    - seed              seed of random values computed in NN
+    - init              initialization of weights in NN
+    - act               Activation function of hidden layers
+    - cost              cost function of NN
+    - last_act          Activation function for output layer
+    - validate          Validation for the heatmap, MSE, R2, ACC
+    - mn                min of data before scaling
+    - mx                max of data before scaling
+    - validate          how to validate performance, MSE, ACC or R2
+    """
     plt.rcParams.update({'font.size': 11})
     val = np.zeros((len(neurons), len(n_layer)))
     for i in range(len(neurons)):
@@ -73,6 +127,20 @@ def grid_search_layer_neurons(X_train, y_train, X_test, y_test, savename, n_laye
     plt.savefig("../figures/%s.png" %(savename), dpi=300, bbox_inches='tight')
       
 def grid_search_logreg(X_train, y_train, X_test, y_test, gradient, lamda, eta, method, iterations, batch_size, mom, savename):
+    """
+    Perform logistic regression grid search for different eta and lambda and plot a heatmap
+    - X_train:          train design matrix
+    - y_train           train target data
+    - X_test:           test design matrix
+    - y_test            test target data 
+    - gradient:         gradient descent method (GD or SGD)
+    - lamda             array of lambdas to test
+    - eta               array of learning rates to test
+    - iterations        iterations to perform in SGD and GD
+    - batch_size        batch size for SGD
+    - mom               add momentum to algorithm
+    - savename          savename for plotted heatmap
+    """
     plt.rcParams.update({'font.size': 10})
     acc = np.zeros((len(eta), len(lamda)))
     for i in range(len(eta)):
@@ -95,63 +163,3 @@ def grid_search_logreg(X_train, y_train, X_test, y_test, gradient, lamda, eta, m
     plt.xlabel(r"log$_{10}(\lambda$)")
     plt.ylabel(r"$\eta$")
     plt.savefig("../figures/%s.png" %(savename), dpi=300, bbox_inches='tight')
-
-def main():
-    #Setting up data
-    n = 30
-    noise_std = 0.2
-    degree = 6
-
-    # train data
-    x, y, z = make_data(n, noise_std, seed=100)
-    x_s = x.ravel()
-    y_s = y.ravel()
-    z_s, mn, mx = min_max_scale(z)
-
-    # Test data
-    x, y, z = make_data(15, noise_std, seed=200)
-    xy = np.array([x_s, y_s]).T
-    xy_test = np.array([x.ravel(), y.ravel()]).T
-
-    batch_size = 5
-    # lambda - eta
-    neurons = np.array([91, 91, 91, 91, 91]) # in hidden layers 
-    eta = np.array([0.01, 0.05, 0.1, 0.2, 0.4, 1])
-    lamda = np.logspace(-9, -3, 7)
-    eta = np.array([0.0001, 0.1])
-    lamda = np.array([1e-6, 1e-5])
-    neurons = np.array([2]) # in hidden layers 
-
-    #grid_search_eta_lamda(xy, xy_test, z_s, z, eta, lamda, neurons, mn, mx, savename="test", epochs=50, batch_size=5)
-
-
-    # layers - neurons
-    eta = 0.1
-    lamda=1e-0
-    batch_size = n+1
-    epochs = 400
-    n_layer = [1, 2, 3, 4]
-    neurons = [5, 10, 20, 30]
-    grid_search_layer_neurons(xy, xy_test, z_s, z, n_layer, neurons, mn, mx, savename="test", epochs=epochs, eta=eta, lamda=lamda, batch_size=batch_size, init="random", act="relu", seed=100)
-    """
-    neurons = np.array([400, 400]) # in hidden layers 
-    epochs = 100
-    batch_size = 5
-    eta = 0.01
-    lamda=1e-5
-    n_layer = [1, 2, 3, 4]
-    neurons = [10, 50, 100, 200, 400]
-    grid_search_layer_neurons(xy, xy_test, z_s, z, n_layer, neurons, mn, mx, savename="grid_L_n_large", epochs=50, eta=0.01, lamda=0, batch_size=5)
-    n_layer = [1, 2, 3, 4, 5, 6]
-    neurons = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
-    grid_search_layer_neurons(xy, xy_test, z_s, z, n_layer, neurons, mn, mx, savename="grid_L_n_small", epochs=50, eta=0.1, lamda=0, batch_size=5)
-    n_layer = [4, 5, 6, 7, 8]
-    neurons = [87, 88, 89, 90, 91, 92, 93, 94]
-    grid_search_layer_neurons(xy, xy_test, z_s, z, n_layer, neurons, mn, mx, savename="grid_L_n_narrow_zoom", epochs=50, eta=0.1, lamda=0, batch_size=5)
-    n_layer = [3, 4]
-    neurons = [200, 250, 300, 350, 400]
-    grid_search_layer_neurons(xy, xy_test, z_s, z, n_layer, neurons, mn, mx, savename="grid_L_n_wide_zoom", epochs=50, eta=0.1, lamda=0, batch_size=5)
-    """
-
-if __name__ == "__main__":
-    main()
