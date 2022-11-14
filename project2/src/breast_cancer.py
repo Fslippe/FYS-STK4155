@@ -17,7 +17,6 @@ def choose_inputs(idx, data):
     """
     inputs = data.data 
     labels = data.feature_names
-    print(labels)
     temp = np.zeros(len(idx), dtype=object)
     for i in range(len(idx)):
         temp[i] = np.reshape(inputs[:,idx[i]],(len(inputs[:,idx[i]]),1))
@@ -43,7 +42,7 @@ def main():
     y = outputs.reshape(len(outputs), 1)
     
     # A random state of 10 makes it possible to gain a 100% accuracy
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=5) #=10) 
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=10) #=10) 
     std = np.std(X_train, axis=0)
     mean = np.mean(X_train, axis=0)
 

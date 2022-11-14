@@ -287,10 +287,10 @@ class NeuralNetwork :
         return a - y
 
     def cross_entropy(self, a, y):
-        return -(y * np.log(a)) + (1-y) * np.log(1-a)#-np.sum(y* np.log(a) + (1 - y) * np.log(1 - a))
+        return -(y * np.log(a)) + (1-y) * np.log(1-a)
 
     def cross_entropy_grad(self, a, y):
-        return a-y#-(y - a) / (a - a**2)
+        return -(y - a) / (a - a**2)
 
 
 def design_matrix_1D(x, degree):
@@ -316,7 +316,7 @@ def test_func_1D(x, degree, noise):
 def main():
     """
     Simple test of NN using 1D func to check for problems.
-    Results not used in report.
+    Results not of value and not used in report.
     """
     np.random.seed(100)
     n = 1000

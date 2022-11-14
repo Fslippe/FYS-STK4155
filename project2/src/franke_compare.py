@@ -210,7 +210,7 @@ def main():
     """Performing grid search depending on activation and validation"""
     act = "lrelu"
     validate="MSE"
-    grid_search_franke(xy_train, xy_test, z_train_scaled, z_test, neurons, epochs, batch_size, mn, mx, act=act, validate=validate)
+    #grid_search_franke(xy_train, xy_test, z_train_scaled, z_test, neurons, epochs, batch_size, mn, mx, act=act, validate=validate)
     
     """Setting up optimal values depending on activation function"""
     if act == "sigmoid":

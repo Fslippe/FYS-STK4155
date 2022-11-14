@@ -61,7 +61,7 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-  We implement and look into the performance of different methods such as gradient descent, logistic regression and our own feed forward neural network. We also compare these to built in functionalities in scikit learn and TensorFlow, and use all these methods for regression on a simple one-dimensional function and on the Franke function. Furthermore, we use the methods on classification of breast cancer data. In the regression case we compare both gradient descent and the neural network to ordinary least squares and ridge regression. We see that stochastic gradient descent perform better than OLS and ridge regression giving at the lowest a mean squared error of $0.0082$ when using ADAM as tuning function compared to ridge giving 0.00980. For the Franke function our neural network perform the best when using sigmoid as activation function with a mean square error of 0.0395 compared to ridge with 0.0407. In the classification case, both logistic regression and our neural network with accuracies of 98.1\% outperform scikit learn with an accuracy of 97.4\%.
+    We implement and look into the performance of different methods such as gradient descent, logistic regression and our own feed forward neural network. We also compare these to built in functionalities in scikit learn and TensorFlow, and use all these methods for regression on a simple one-dimensional function and on the Franke function. Furthermore, we use the methods on classification of breast cancer data. In the regression case we compare both gradient descent and the neural network to ordinary least squares and ridge regression. We see that stochastic gradient descent perform better than OLS and ridge regression giving at the lowest a mean squared error of $0.0082$ when using ADAM as tuning function compared to ridge giving 0.00980. For the Franke function our neural network perform the best when using sigmoid as activation function with a mean square error of 0.0395 compared to ridge with 0.0407. In the classification case, both logistic regression and our neural network with accuracies of 98.1\% outperform scikit learn with an accuracy of 97.4\%.
 \end{abstract}
 \newpage
 \tableofcontents
@@ -74,205 +74,206 @@ First in the method section of this report, we will derive the equations and alg
 \subsection{Gradient descent}\label{sec:GD}
 In order to perform both logistic regression and regression of a continuous function, we implement both Gradient Descent and Stochastic Gradient Descent (GD and SGD). Both these methods are based on minimizing some cost function to reduce the error of predictions. This can be done by following the negative gradient of this function and thereby reaching either a global or local minimum. For Gradient Descent this can be written in terms of a step size or learning rate $\eta_k$ with the total stepping process for $k$ iterations:
 \begin{align}
-  \label{eq:GD}
-  \boldsymbol{\theta}_{k+1} = \boldsymbol{\theta}_k - \eta_k \nabla_\theta C(\boldsymbol{\theta}_k),\quad k \geq 0
+    \label{eq:GD}
+    \boldsymbol{\theta}_{k+1} = \boldsymbol{\theta}_k - \eta_k \nabla_\theta C(\boldsymbol{\theta}_k),\quad k \geq 0
 \end{align}
 Here we have a randomly chosen an initial $\theta_0$ from a normal distribution of mean 0 and variance 1 ($N(0,1)$), and a cost function $C$ which for a typical problem can choose to be the error given our input and target training data. For a regression problem this can be written in terms of the Ridge method where the cost function can be written in terms of the optimal parameter $\theta$, a chosen design matrix $X$, the target data $y$ and a $L_2$ norm $\lambda \geq 0$ :
 \begin{align*}
-  C_{OLS}(\theta) = \frac{1 }{n }||\boldsymbol{X}\theta - \boldsymbol{y}||^2 + \lambda ||\theta||^2
+    C_{OLS}(\theta) = \frac{1 }{n }||\boldsymbol{X}\theta - \boldsymbol{y}||^2 + \lambda ||\theta||^2
 \end{align*}
 giving us the cost gradient:
 \begin{align*}
-  \nabla_\theta C_{OLS}(\theta) = \frac{2}{n}\boldsymbol{X}^T(\boldsymbol{X}\beta - \boldsymbol{y}) + 2\lambda \theta
+    \nabla_\theta C_{OLS}(\theta) = \frac{2}{n}\boldsymbol{X}^T(\boldsymbol{X}\beta - \boldsymbol{y}) + 2\lambda \theta
 \end{align*}
 For a well-chosen learning rate we will by following (\ref{eq:GD}) reach a local or global minimum.
 
 To further optimize the Gradient descent we shuffle and split up our design matrix $\boldsymbol{X}$ and target data $\boldsymbol{y}$ in $M$ minibatches $B_j$ denoted as $\boldsymbol{x}_i$ $\boldsymbol{y}_i$ where the gradient is computed for each one of them. This gives us a new way of writing (\ref{eq:GD}):
 \begin{align}
-  \label{eq:SGD}
-  \theta_{j+1} = \theta_j - \eta_j \sum_{i\in B_k}^M \nabla_\theta C(\boldsymbol{x}_i, \theta)
+    \label{eq:SGD}
+    \theta_{j+1} = \theta_j - \eta_j \sum_{i\in B_k}^M \nabla_\theta C(\boldsymbol{x}_i, \theta)
 \end{align}
 
 \subsection{Optimizing methods}
 \subsubsection*{AdaGrad}
 AdaGrad reduces the learning rate over time by dividing by an accumulative gradient of the last iterations. For GD, we have implemented this as follows:
 \begin{align*}
-  g_t = \nabla_\theta C(\theta) \quad\quad g_t^2 = g_{t-1}^2 + g_t^2
+    g_t = \nabla_\theta C(\theta) \quad\quad g_t^2 = g_{t-1}^2 + g_t^2
 \end{align*}
 \begin{align*}
-  \theta_{t+1} = \theta_t - \eta \frac{g_t}{\sqrt{g_t^2} + \epsilon}
+    \theta_{t+1} = \theta_t - \eta \frac{g_t}{\sqrt{g_t^2} + \epsilon}
 \end{align*}
 For SGD we have set $g_t^2$ to 0 for every iteration meaning that the gradient squared only is accumulated over the iteration of the minibatches. This greatly reduces the value of the accumulated gradient especially after many iterations.
 \subsubsection*{Momentum}
 To help the updates in both (\ref{eq:GD}) and (\ref{eq:SGD}) to gain speed in small gradient regions and suppressing oscillations in high curvature regions and thereby reduce the risk of ending up in a local minimum we introduce momentum denoted as $\gamma$:
 \begin{align}
-  \label{eq:GD_mom}
-  \boldsymbol{v}_{k} = \gamma\boldsymbol{v}_{k-1} - \eta_k \nabla_\theta C(\boldsymbol{\theta}_k),\quad\quad\quad\boldsymbol{\theta}_{k+1} = \boldsymbol{\theta}_k + \boldsymbol{v}_k
+    \label{eq:GD_mom}
+    \boldsymbol{v}_{k} = \gamma\boldsymbol{v}_{k-1} - \eta_k \nabla_\theta C(\boldsymbol{\theta}_k),\quad\quad\quad\boldsymbol{\theta}_{k+1} = \boldsymbol{\theta}_k + \boldsymbol{v}_k
 \end{align}
 $\gamma$ can be chosen to any or an optimal value, but we use $\gamma=0.3$ in all our analysis using momentum.
 
 \subsubsection*{RMSprop}
 We also implement RMSprop which keeps track of the second moment $s_t$ to update our parameter $\theta$:
 \begin{align*}
-  g_t^2 = (\nabla_\theta C(\theta_k))^2  \quad\quad s_t = \rho_1 s_{t-1} + (1- \rho_1)g_t^2
+    g_t^2 = (\nabla_\theta C(\theta_k))^2  \quad\quad s_t = \rho_1 s_{t-1} + (1- \rho_1)g_t^2
 \end{align*}
 \begin{align*}
-  \theta_{t+1} = \theta_t - \eta_t \frac{\nabla_\theta C(\theta_k)}{\sqrt{s_t} + \epsilon }
+    \theta_{t+1} = \theta_t - \eta_t \frac{\nabla_\theta C(\theta_k)}{\sqrt{s_t} + \epsilon }
 \end{align*}
 where $\epsilon=10^{-8}$ to prevent dividing by 0 and $\rho_1 = 0.9$. Similar to AdaGrad the gradient squared ($g_t^2$) is for SGD an accumulated gradient over the minibatches while it is recalculated for each iteration when using GD.
 \subsubsection*{ADAM}
 We have the same accumulated gradient for ADAM, and we also keep track of the second moment. The difference is that we now introduce the first moment to the algorithm giving us:
 \begin{align*}
-  m_t = \rho_1 m_{t-1} + (1-\rho_1)\nabla_\theta C(\theta_k) \quad\quad s_t = \rho_2 s_{t-1} + (1- \rho_2)(\nabla_\theta C(\theta_k))^2
+    m_t = \rho_1 m_{t-1} + (1-\rho_1)\nabla_\theta C(\theta_k) \quad\quad s_t = \rho_2 s_{t-1} + (1- \rho_2)(\nabla_\theta C(\theta_k))^2
 \end{align*}
 \begin{align*}
-  \hat{m}_t = \frac{m_t }{1-\rho_1^t} \quad\quad \hat{s}_t = \frac{s_t }{1- \rho_2^t}
+    \hat{m}_t = \frac{m_t }{1-\rho_1^t} \quad\quad \hat{s}_t = \frac{s_t }{1- \rho_2^t}
 \end{align*}
 \begin{align*}
-  \theta_{t+1} = \theta_t - \eta_t \frac{\hat{m}_t}{\sqrt{\hat{s}_t} + \epsilon }
+    \theta_{t+1} = \theta_t - \eta_t \frac{\hat{m}_t}{\sqrt{\hat{s}_t} + \epsilon }
 \end{align*}
 Where $\rho_2=0.99$
 \subsection{Logistic regression}
 To analyze binary data where possible solutions are $y_i=0$ and $y_i=1$ we define the logistic function:
-\begin{align*}
-  p(t) =  \frac{e^{\hat{y}_i}}{1+e^{\hat{y}_i}}
-\end{align*}
+\begin{align}
+    \label{eq:logistic}
+    p(t) =  \frac{e^{\hat{y}_i}}{1+e^{\hat{y}_i}}
+\end{align}
 Where $\hat{y}_i$ is defined by:
 \begin{align*}
-  \hat{y}_i = \theta_0 + \theta_1 x_i +...+ \theta_n x_i^n
+    \hat{y}_i = \theta_0 + \theta_1 x_i +...+ \theta_n x_i^n
 \end{align*}
 To find a cost function and following gradient we use Maximum Likelihood Estimation from the dataset $\mathcal{D} \in \{x_i, y_i\}$:
 \begin{align*}
-  p(\mathcal{D}|\boldsymbol{\theta}) = \prod_{i=1}^n (p(y_i = 1|x_i,\boldsymbol{\theta}))^{y_i}\left( 1- p(y_i = 1 | x_i, \boldsymbol{\theta})\right)^{1-y_i}
+    p(\mathcal{D}|\boldsymbol{\theta}) = \prod_{i=1}^n (p(y_i = 1|x_i,\boldsymbol{\theta}))^{y_i}\left( 1- p(y_i = 1 | x_i, \boldsymbol{\theta})\right)^{1-y_i}
 \end{align*}
 where we have used:
 \begin{align*}
-  p(y_i=0|x_i, \boldsymbol{\theta} ) = 1 - p(y_i=1 | x_i, \boldsymbol{\theta})
+    p(y_i=0|x_i, \boldsymbol{\theta} ) = 1 - p(y_i=1 | x_i, \boldsymbol{\theta})
 \end{align*}
 giving us the log-likelihood and our cost function:
 \begin{align*}
-  C(\boldsymbol{\theta}) = \sum_{i=1}^n (y_i \log p(y_i =1 | x_i, \boldsymbol{\theta})) + (1- y_i) \log [1 - p(y_i \log p(y_i =1 | x_i, \boldsymbol{\theta}))]
+    C(\boldsymbol{\theta}) = \sum_{i=1}^n (y_i \log p(y_i =1 | x_i, \boldsymbol{\theta})) + (1- y_i) \log [1 - p(y_i \log p(y_i =1 | x_i, \boldsymbol{\theta}))]
 \end{align*}
 Recognizing the log-likelihood being a maximizing function we use the negative log-likelihood which rewritten gives us:
 \begin{align*}
-  C(\boldsymbol{\theta}) = -\sum_{i=1}^n (y_i \hat{y}_i - \log [1 + e^{\hat{y}_i}])
+    C(\boldsymbol{\theta}) = -\sum_{i=1}^n (y_i \hat{y}_i - \log [1 + e^{\hat{y}_i}])
 \end{align*}
 This is the cross entropy function.
 Its derivative can more easily be written in terms of matrices giving us:
 \begin{align*}
-  \frac{\partial C(\boldsymbol{\theta})}{\partial \boldsymbol{\theta}} = - \boldsymbol{X}^T (\boldsymbol{y}- \boldsymbol{p})
+    \frac{\partial C(\boldsymbol{\theta})}{\partial \boldsymbol{\theta}} = - \boldsymbol{X}^T (\boldsymbol{y}- \boldsymbol{p})
 \end{align*}
-where $\boldsymbol{p}$ is the logistic function defined earlier.
+where $\boldsymbol{p}$ is the logistic function defined earlier in (\ref{eq:logistic}).
 \subsection{Neural Network}
 As an alternative to both logistic regression and regression of a continuous function we implement a feed forward Neural Network. This type of network is built up around one input layer, $n$ number of hidden layers and one output layer. The input layer contains one neuron for every feature of the data where each of them are connected to every neuron in the first hidden layer. These hidden layers can have any chosen amount of neurons and every neuron is also connected to each and every neuron of the next layer. Lastly we have the output layer containing one neuron per target category.
 
 The connection and following activation of each neuron is dependent on weights and biases which in a trained model are parameters calculated to best fit the input data. The training and predictions performed by such a Neural Network is split up in several steps. The first is the feeding forward process. After either random or chosen weights and biases has been initialized the feed forward process starts. In our case of choosing a SGD method for our gradient descent, our training input and target data are split up and shuffled in minibatches as described in section \ref{sec:GD}. After this the following process starts.
 \begin{enumerate}
-  \item The input neurons send their input value scaled by each connection's weight to the first hidden layer
-  \item The weighted sum of inputs arriving at each neuron of the first layer gets an addition corresponding to the bias of that neuron giving us a value $z_l$ for each neuron.
-  \item The value $z_l$ is then fed into an activation function for the hidden layer which outputs a value $a_l$
-  \item This process continues until we arrive at the last hidden layer
-  \item At the last layer $z_o$ is calculated in the same way as $z_l$ earlier but now fed into the last layer's activation function giving $a_o$ corresponding to the predicted value of the Neural Network
+    \item The input neurons send their input value scaled by each connection's weight to the first hidden layer
+    \item The weighted sum of inputs arriving at each neuron of the first layer gets an addition corresponding to the bias of that neuron giving us a value $z_l$ for each neuron.
+    \item The value $z_l$ is then fed into an activation function for the hidden layer which outputs a value $a_l$
+    \item This process continues until we arrive at the last hidden layer
+    \item At the last layer $z_o$ is calculated in the same way as $z_l$ earlier but now fed into the last layer's activation function giving $a_o$ corresponding to the predicted value of the Neural Network
 \end{enumerate}
 Depending on the chosen weights and biases this model will not perform well. In order to adjust these weights and biases we define a cost function to minimize using gradient descent. For a continuous function we use a squared error function defined as:
 \begin{align*}
-  C(\hat{\boldsymbol{y}}) = \frac{1}{2}(\hat{\boldsymbol{y}}_i - \boldsymbol{y}_i)^2
+    C(\hat{\boldsymbol{y}}) = \frac{1}{2}(\hat{\boldsymbol{y}}_i - \boldsymbol{y}_i)^2
 \end{align*}
 giving the gradient:
 \begin{align*}
-  \frac{\partial C(\hat{\boldsymbol{y}})}{\partial  \hat{\boldsymbol{y}}} = \hat{\boldsymbol{y}}_i - \boldsymbol{y}_i
+    \frac{\partial C(\hat{\boldsymbol{y}})}{\partial  \hat{\boldsymbol{y}}} = \hat{\boldsymbol{y}}_i - \boldsymbol{y}_i
 \end{align*}
 For a binary classification problem we use the cross entropy function defined earlier.
 
 The gradients calculated is only a function of the prediction and target value and does not say anything on how we should update the weights and biases. To apply the cost function on the weight and biases we use the chain rule for layer $L$:
 \begin{align*}
-  \frac{\partial C}{\partial w^{(L)}_{ij}}  = \frac{\partial z^{(L)}_j}{\partial w^{(L)}_{ij}}  \frac{\partial a^{(L)}_{j}}{\partial z^{(L)}_j}  \frac{\partial C}{\partial a^{(L)}_j}
+    \frac{\partial C}{\partial w^{(L)}_{ij}}  = \frac{\partial z^{(L)}_j}{\partial w^{(L)}_{ij}}  \frac{\partial a^{(L)}_{j}}{\partial z^{(L)}_j}  \frac{\partial C}{\partial a^{(L)}_j}
 \end{align*}
 rewriting in terms of the activation function for simplicity here denoted as the sigmoid $\sigma$, and using the calculation of $z$ throughout the layers:
 \begin{align*}
-  a_j^L = \sigma(z_j^{(L)}) \quad\quad z_j^{(L)} = \sum_{i=1}^{n_{L-1}}w^{(L)}_{ij}a{(L-1)}_{i} + b{(L)}_{j}
+    a_j^L = \sigma(z_j^{(L)}) \quad\quad z_j^{(L)} = \sum_{i=1}^{n_{L-1}}w^{(L)}_{ij}a{(L-1)}_{i} + b{(L)}_{j}
 \end{align*}
 giving us:
 \begin{align*}
-  \frac{\partial C}{\partial w^{(L)}_{ij}} = \frac{\partial C}{\partial a^{(L)}_{j}}\sigma(z_j^{(L)})a_i^{(L-1)}
+    \frac{\partial C}{\partial w^{(L)}_{ij}} = \frac{\partial C}{\partial a^{(L)}_{j}}\sigma(z_j^{(L)})a_i^{(L-1)}
 \end{align*}
 Similarly for the bias we get:
 \begin{align*}
-  \frac{\partial C}{\partial b^{(L)}_{j}} = \frac{\partial z^{(L)}_j}{\partial b^{(L)}_{j}}  \frac{\partial a^{(L)}_{j}}{\partial z^{(L)}_j}  \frac{\partial C}{\partial a^{(L)}_j} =
-  \frac{\partial C}{\partial a^{(L)}_{j}}\sigma(z_j^{(L)})
+    \frac{\partial C}{\partial b^{(L)}_{j}} = \frac{\partial z^{(L)}_j}{\partial b^{(L)}_{j}}  \frac{\partial a^{(L)}_{j}}{\partial z^{(L)}_j}  \frac{\partial C}{\partial a^{(L)}_j} =
+    \frac{\partial C}{\partial a^{(L)}_{j}}\sigma(z_j^{(L)})
 \end{align*}
 We define a local gradient (error $E$) as:
 \begin{align*}
-  E_j^{(L)} = \frac{\partial C }{\partial z_j^{(L)}} = \frac{\partial C }{\partial a_j^{(L)}}\frac{\partial a_j^{(L)} }{\partial z_j^{(L)}} = \frac{\partial C }{\partial a_j^{(L)}} \sigma(z_j^{(L)})
+    E_j^{(L)} = \frac{\partial C }{\partial z_j^{(L)}} = \frac{\partial C }{\partial a_j^{(L)}}\frac{\partial a_j^{(L)} }{\partial z_j^{(L)}} = \frac{\partial C }{\partial a_j^{(L)}} \sigma(z_j^{(L)})
 \end{align*}
 which gives us:
 \begin{align*}
-  \frac{\partial C }{\partial w_{ij}^{(L)}} = E_j^{(L)} a_i^{(L-1)} \quad\quad
-  \frac{\partial C }{\partial b_{j}^{(L)}} = E_j^{(L)}
+    \frac{\partial C }{\partial w_{ij}^{(L)}} = E_j^{(L)} a_i^{(L-1)} \quad\quad
+    \frac{\partial C }{\partial b_{j}^{(L)}} = E_j^{(L)}
 \end{align*}
 and in terms of matrices:
 \begin{align*}
-  E^{(L)} = \nabla_a C \odot \frac{\partial \sigma }{\partial z^{(L)}} \quad \text{for} \quad \nabla_a C = \left(\frac{\partial C }{\partial a_1^{(L)}}, \frac{\partial C }{\partial a_2^{(L)}},..., \frac{\partial C }{\partial a_{n_L}^{(L)}}\right)
+    E^{(L)} = \nabla_a C \odot \frac{\partial \sigma }{\partial z^{(L)}} \quad \text{for} \quad \nabla_a C = \left(\frac{\partial C }{\partial a_1^{(L)}}, \frac{\partial C }{\partial a_2^{(L)}},..., \frac{\partial C }{\partial a_{n_L}^{(L)}}\right)
 \end{align*}
 By using the chain rule we arrive at an expression for the error of one node at one layer dependent on a sum of all the errors of the next layer with neurons denoted $k$:
 \begin{align*}
-  E^{(l-1)}_j = \sum_k E^{(l)}_k w_{jk}^{(l)}\sigma(z_j^{(l-1)})
+    E^{(l-1)}_j = \sum_k E^{(l)}_k w_{jk}^{(l)}\sigma(z_j^{(l-1)})
 \end{align*}
 This means that we can calculate the error and following bias and weight gradients of one layer if we know the error at the last layer. This gives us a way of updating all the weights and biases in order to reduce the error of the Neural Network's predictions. This is called back propagation and is given by:
 \begin{enumerate}
-  \item calculating the error at the last layer $L$:
-        \begin{align*}
-          \boldsymbol{E}^{(L)} = \frac{\partial C }{\partial \boldsymbol{a}^{(L)}} \sigma(\boldsymbol{z}^{(L)})
-        \end{align*}
-  \item Using this to calculate the error of the other layers starting at $l=L-1$:
-        \begin{align*}
-          \text{for}\quad  l=L-1, L-2,...,1 \quad\quad
-          E_j^{(l)} = \sum_k E^{(l+1)}_k w_{jk}^{(l+1)} \sigma(z_j^{(l)})
-        \end{align*}
+    \item calculating the error at the last layer $L$:
+          \begin{align*}
+              \boldsymbol{E}^{(L)} = \frac{\partial C }{\partial \boldsymbol{a}^{(L)}} \sigma(\boldsymbol{z}^{(L)})
+          \end{align*}
+    \item Using this to calculate the error of the other layers starting at $l=L-1$:
+          \begin{align*}
+              \text{for}\quad  l=L-1, L-2,...,1 \quad\quad
+              E_j^{(l)} = \sum_k E^{(l+1)}_k w_{jk}^{(l+1)} \sigma(z_j^{(l)})
+          \end{align*}
 \end{enumerate}
 We then update the weights and biases for a chosen learning rate $\eta$ and L2 norm $\lambda$:
 \begin{align*}
-  w^{(l)}_{ij} = w^{(l)}_{ij} - \eta(E_j^{(l-1)}  + \lambda w_{ij}^{(l)}) \quad\quad b_j^{(l)} = b_j^{(l)} - \eta(E_j^{(l)} + \lambda b_j^{(l)})
+    w^{(l)}_{ij} = w^{(l)}_{ij} - \eta(E_j^{(l-1)}  + \lambda w_{ij}^{(l)}) \quad\quad b_j^{(l)} = b_j^{(l)} - \eta(E_j^{(l)} + \lambda b_j^{(l)})
 \end{align*}
 After the backpropagation algorithm has updated the weights and biases the feed forward algorithm reruns which updates the values returned by our cost function which in turn gives new instructions to the backpropagation algorithm on how to update the weights and biases once again. The process runs over for a given number of iterations and minibatches and in the end giving a final set of weights and biases which can be used for prediction.
 \subsection{Activation functions}
 In our Neural Network we implement different activation functions. The common sigmoid is the one we mainly will use:
 \begin{align*}
-  f(x) = \frac{1 }{1 + e^{-x}} \quad\quad \frac{d f }{dx} = f(x) (1 - f(x))
+    f(x) = \frac{1 }{1 + e^{-x}} \quad\quad \frac{d f }{dx} = f(x) (1 - f(x))
 \end{align*}
 We also use this as activation for the output layer which comes with a set of challenges. We are now restricted to output values in the interval [0,1] for prediction of continuous functions, which for a classification case also means that output values never would be exactly 1 or 0. The scaling of the input target data to the interval [0,1] for a continuous function (\ref{eq:scale}), and a rounding to 0 or 1 for a classification problem (\ref{eq:sigmoid_out}) solves this:
 \begin{align}
-  \label{eq:scale}
-  z_{scaled} = \frac{z- min(z)}{max(z)- min(z)}
+    \label{eq:scale}
+    z_{scaled} = \frac{z- min(z)}{max(z)- min(z)}
 \end{align}
 \begin{align}
-  \label{eq:sigmoid_out}
-  \hat{y} =
-  \begin{cases}
-    0 & \text{if } y_{pred} < 0.5    \\
-    1 & \text{if } y_{pred} \geq 0.5
-  \end{cases}
+    \label{eq:sigmoid_out}
+    \hat{y} =
+    \begin{cases}
+        0 & \text{if } y_{pred} < 0.5    \\
+        1 & \text{if } y_{pred} \geq 0.5
+    \end{cases}
 \end{align}
 We also have alternative activation functions such as the ReLU function:
 \begin{align*}
-  f(x) = max(0, x) \quad\quad \frac{df }{dx} =
-  \begin{cases}
-    0 & x\leq 0 \\
-    1 & x > 0   \\
-  \end{cases}
+    f(x) = max(0, x) \quad\quad \frac{df }{dx} =
+    \begin{cases}
+        0 & x\leq 0 \\
+        1 & x > 0   \\
+    \end{cases}
 \end{align*}
 and the Leaky ReLU:
 \begin{align*}
-  f(x) =
-  \begin{cases}
-    x     & x > 0    \\
-    0.01x & x \leq 0 \\
-  \end{cases}
-  \quad\quad \frac{df }{dx} =
-  \begin{cases}
-    1    & x > 0    \\
-    0.01 & x \leq 0 \\
-  \end{cases}
+    f(x) =
+    \begin{cases}
+        x     & x > 0    \\
+        0.01x & x \leq 0 \\
+    \end{cases}
+    \quad\quad \frac{df }{dx} =
+    \begin{cases}
+        1    & x > 0    \\
+        0.01 & x \leq 0 \\
+    \end{cases}
 \end{align*}
 For both ReLU and leaky ReLU we use no activation for the output layer when predicting the Franke function. We do not perform any analysis of a classification problem using any of the ReLU functions, but the sigmoid or an activation function like softmax will make it possible to do classification problems using ReLU and leaky ReLU as activation functions for the hidden layers.
 
@@ -285,7 +286,7 @@ In order to test and compare the different regression methods, gradient descent,
 \subsubsection*{Simple function}
 Our simple function is implemented as:
 \begin{align*}
-  f(x) = a_0 + a_1 x + a_2 x^2 + ... + a_n x^n
+    f(x) = a_0 + a_1 x + a_2 x^2 + ... + a_n x^n
 \end{align*}
 Where we define $x$ as a vector of $n=100$ equally spaced values in the interval [0,1], and $a$ as randomly picked values from a standard normal distribution $N(0,1)$.
 To this function we add some normally distributed noise $\epsilon\sim N(0,0.1)$, and use it to compare the performance of our different gradient descent methods  with both OLS and Ridge regression by computing the $MSE$. When using SGD we choose a batch size of 16 giving a total of 5 minibatches of the train data for a 80-20 train-test split. We also look into how different batch sizes influences the performance and convergence of the different tuning methods for SGD. For train data with 80 datapoints we use factorized values giving $N=20, 10, 5, 4$ equally large minibatches corresponding to batch sizes of 4, 8, 16, 20, and 40.
@@ -293,36 +294,36 @@ To this function we add some normally distributed noise $\epsilon\sim N(0,0.1)$,
 \subsubsection*{Franke function}
 We continue with the Franke function defined as:
 \begin{align*}
-  f(x,y) & = \frac{3}{4 }\exp\left(- \frac{(9x -2 )^2}{4} - \frac{(9y-2)^2}{4}\right) +\frac{3}{4}\exp{\left(-\frac{(9x+1)^2}{49}- \frac{(9y+1)}{10}\right)} \\
-         & +\frac{1}{2}\exp{\left(-\frac{(9x-7)^2}{4} - \frac{(9y-3)^2}{4}\right)} -\frac{1}{5}\exp{\left( -(9x-4)^2 - (9y-7)^2\right) }
+    f(x,y) & = \frac{3}{4 }\exp\left(- \frac{(9x -2 )^2}{4} - \frac{(9y-2)^2}{4}\right) +\frac{3}{4}\exp{\left(-\frac{(9x+1)^2}{49}- \frac{(9y+1)}{10}\right)} \\
+           & +\frac{1}{2}\exp{\left(-\frac{(9x-7)^2}{4} - \frac{(9y-3)^2}{4}\right)} -\frac{1}{5}\exp{\left( -(9x-4)^2 - (9y-7)^2\right) }
 \end{align*}
 For this function we use $n=30$ equally spaced $x$ and $y$ both in the interval [0,1], generating a meshgrid with size $30 \times 30$ giving us the possibility to predict a three-dimensional surface. To this we also add a normally distributed noise $\epsilon\sim N(0, 0.2)$ to make use of optimal parameters found in project 1 \cite{project1}. For the case of Ridge and OLS regression we set up a design matrix matching the parameter $\beta$:
 \begin{align*}
-  \boldsymbol{X} = \begin{bmatrix}
-    1      & x_0    & y_0    & x_0^2  & x_0y_0 & y_0^2  & \hdots & x_0^N  & y_0^N  \\
-    1      & x_1    & y_1    & x_1^2  & x_1y_1 & y_1^2  & \hdots & x_1^N  & y_1^N  \\
-    \vdots & \vdots & \vdots & \vdots & \vdots & \vdots &        & \vdots & \vdots \\
-    1      & x_n    & y_n    & x_n^2  & x_ny_n & y_n^2  & \hdots & x_n^N  & y_n^N
-  \end{bmatrix}
-  , \quad
-  \boldsymbol{\beta} =
-  \begin{bmatrix}
-    \beta_0 \\
-    \beta_1 \\
-    \vdots  \\
-    \beta_n
-  \end{bmatrix}
+    \boldsymbol{X} = \begin{bmatrix}
+        1      & x_0    & y_0    & x_0^2  & x_0y_0 & y_0^2  & \hdots & x_0^N  & y_0^N  \\
+        1      & x_1    & y_1    & x_1^2  & x_1y_1 & y_1^2  & \hdots & x_1^N  & y_1^N  \\
+        \vdots & \vdots & \vdots & \vdots & \vdots & \vdots &        & \vdots & \vdots \\
+        1      & x_n    & y_n    & x_n^2  & x_ny_n & y_n^2  & \hdots & x_n^N  & y_n^N
+    \end{bmatrix}
+    , \quad
+    \boldsymbol{\beta} =
+    \begin{bmatrix}
+        \beta_0 \\
+        \beta_1 \\
+        \vdots  \\
+        \beta_n
+    \end{bmatrix}
 \end{align*}
 Where we for OLS use a design matrix of degree 6, and for ridge a design matrix of degree 8 together with $\lambda = 1.61 \times10^{-7}$
 for our neural network on the other hand we define the two feature input matrix on the form:
 \begin{align*}
-  \boldsymbol{X} =
-  \begin{bmatrix}
-    x_0      & y_0    \\
-    x_1      & y_1    \\
-    \vdots\  & \vdots \\
-    x_n      & y_n
-  \end{bmatrix}
+    \boldsymbol{X} =
+    \begin{bmatrix}
+        x_0      & y_0    \\
+        x_1      & y_1    \\
+        \vdots\  & \vdots \\
+        x_n      & y_n
+    \end{bmatrix}
 \end{align*}
 We also feed TensorFlow keras with this the same design matrix giving us another neural network to compare our own neural network with.
 
@@ -338,440 +339,440 @@ In the end we compare Logistic regression with our neural network looking at bre
 \subsection{Gradient descent on a one dimensional function}
 We look into how the different scaling methods perform compared to standard ordinary least squares. In figure \ref{fig:compare_GD_SGD} we see the performance of the different methods at each iteration where the mean squared error has been evaluated using test data:
 \begin{figure}[H]
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{../figures/SGD_methods_OLS_eta_0.1.png}
-    \caption{SGD}
-    \label{fig:}
-  \end{subfigure}
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{../figures/GD_methods_OLS_eta_0.1.png}
-    \caption{GD}
-    \label{fig:}
-  \end{subfigure}
-  \caption{$MSE$ for different tuning methods for both SGD and GD using $n=100$ data points with a 80-20 train-test split from a 4th order polynomial, a learning rate of $\eta=0.1$ and for SGD a batch size of 16 giving 5 mini batches. $MSE$ has been evaluated at each iteration using test data.}
-  \label{fig:compare_GD_SGD}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../figures/SGD_methods_OLS_eta_0.1.png}
+        \caption{SGD}
+        \label{fig:}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../figures/GD_methods_OLS_eta_0.1.png}
+        \caption{GD}
+        \label{fig:}
+    \end{subfigure}
+    \caption{$MSE$ for different tuning methods for both SGD and GD using $n=100$ data points with a 80-20 train-test split from a 4th order polynomial, a learning rate of $\eta=0.1$ and for SGD a batch size of 16 giving 5 mini batches. $MSE$ has been evaluated at each iteration using test data.}
+    \label{fig:compare_GD_SGD}
 \end{figure}
 We see that SGD needs fewer iterations than GD in order to perform well. We also see a difference in how well the different tuning methods perform, and how fast they converge towards a low $MSE$.
 
 When looking at the same methods for a lower learning rate of $\eta=0.01$ we get the following plots in figure \ref{fig:compare_GD_SGD_2}
 \begin{figure}[H]
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{../figures/SGD_methods_OLS_eta_0.01.png}
-    \caption{SGD}
-    \label{fig:}
-  \end{subfigure}
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{../figures/GD_methods_OLS_eta_0.01.png}
-    \caption{GD}
-    \label{fig:}
-  \end{subfigure}
-  \caption{$MSE$ for different tuning methods for both SGD and GD using $n=100$ data points with a 80-20 train-test split from a 4th order polynomial, a learning rate of $\eta=0.01$, and for SGD a batch size of 16 giving 5 mini batches. $MSE$ has been evaluated at each iteration using the training data.}
-  \label{fig:compare_GD_SGD_2}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../figures/SGD_methods_OLS_eta_0.01.png}
+        \caption{SGD}
+        \label{fig:}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../figures/GD_methods_OLS_eta_0.01.png}
+        \caption{GD}
+        \label{fig:}
+    \end{subfigure}
+    \caption{$MSE$ for different tuning methods for both SGD and GD using $n=100$ data points with a 80-20 train-test split from a 4th order polynomial, a learning rate of $\eta=0.01$, and for SGD a batch size of 16 giving 5 mini batches. $MSE$ has been evaluated at each iteration using the training data.}
+    \label{fig:compare_GD_SGD_2}
 \end{figure}
 In figure \ref{fig:compare_GD_SGD_2} we see the same as in figure \ref{fig:compare_GD_SGD} but now with an even slower convergence. We also see that the tuning methods for GD does not converge after 100 iterations, while SGD seem to start converging, giving $MSE$ values close to what we saw for a learning rate $\eta =0.1$ in figure \ref{fig:compare_GD_SGD}.
 
 The minimum $MSE$ values for the different methods in figure \ref{fig:compare_GD_SGD} and \ref{fig:compare_GD_SGD_2} is shown in table \ref{tab:OLS_compare}
 \begin{table}[H]
-  \centering
-  \caption{$MSE$ using test data for OLS and the different tuning methods for GD and SGD using  $\eta=0.01$ and $\eta=0.1$ over 100 iterations}
-  \label{tab:OLS_compare}
-  \begin{tabular}{|c|c|c|c|c|c|c|}
-    \hline
-    Method          & OLS     & AdaGrad & no tune & Momentum & RMSprop & ADAM    \\
-    \hline
-    SGD $\eta=0.1$  & 0.00980 & 0.00774 & 0.01158 & 0.01147  & 0.00910 & 0.00959 \\
-    \hline
-    GD  $\eta=0.1$  & 0.00980 & 0.06416 & 0.01373 & 0.01309  & 0.01280 & 0.01119 \\
-    \hline
-    SGD $\eta=0.01$ & 0.00980 & 0.01089 & 0.02454 & 0.01590  & 0.01108 & 0.02317 \\
-    \hline
-    GD  $\eta=0.01$ & 0.00980 & 1.26583 & 0.26030 & 0.17753  & 0.18092 & 0.30220 \\
-    \hline
-  \end{tabular}
+    \centering
+    \caption{$MSE$ using test data for OLS and the different tuning methods for GD and SGD using  $\eta=0.01$ and $\eta=0.1$ over 100 iterations}
+    \label{tab:OLS_compare}
+    \begin{tabular}{|c|c|c|c|c|c|c|}
+        \hline
+        Method          & OLS     & AdaGrad & no tune & Momentum & RMSprop & ADAM    \\
+        \hline
+        SGD $\eta=0.1$  & 0.00980 & 0.00774 & 0.01158 & 0.01147  & 0.00910 & 0.00959 \\
+        \hline
+        GD  $\eta=0.1$  & 0.00980 & 0.06416 & 0.01373 & 0.01309  & 0.01280 & 0.01119 \\
+        \hline
+        SGD $\eta=0.01$ & 0.00980 & 0.01089 & 0.02454 & 0.01590  & 0.01108 & 0.02317 \\
+        \hline
+        GD  $\eta=0.01$ & 0.00980 & 1.26583 & 0.26030 & 0.17753  & 0.18092 & 0.30220 \\
+        \hline
+    \end{tabular}
 \end{table}
 In table \ref{tab:OLS_compare} above we see that the overall best performer is SGD with AdaGrad as tuning function reaching the lowest $MSE$ of 0.00774 which together with RMSprop and ADAM is better than the OLS $MSE$. We also see that $SGD$ performs the best, and that AdaGrad, RMSprop and ADAM are the tuning methods with generally best results.
 
 The same analysis using Ridge regression for different choices of $\lambda$ can be seen in figure  \ref{fig:compare_ridge_2} and \ref{fig:compare_ridge}.
 
 \begin{figure}[H]
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{../figures/none_SGD_eta_lmb.png}
-    \caption{SGD no tune}
-    \label{fig:}
-  \end{subfigure}
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{../figures/none_GD_eta_lmb.png}
-    \caption{GD no tune}
-    \label{fig:}
-  \end{subfigure}
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{../figures/momentum_SGD_eta_lmb.png}
-    \caption{SGD momentum}
-    \label{fig:}
-  \end{subfigure}
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{../figures/momentum_GD_eta_lmb.png}
-    \caption{GD momentum}
-    \label{fig:}
-  \end{subfigure}
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{../figures/AdaGrad_SGD_eta_lmb.png}
-    \caption{SGD AdaGrad}
-    \label{fig:}
-  \end{subfigure}
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{../figures/AdaGrad_GD_eta_lmb.png}
-    \caption{GD AdaGrad}
-    \label{fig:}
-  \end{subfigure}
-  \caption{$MSE$ for different methods for different choices of $\eta$ and $\lambda$ for both SGD (figures on the left) and GD (figures on the right) using $n=100$ data points from a 4th order polynomial with a batch size of 16 for SGD giving 5 mini batches}
-  \label{fig:compare_ridge_2}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../figures/none_SGD_eta_lmb.png}
+        \caption{SGD no tune}
+        \label{fig:}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../figures/none_GD_eta_lmb.png}
+        \caption{GD no tune}
+        \label{fig:}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../figures/momentum_SGD_eta_lmb.png}
+        \caption{SGD momentum}
+        \label{fig:}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../figures/momentum_GD_eta_lmb.png}
+        \caption{GD momentum}
+        \label{fig:}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../figures/AdaGrad_SGD_eta_lmb.png}
+        \caption{SGD AdaGrad}
+        \label{fig:}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../figures/AdaGrad_GD_eta_lmb.png}
+        \caption{GD AdaGrad}
+        \label{fig:}
+    \end{subfigure}
+    \caption{$MSE$ for different methods for different choices of $\eta$ and $\lambda$ for both SGD (figures on the left) and GD (figures on the right) using $n=100$ data points from a 4th order polynomial with a batch size of 16 for SGD giving 5 mini batches}
+    \label{fig:compare_ridge_2}
 \end{figure}
 \begin{figure}[H]
 
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{../figures/ADAM_SGD_eta_lmb.png}
-    \caption{SGD ADAM}
-    \label{fig:}
-  \end{subfigure}
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{../figures/ADAM_GD_eta_lmb.png}
-    \caption{GD ADAM}
-    \label{fig:}
-  \end{subfigure}
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{../figures/RMSprop_SGD_eta_lmb.png}
-    \caption{SGD RMSprop}
-    \label{fig:}
-  \end{subfigure}
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{../figures/RMSprop_GD_eta_lmb.png}
-    \caption{GD RMSprop}
-    \label{fig:}
-  \end{subfigure}
-  \caption{$MSE$ for different methods for different choices of $\eta$ and $\lambda$ for both SGD (figures on the left) and GD (figures on the right) using $n=100$ data points from a 4th order polynomial with a batch size of 16 for SGD giving 5 mini batches}
-  \label{fig:compare_ridge}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../figures/ADAM_SGD_eta_lmb.png}
+        \caption{SGD ADAM}
+        \label{fig:}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../figures/ADAM_GD_eta_lmb.png}
+        \caption{GD ADAM}
+        \label{fig:}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../figures/RMSprop_SGD_eta_lmb.png}
+        \caption{SGD RMSprop}
+        \label{fig:}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../figures/RMSprop_GD_eta_lmb.png}
+        \caption{GD RMSprop}
+        \label{fig:}
+    \end{subfigure}
+    \caption{$MSE$ for different methods for different choices of $\eta$ and $\lambda$ for both SGD (figures on the left) and GD (figures on the right) using $n=100$ data points from a 4th order polynomial with a batch size of 16 for SGD giving 5 mini batches}
+    \label{fig:compare_ridge}
 \end{figure}
 In figure \ref{fig:compare_ridge} and \ref{fig:compare_ridge_2} we see that the methods hvary in $MSE$ both when changing the learning rate $\eta$ aswell as when changing the L2 norm $\lambda$. In table \ref{tab:ridge_compare_GD} and \ref{tab:ridge_compare_SGD} we see the lowest $MSE$ for each method together with the parameters used.
 \begin{table}[H]
-  \centering
-  \caption{$MSE$ of ridge and the best performing tuning methods for SGD after 100 iterations}
-  \label{tab:ridge_compare_SGD}
-  \begin{tabular}{|c|c|c|c|c|c|c|}
-    \hline
-    Method    & ridge               & AdaGrad   & no tune   & Momentum  & RMSprop   & ADAM      \\
-    \hline
-    $MSE$     & 0.00980             & 0.01146   & 0.01194   & 0.01142   & 0.00885   & 0.00882   \\
-    \hline
-    $\lambda$ & $1.61\times10^{-7}$ & $10^{-2}$ & $10^{-2}$ & $10^{-2}$ & $10^{-4}$ & $10^{-6}$ \\
-    \hline
-    $\eta$    & -                   & 0.01      & 0.2       & 0.2       & 0.8       & 0.5       \\
-    \hline
-  \end{tabular}
+    \centering
+    \caption{$MSE$ of ridge and the best performing tuning methods for SGD after 100 iterations}
+    \label{tab:ridge_compare_SGD}
+    \begin{tabular}{|c|c|c|c|c|c|c|}
+        \hline
+        Method    & ridge               & AdaGrad   & no tune   & Momentum  & RMSprop   & ADAM      \\
+        \hline
+        $MSE$     & 0.00980             & 0.01146   & 0.01194   & 0.01142   & 0.00885   & 0.00882   \\
+        \hline
+        $\lambda$ & $1.61\times10^{-7}$ & $10^{-2}$ & $10^{-2}$ & $10^{-2}$ & $10^{-4}$ & $10^{-6}$ \\
+        \hline
+        $\eta$    & -                   & 0.01      & 0.2       & 0.2       & 0.8       & 0.5       \\
+        \hline
+    \end{tabular}
 \end{table}
 \begin{table}[H]
-  \centering
-  \caption{$MSE$ of ridge and the best performing tuning methods for GD after 100 iterations}
-  \label{tab:ridge_compare_GD}
-  \begin{tabular}{|c|c|c|c|c|c|c|}
-    \hline
-    Method    & ridge               & AdaGrad   & no tune   & Momentum  & RMSprop   & ADAM      \\
-    \hline
-    $MSE$     & 0.00980             & 0.01151   & 0.01204   & 0.01179   & 0.01366   & 0.01057   \\
-    \hline
-    $\lambda$ & $1.61\times10^{-7}$ & $10^{-1}$ & $10^{-4}$ & $10^{-1}$ & $10^{-1}$ & $10^{-2}$ \\
-    \hline
-    $\eta$    & -                   & 0.5       & 0.5       & 0.8       & 0.1       & 0.8       \\
-    \hline
-  \end{tabular}
+    \centering
+    \caption{$MSE$ of ridge and the best performing tuning methods for GD after 100 iterations}
+    \label{tab:ridge_compare_GD}
+    \begin{tabular}{|c|c|c|c|c|c|c|}
+        \hline
+        Method    & ridge               & AdaGrad   & no tune   & Momentum  & RMSprop   & ADAM      \\
+        \hline
+        $MSE$     & 0.00980             & 0.01151   & 0.01204   & 0.01179   & 0.01366   & 0.01057   \\
+        \hline
+        $\lambda$ & $1.61\times10^{-7}$ & $10^{-1}$ & $10^{-4}$ & $10^{-1}$ & $10^{-1}$ & $10^{-2}$ \\
+        \hline
+        $\eta$    & -                   & 0.5       & 0.5       & 0.8       & 0.1       & 0.8       \\
+        \hline
+    \end{tabular}
 \end{table}
 
 \begin{figure}[H]
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=.9\textwidth]{../figures/SGD_batch_size_AdaGrad.png}
-    \caption{AdaGrad}
-    \label{fig:}
-  \end{subfigure}
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=.9\textwidth]{../figures/SGD_batch_size_none.png}
-    \caption{no tune}
-    \label{fig:}
-  \end{subfigure}
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=.9\textwidth]{../figures/SGD_batch_size_momentum.png}
-    \caption{momentum}
-    \label{fig:}
-  \end{subfigure}
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=.9\textwidth]{../figures/SGD_batch_size_RMSprop.png}
-    \caption{RMSprop}
-    \label{fig:}
-  \end{subfigure}
-  \begin{subfigure}{.9\textwidth}
-    \centering
-    \includegraphics[width=.5\textwidth]{../figures/SGD_batch_size_ADAM.png}
-    \caption{ADAM}
-    \label{fig:}
-  \end{subfigure}
-  \caption{$MSE$ for different tuning functions and batch sizes for SGD.}
-  \label{fig:compare_batch_size}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=.9\textwidth]{../figures/SGD_batch_size_AdaGrad.png}
+        \caption{AdaGrad}
+        \label{fig:}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=.9\textwidth]{../figures/SGD_batch_size_none.png}
+        \caption{no tune}
+        \label{fig:}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=.9\textwidth]{../figures/SGD_batch_size_momentum.png}
+        \caption{momentum}
+        \label{fig:}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=.9\textwidth]{../figures/SGD_batch_size_RMSprop.png}
+        \caption{RMSprop}
+        \label{fig:}
+    \end{subfigure}
+    \begin{subfigure}{.9\textwidth}
+        \centering
+        \includegraphics[width=.5\textwidth]{../figures/SGD_batch_size_ADAM.png}
+        \caption{ADAM}
+        \label{fig:}
+    \end{subfigure}
+    \caption{$MSE$ for different tuning functions and batch sizes for SGD.}
+    \label{fig:compare_batch_size}
 \end{figure}
 In figure \ref{fig:compare_batch_size} we see that the convergence of SGD is greatly influenced by the batch size. We see that a batch size of 20 generally performs worse and that a lower batch size equals a faster convergence.
 
 \subsection{Neural Network and the Franke function}
 A grid search for our own neural network on the Franke function can be seen in figure \ref{fig:franke_grid} for sigmoid as activation function. Grid search using ReLU can be seen in figure \ref{fig:franke_grid_2} and figure \ref{fig:franke_grid_3} is for the leaky ReLU
 \begin{figure}[H]
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{../figures/franke_L_n_test_sigmoid.png}
-    \caption{$MSE$ for number of layers vs number of neurons}
-    \label{fig:}
-  \end{subfigure}
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{../figures/franke_eta_lmb_sigmoid.png}
-    \caption{$MSE$ for $\eta$ vs $\lambda$}
-    \label{fig:}
-  \end{subfigure}
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{../figures/franke_L_n_test_sigmoid_R2.png}
-    \caption{$R^2$ for number of layers vs number of neurons}
-    \label{fig:}
-  \end{subfigure}
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{../figures/franke_eta_lmb_sigmoid_R2.png}
-    \caption{$R^2$ for $\eta$ vs $\lambda$}
-    \label{fig:}
-  \end{subfigure}
-  \caption{$MSE$ and $R^2$ grid search for Franke function to find best possible $\eta$, $\lambda$, number of layers and number of neurons for sigmoid as activation function}
-  \label{fig:franke_grid}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../figures/franke_L_n_test_sigmoid.png}
+        \caption{$MSE$ for number of layers vs number of neurons}
+        \label{fig:}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../figures/franke_eta_lmb_sigmoid.png}
+        \caption{$MSE$ for $\eta$ vs $\lambda$}
+        \label{fig:}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../figures/franke_L_n_test_sigmoid_R2.png}
+        \caption{$R^2$ for number of layers vs number of neurons}
+        \label{fig:}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../figures/franke_eta_lmb_sigmoid_R2.png}
+        \caption{$R^2$ for $\eta$ vs $\lambda$}
+        \label{fig:}
+    \end{subfigure}
+    \caption{$MSE$ and $R^2$ grid search for Franke function to find best possible $\eta$, $\lambda$, number of layers and number of neurons for sigmoid as activation function}
+    \label{fig:franke_grid}
 \end{figure}
 \begin{figure}[H]
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{../figures/franke_L_n_test_relu_MSE.png}
-    \caption{$MSE$ for number of layers vs number of neurons}
-    \label{fig:}
-  \end{subfigure}
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{../figures/franke_eta_lmb_relu.png}
-    \caption{$MSE$ for $\eta$ vs $\lambda$}
-    \label{fig:}
-  \end{subfigure}
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{../figures/franke_L_n_test_relu_R2.png}
-    \caption{$R^2$ for number of layers vs number of neurons}
-    \label{fig:}
-  \end{subfigure}
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{../figures/franke_eta_lmb_relu_R2.png}
-    \caption{$R^2$ for $\eta$ vs $\lambda$}
-    \label{fig:}
-  \end{subfigure}
-  \caption{$MSE$ and $R^2$ grid search for Franke function to find the best possible $\eta$, $\lambda$, number of layers and number of neurons for ReLU as activation function}
-  \label{fig:franke_grid_2}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../figures/franke_L_n_test_relu_MSE.png}
+        \caption{$MSE$ for number of layers vs number of neurons}
+        \label{fig:}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../figures/franke_eta_lmb_relu.png}
+        \caption{$MSE$ for $\eta$ vs $\lambda$}
+        \label{fig:}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../figures/franke_L_n_test_relu_R2.png}
+        \caption{$R^2$ for number of layers vs number of neurons}
+        \label{fig:}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../figures/franke_eta_lmb_relu_R2.png}
+        \caption{$R^2$ for $\eta$ vs $\lambda$}
+        \label{fig:}
+    \end{subfigure}
+    \caption{$MSE$ and $R^2$ grid search for Franke function to find the best possible $\eta$, $\lambda$, number of layers and number of neurons for ReLU as activation function}
+    \label{fig:franke_grid_2}
 \end{figure}
 \begin{figure}[H]
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{../figures/franke_L_n_test_lrelu_MSE.png}
-    \caption{$MSE$ for number of layers vs number of neurons}
-    \label{fig:}
-  \end{subfigure}
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{../figures/franke_eta_lmb_lrelu_MSE.png}
-    \caption{$MSE$ for $\eta$ vs $\lambda$}
-    \label{fig:}
-  \end{subfigure}
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{../figures/franke_L_n_test_lrelu_R2.png}
-    \caption{$R^2$ for number of layers vs number of neurons}
-    \label{fig:}
-  \end{subfigure}
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{../figures/franke_eta_lmb_lrelu_R2.png}
-    \caption{$R^2$ for $\eta$ vs $\lambda$}
-    \label{fig:}
-  \end{subfigure}
-  \caption{$MSE$ and $R^2$ grid search for Franke function to find the best possible $\eta$, $\lambda$, number of layers and number of neurons for leaky ReLU as activation function}
-  \label{fig:franke_grid_3}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../figures/franke_L_n_test_lrelu_MSE.png}
+        \caption{$MSE$ for number of layers vs number of neurons}
+        \label{fig:}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../figures/franke_eta_lmb_lrelu_MSE.png}
+        \caption{$MSE$ for $\eta$ vs $\lambda$}
+        \label{fig:}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../figures/franke_L_n_test_lrelu_R2.png}
+        \caption{$R^2$ for number of layers vs number of neurons}
+        \label{fig:}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../figures/franke_eta_lmb_lrelu_R2.png}
+        \caption{$R^2$ for $\eta$ vs $\lambda$}
+        \label{fig:}
+    \end{subfigure}
+    \caption{$MSE$ and $R^2$ grid search for Franke function to find the best possible $\eta$, $\lambda$, number of layers and number of neurons for leaky ReLU as activation function}
+    \label{fig:franke_grid_3}
 \end{figure}
 We see in figure \ref{fig:franke_grid}, \ref{fig:franke_grid_2} and \ref{fig:franke_grid_3} a $MSE$ and $R^2$ dependence on all the parameters. We end up finding the best parameters with both the highest measured $R^2$ and lowest $MSE$ as shown in table \ref{tab:franke_best}:
 \begin{table}[H]
-  \centering
-  \caption{Lowest $MSE$ and highest $R^2$ found in grid search and the optimal parameters compared to OLS, Ridge and TensorFlow keras}
-  \label{tab:franke_best}
-  \begin{tabular}{|c|c|c|c|c|c|c|}
-    \hline
-    method                 & $MSE$  & $R^2$ & Layers & neurons & $\eta$                & $\lambda$ \\
-    \hline
-    \textbf{NN sigmoid}    & 0.0395 & 0.69  & 6      & 140     & 0.2                   & $10^{-5}$ \\\hline
-    \textbf{NN relu}       & 0.0407 & 0.68  & 7      & 120     & 0.02                  & $10^{-2}$ \\\hline
-    \textbf{NN leaky relu} & 0.0412 & 0.67  & 7      & 120     & 0.02                  & $10^{-1}$ \\\hline
-    \textbf{NN relu keras} & 0.0411 & 0.68  & 3      & 100     & -                     & -         \\\hline
-    \textbf{OLS}           & 0.0405 & 0.68  & -      & -       & -                     & -         \\\hline
-    \textbf{Ridge}         & 0.0403 & 0.68  & -      & -       & 1.61$\times 10 ^{-7}$ & -         \\
-    \hline
-  \end{tabular}
+    \centering
+    \caption{Lowest $MSE$ and highest $R^2$ found in grid search and the optimal parameters compared to OLS, Ridge and TensorFlow keras}
+    \label{tab:franke_best}
+    \begin{tabular}{|c|c|c|c|c|c|c|}
+        \hline
+        method                 & $MSE$  & $R^2$ & Layers & neurons & $\eta$                & $\lambda$ \\
+        \hline
+        \textbf{NN sigmoid}    & 0.0395 & 0.69  & 6      & 140     & 0.2                   & $10^{-5}$ \\\hline
+        \textbf{NN relu}       & 0.0407 & 0.68  & 7      & 120     & 0.02                  & $10^{-2}$ \\\hline
+        \textbf{NN leaky relu} & 0.0412 & 0.67  & 7      & 120     & 0.02                  & $10^{-1}$ \\\hline
+        \textbf{NN relu keras} & 0.0411 & 0.68  & 3      & 100     & -                     & -         \\\hline
+        \textbf{OLS}           & 0.0405 & 0.68  & -      & -       & -                     & -         \\\hline
+        \textbf{Ridge}         & 0.0403 & 0.68  & -      & -       & 1.61$\times 10 ^{-7}$ & -         \\
+        \hline
+    \end{tabular}
 \end{table}
 We see in table \ref{tab:franke_best} that we manage to perform better than OLS and Ridge for each of their optimal parameters \cite{project1}. Our own neural network also outperform the neural network keras. We see each of their predictions plotted in figure \ref{fig:franke_pred} below:
 \begin{figure}[H]
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=.92\textwidth]{../figures/test_OLS.png}
-    \caption{OLS}
-    \label{fig:}
-  \end{subfigure}
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=.92\textwidth]{../figures/test_RIDGE.png}
-    \caption{Ridge}
-    \label{fig:}
-  \end{subfigure}
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=.92\textwidth]{../figures/NN_lrelu_franke.png}
-    \caption{own NN leaky relu}
-    \label{fig:}
-  \end{subfigure}
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=.92\textwidth]{../figures/NN_relu_franke.png}
-    \caption{own NN relu}
-    \label{fig:}
-  \end{subfigure}
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=.92\textwidth]{../figures/NN_sigmoid_franke.png}
-    \caption{own NN sigmoid}
-    \label{fig:}
-  \end{subfigure}
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=.92\textwidth]{../figures/NN_tf_franke.png}
-    \caption{NN keras}
-    \label{fig:}
-  \end{subfigure}
-  \caption{Predictions of the Franke function using $n=30\times 30$ data points, a batch size of 60 and the optimal parameters shown in table \ref{tab:franke_best}}
-  \label{fig:franke_pred}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=.92\textwidth]{../figures/test_OLS.png}
+        \caption{OLS}
+        \label{fig:}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=.92\textwidth]{../figures/test_RIDGE.png}
+        \caption{Ridge}
+        \label{fig:}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=.92\textwidth]{../figures/NN_lrelu_franke.png}
+        \caption{own NN leaky relu}
+        \label{fig:}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=.92\textwidth]{../figures/NN_relu_franke.png}
+        \caption{own NN relu}
+        \label{fig:}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=.92\textwidth]{../figures/NN_sigmoid_franke.png}
+        \caption{own NN sigmoid}
+        \label{fig:}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=.92\textwidth]{../figures/NN_tf_franke.png}
+        \caption{NN keras}
+        \label{fig:}
+    \end{subfigure}
+    \caption{Predictions of the Franke function using $n=30\times 30$ data points, a batch size of 60 and the optimal parameters shown in table \ref{tab:franke_best}}
+    \label{fig:franke_pred}
 \end{figure}
 
 \subsection{Neural network, Logistic regression and Cancer data}
 An accuracy grid search for the different gradient descent methods using logistic regression on cancer data is shown in figure \ref{fig:logreg_comp}
 \begin{figure}[H]
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=.95\textwidth]{../figures/logreg_none.png}
-    \caption{No tune}
-    \label{fig:}
-  \end{subfigure}
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=.95\textwidth]{../figures/logreg_momentum.png}
-    \caption{Momentum}
-    \label{fig:}
-  \end{subfigure}
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=.95\textwidth]{../figures/logreg_AdaGrad.png}
-    \caption{AdaGrad}
-    \label{fig:}
-  \end{subfigure}
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=.95\textwidth]{../figures/logreg_RMSprop.png}
-    \caption{RMSprop}
-    \label{fig:}
-  \end{subfigure}
-  \begin{subfigure}{.95\textwidth}
-    \centering
-    \includegraphics[width=.5\textwidth]{../figures/logreg_ADAM.png}
-    \caption{ADAM}
-    \label{fig:}
-  \end{subfigure}
-  \caption{Accuracy of logistic regression using SGD on breast cancer data for different tuning methods.}
-  \label{fig:logreg_comp}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=.95\textwidth]{../figures/logreg_none.png}
+        \caption{No tune}
+        \label{fig:}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=.95\textwidth]{../figures/logreg_momentum.png}
+        \caption{Momentum}
+        \label{fig:}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=.95\textwidth]{../figures/logreg_AdaGrad.png}
+        \caption{AdaGrad}
+        \label{fig:}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=.95\textwidth]{../figures/logreg_RMSprop.png}
+        \caption{RMSprop}
+        \label{fig:}
+    \end{subfigure}
+    \begin{subfigure}{.95\textwidth}
+        \centering
+        \includegraphics[width=.5\textwidth]{../figures/logreg_ADAM.png}
+        \caption{ADAM}
+        \label{fig:}
+    \end{subfigure}
+    \caption{Accuracy of logistic regression using SGD on breast cancer data for different tuning methods.}
+    \label{fig:logreg_comp}
 \end{figure}
 In figure \ref{fig:logreg_comp} we can clearly see that logistic regression gives good results reaching an accuracy of up to 98.2\% for all tuning methods on test data.
 
 Below in figure \ref{fig:NN_cancer} we see the accuracy of our neural network for different hyperparameters.
 \begin{figure}[H]
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{../figures/cancer_eta_lmb.png}
-    \caption{}
-    \label{fig:}
-  \end{subfigure}
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{../figures/cancer_L_n_test.png}
-    \caption{}
-    \label{fig:}
-  \end{subfigure}
-  \caption{Accuracy of our own Neural Network for different choices of $\eta$, $\lambda$, number of layers, and number of neurons.}
-  \label{fig:NN_cancer}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../figures/cancer_eta_lmb.png}
+        \caption{}
+        \label{fig:}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../figures/cancer_L_n_test.png}
+        \caption{}
+        \label{fig:}
+    \end{subfigure}
+    \caption{Accuracy of our own Neural Network for different choices of $\eta$, $\lambda$, number of layers, and number of neurons.}
+    \label{fig:NN_cancer}
 \end{figure}
 We see above in figure \ref{fig:NN_cancer} similar accuracies as for logistic regression in figure \ref{fig:logreg_comp} with an accuracy hitting 98.2\%. A comparison between the two methods and scikit learns regression functionality is shown in table \ref{tab:cancer_comp}
 \begin{table}[H]
-  \centering
-  \caption{Accuracy and optimal parameters on predicting cancer data for Neural Network and logistic regression}
-  \label{tab:cancer_comp}
-  \begin{tabular}{|c|c|c|c|c|c|}
-    \hline
-    method                   & $Accuracy$ & $\eta$ & $\lambda$ & Layers & neurons \\
-    \hline
-    \textbf{NN}              & 98.2\%     & 0.2    & $10^{-1}$ & 3      & 80      \\\hline
-    \textbf{Logreg AdaGrad}  & 98.2\%     & 0.01   & $10^{-4}$ & -      & -       \\\hline
-    \textbf{Logreg ADAM}     & 98.2\%     & 0.01   & $10^{-4}$ & -      & -       \\\hline
-    \textbf{Logreg RMSprop}  & 98.2\%     & 0.01   & $10^{-4}$ & -      & -       \\\hline
-    \textbf{Logreg Momentum} & 98.2\%     & 0.01   & $10^{-2}$ & -      & -       \\\hline
-    \textbf{Logreg no tune}  & 98.2\%     & 0.01   & $10^{-4}$ & -      & -       \\\hline
-    \textbf{Logreg scikit}   & 97.4\%     & -      & -         & -      & -       \\\hline
-  \end{tabular}
+    \centering
+    \caption{Accuracy and optimal parameters on predicting cancer data for Neural Network and logistic regression}
+    \label{tab:cancer_comp}
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        method                   & $Accuracy$ & $\eta$ & $\lambda$ & Layers & neurons \\
+        \hline
+        \textbf{NN}              & 98.2\%     & 0.2    & $10^{-1}$ & 3      & 80      \\\hline
+        \textbf{Logreg AdaGrad}  & 98.2\%     & 0.01   & $10^{-4}$ & -      & -       \\\hline
+        \textbf{Logreg ADAM}     & 98.2\%     & 0.01   & $10^{-4}$ & -      & -       \\\hline
+        \textbf{Logreg RMSprop}  & 98.2\%     & 0.01   & $10^{-4}$ & -      & -       \\\hline
+        \textbf{Logreg Momentum} & 98.2\%     & 0.01   & $10^{-2}$ & -      & -       \\\hline
+        \textbf{Logreg no tune}  & 98.2\%     & 0.01   & $10^{-4}$ & -      & -       \\\hline
+        \textbf{Logreg scikit}   & 97.4\%     & -      & -         & -      & -       \\\hline
+    \end{tabular}
 \end{table}
 
 Using another seed for our train-test split and shuffle we get the following results in figure \ref{fig:cancer_best}
 \begin{figure}[H]
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{../figures/cancer_eta_lmb_best.png}
-    \caption{Own neural network}
-    \label{fig:}
-  \end{subfigure}
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{../figures/logreg_ADAM_best.png}
-    \caption{Logistic regression using ADAM}
-    \label{fig:}
-  \end{subfigure}
-  \caption{Accuracy of our own Neural Network for different choices of $\eta$, $\lambda$ and logistic regression using SGD and ADAM for a different train-test split than in figure \ref{fig:NN_cancer} and \ref{fig:logreg_comp}}
-  \label{fig:cancer_best}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../figures/cancer_eta_lmb_best.png}
+        \caption{Own neural network}
+        \label{fig:}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../figures/logreg_ADAM_best.png}
+        \caption{Logistic regression using ADAM}
+        \label{fig:}
+    \end{subfigure}
+    \caption{Accuracy of our own Neural Network for different choices of $\eta$, $\lambda$ and logistic regression using SGD and ADAM for a different train-test split than in figure \ref{fig:NN_cancer} and \ref{fig:logreg_comp}}
+    \label{fig:cancer_best}
 \end{figure}
 We see in figure \ref{fig:cancer_best} that a different shuffle in the train-test split gives us accuracies up to 100\% for both logistic regression and our neural network.
 \section{Discussion}
