@@ -5,7 +5,7 @@ This Project includes 3 Folders
 - latex:    Report Pdf, .tex and project description 
 - src:      All python code used in this project 
 
-Following packages need to be installed before running the code:
+Following packages need to be installed before running the commands:
 - pip3 install matplotlib
 - pip3 install numpy 
 - pip3 install sklearn
