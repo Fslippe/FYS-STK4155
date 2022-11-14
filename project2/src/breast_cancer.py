@@ -42,7 +42,7 @@ def main():
     y = outputs.reshape(len(outputs), 1)
     
     # A random state of 10 makes it possible to gain a 100% accuracy
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=10) #=10) 
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=5) #=10) 
     std = np.std(X_train, axis=0)
     mean = np.mean(X_train, axis=0)
 
