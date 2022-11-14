@@ -11,7 +11,7 @@ Following packages need to be installed before running the code:
 - pip3 install sklearn
 - pip3 install seaborn
 
-The code is structured around two classes
+The code is structured around two classes, one functions file including most used functions, one grid search file including grid search functions, and 3 files used to analyze 3 different datasets.
 - NN.py: Feed forward Neural Network class
 - gradient_descent.py: gradient descent class (GD or SGD)
 - functions.py: Includes functions used in most of other python files
