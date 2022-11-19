@@ -82,8 +82,8 @@ Here we have a randomly chosen an initial $\theta_0$ from a normal distribution 
 \end{align*}
 giving us the cost gradient:
 \begin{align*}
-    \nabla_\theta C_{ridge}(\theta) = \frac{2}{n}\boldsymbol{X}^T(\boldsymbol{X}\beta - \boldsymbol{y}) + 2\lambda \theta
-\end{align*}.
+    \nabla_\theta C_{ridge}(\theta) = \frac{2}{n}\boldsymbol{X}^T(\boldsymbol{X}\beta - \boldsymbol{y}) + 2\lambda \theta.
+\end{align*}
 For $\lambda=0$ the cost function become the OLS cost function, and for a well-chosen learning rate we will by following (\ref{eq:GD}) reach a local or global minimum.
 
 To further optimize the Gradient descent we shuffle and split up our design matrix $\boldsymbol{X}$ and target data $\boldsymbol{y}$ in $M$ minibatches $B_j$ denoted as $\boldsymbol{x}_i$ $\boldsymbol{y}_i$ where the gradient is computed for each one of them. This gives us a new way of writing (\ref{eq:GD}) and gives us stochastic gradient descent:
@@ -155,9 +155,10 @@ giving us the log-likelihood and our cost function:
     C(\boldsymbol{\theta}) = \sum_{i=1}^n (y_i \log p(y_i =1 | x_i, \boldsymbol{\theta})) + (1- y_i) \log [1 - p(y_i \log p(y_i =1 | x_i, \boldsymbol{\theta}))]
 \end{align*}
 Recognizing the log-likelihood being a maximizing function we use the negative log-likelihood which rewritten gives us:
-\begin{align*}
+\begin{align}
+    \label{eq:cross}
     C(\boldsymbol{\theta}) = -\sum_{i=1}^n (y_i \hat{y}_i - \log [1 + e^{\hat{y}_i}])
-\end{align*}
+\end{align}
 This is the cross entropy function.
 Its derivative can more easily be written in terms of matrices giving us:
 \begin{align*}
@@ -165,9 +166,14 @@ Its derivative can more easily be written in terms of matrices giving us:
 \end{align*}
 where $\boldsymbol{p}$ is the logistic function defined earlier in (\ref{eq:logistic}).
 \subsection{Neural Network}
-As an alternative to both logistic regression and regression of a continuous function we implement a feed forward Neural Network. This type of network is built up around one input layer, $n$ number of hidden layers and one output layer. The input layer contains one neuron for every feature of the data where each of them are connected to every neuron in the first hidden layer. These hidden layers can have any chosen amount of neurons and every neuron is also connected to each and every neuron of the next layer. Lastly we have the output layer containing one neuron per target category.
-
-The connection and following activation of each neuron is dependent on weights and biases which in a trained model are parameters calculated to best fit the input data. The training and predictions performed by such a Neural Network is split up in several steps. The first is the feeding forward process. After either random or chosen weights and biases has been initialized the feed forward process starts. In our case of choosing a SGD method for our gradient descent, our training input and target data are split up and shuffled in minibatches as described in section \ref{sec:GD}. After this the feeding forward process starts.
+As an alternative to both logistic regression and regression of a continuous function we implement a feed forward Neural Network. This type of network is built up around one input layer, $n$ number of hidden layers and one output layer. The input layer contains one neuron for every feature of the data where each of them are connected to every neuron in the first hidden layer. These hidden layers can have any chosen amount of neurons and every neuron is also connected to each and every neuron of the next layer. Lastly we have the output layer containing one neuron per target category. An illustration of these connection is shown in figure \ref{fig:NN_layers}.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{../figures/NN_layers.png}
+    \caption{Illustration of the connection between layers of a Neural network. \href{https://towardsdatascience.com/applied-deep-learning-part-1-artificial-neural-networks-d7834f67a4f6}{Refference} (visited on 11/18/2022)}
+    \label{fig:NN_layers}
+\end{figure}
+The connection and following activation of each neuron is dependent on weights and biases which in a trained model are parameters calculated to best fit the input data. The training and predictions performed by such a Neural Network is split up in several steps. The first is the feeding forward process. Random or chosen weights and biases is initialized, and in our case of choosing a SGD method for our gradient descent, our training input and target data are split up and shuffled in minibatches as described in section \ref{sec:GD}. After this the feeding forward process starts.
 \begin{enumerate}
     \item The input neurons send their input value scaled by each connection's weight to the first hidden layer
     \item The weighted sum of inputs arriving at each neuron of the first layer gets an addition corresponding to the bias of that neuron giving us a value $z_l$ for each neuron.
@@ -175,15 +181,15 @@ The connection and following activation of each neuron is dependent on weights a
     \item This process continues until we arrive at the last hidden layer
     \item At the last layer $z_o$ is calculated in the same way as $z_l$ earlier but now fed into the last layer's activation function giving $a_o$ corresponding to the predicted value of the Neural Network
 \end{enumerate}
-Depending on the chosen weights and biases this model will not perform well. In order to adjust these weights and biases we define a cost function to minimize using stochastic gradient descent. For a continuous function we use a squared error function defined as:
+Depending on the chosen weights and biases this model will not perform well. In order to adjust these weights and biases we define a cost function to minimize using stochastic gradient descent. For a continuous function we use a squared error function for simlicity defined as:
 \begin{align*}
     C(\hat{\boldsymbol{y}}) = \frac{1}{2}(\hat{\boldsymbol{y}}_i - \boldsymbol{y}_i)^2
 \end{align*}
-giving the gradient:
+giving the easily computed gradient:
 \begin{align*}
     \frac{\partial C(\hat{\boldsymbol{y}})}{\partial  \hat{\boldsymbol{y}}} = \hat{\boldsymbol{y}}_i - \boldsymbol{y}_i
 \end{align*}
-For a binary classification problem we use the cross entropy function defined earlier.
+For a binary classification problem we use the cross entropy function (\ref{eq:cross}) defined earlier.
 
 The gradients calculated is only a function of the prediction and target value and does not say anything on how we should update the weights and biases. To apply the cost function on the weight and biases we use the chain rule for layer $L$:
 \begin{align*}
@@ -200,8 +206,8 @@ giving us:
 Similarly for the bias we get:
 \begin{align*}
     \frac{\partial C}{\partial b^{(L)}_{j}} = \frac{\partial z^{(L)}_j}{\partial b^{(L)}_{j}}  \frac{\partial a^{(L)}_{j}}{\partial z^{(L)}_j}  \frac{\partial C}{\partial a^{(L)}_j} =
-    \frac{\partial C}{\partial a^{(L)}_{j}}\sigma(z_j^{(L)})
-\end{align*}.
+    \frac{\partial C}{\partial a^{(L)}_{j}}\sigma(z_j^{(L)}).
+\end{align*}
 We define a local gradient (error $E$) as:
 \begin{align*}
     E_j^{(L)} = \frac{\partial C }{\partial z_j^{(L)}} = \frac{\partial C }{\partial a_j^{(L)}}\frac{\partial a_j^{(L)} }{\partial z_j^{(L)}} = \frac{\partial C }{\partial a_j^{(L)}} \sigma(z_j^{(L)})
@@ -213,8 +219,8 @@ which gives us:
 \end{align*}
 and in terms of matrices:
 \begin{align*}
-    E^{(L)} = \nabla_a C \odot \frac{\partial \sigma }{\partial z^{(L)}} \quad \text{for} \quad \nabla_a C = \left(\frac{\partial C }{\partial a_1^{(L)}}, \frac{\partial C }{\partial a_2^{(L)}},..., \frac{\partial C }{\partial a_{n_L}^{(L)}}\right)
-\end{align*}.
+    E^{(L)} = \nabla_a C \odot \frac{\partial \sigma }{\partial z^{(L)}} \quad \text{for} \quad \nabla_a C = \left(\frac{\partial C }{\partial a_1^{(L)}}, \frac{\partial C }{\partial a_2^{(L)}},..., \frac{\partial C }{\partial a_{n_L}^{(L)}}\right).
+\end{align*}
 By using the chain rule we arrive at an expression for the error of one node at one layer dependent on a sum of all the errors of the next layer with neurons denoted $k$:
 \begin{align*}
     E^{(l-1)}_j = \sum_k E^{(l)}_k w_{jk}^{(l)}\sigma(z_j^{(l-1)})
@@ -235,7 +241,7 @@ We then update the weights and biases for a chosen learning rate $\eta$ and L2 n
 \begin{align*}
     w^{(l)}_{ij} = w^{(l)}_{ij} - \eta(E_j^{(l-1)}  + \lambda w_{ij}^{(l)}) \quad\quad b_j^{(l)} = b_j^{(l)} - \eta(E_j^{(l)} + \lambda b_j^{(l)})
 \end{align*}
-After the backpropagation algorithm has updated the weights and biases the feed forward algorithm reruns which updates the values returned by our cost function which in turn gives new instructions to the backpropagation algorithm on how to update the weights and biases once again. The process runs over for a given number of iterations and minibatches and in the end giving a final set of weights and biases which can be used for prediction. This is implemented in our Neural Network class on \href{https://github.com/Fslippe/FYS-STK4155/tree/main/project2}{GitHub} as the backpropagation algorithm alongside both the feed forward algorithm and cost functions defined earlier.
+After the backpropagation algorithm has updated the weights and biases the feed forward algorithm reruns which updates the values returned by our cost function. This gives new instructions to the backpropagation algorithm on how to update the weights and biases once again. The process runs over for a given number of iterations and minibatches and in the end giving a final set of weights and biases which can be used for prediction. This is implemented in our Neural Network class on \href{https://github.com/Fslippe/FYS-STK4155/tree/main/project2}{GitHub} as the backpropagation algorithm alongside both the feed forward algorithm and cost functions defined earlier.
 
 \subsection{Weight and bias initialization}
 We implement the possibility to initialize the biases and weights differently. For the bias the Neural Network takes in either an argument "zeros" meaning every bias is initialized with the value 0.01 which generally works well  \cite{bias} and is what we will use, and "random" where the biases are randomly chosen from a normal distribution $N(0,1)$. We will not test this. For the weights we have three possibilities. An option "zeros" initializing all weights with the value 0, "random" for initializing all values with values randomly chosen from a normal distribution $N(0,1)$, and "random scaled" which is the same process as for "random" only that a scaling factor $s$ is multiplied on every weight for layer $l$, equalling $s^{(l)}=\sqrt{2/n^{(l-1)}}$ where $n^{(l-1)}$ is the number of neurons in the last layer. This is called He initialization and helps solve an exploding gradient problem often seen while using ReLU as activation function \cite{he}\cite{he_2}.
@@ -243,7 +249,7 @@ We implement the possibility to initialize the biases and weights differently. F
 \subsection{Activation functions}
 In our Neural Network we implement different activation functions. The common sigmoid is the one we mainly will use:
 \begin{align*}
-    f(x) = \frac{1 }{1 + e^{-x}} \quad\quad \frac{d f }{dx} = f(x) (1 - f(x))
+    f(x) = \frac{1 }{1 + e^{-x}} \quad\quad \frac{d f }{dx} = f(x) (1 - f(x)).
 \end{align*}
 We also use this as activation for the output layer which comes with a set of challenges. We are now restricted to output values in the interval [0,1] for prediction of continuous functions, which for a classification case also means that output values never would be exactly 1 or 0. The scaling of the input target data to the interval [0,1] for a continuous function (\ref{eq:scale}), and a rounding to 0 or 1 for a classification problem (\ref{eq:sigmoid_out}) solves this:
 \begin{align}
@@ -286,7 +292,7 @@ For both ReLU and leaky ReLU we use the "random scaled" weight initialization an
 \subsection{Datasets}
 In order to test and compare the different regression methods, gradient descent, and our Neural Network, we look at a simple $x$ dependent function, the $x$ and $y$ dependent Franke function, and in the end breast cancer data.
 
-We will in all cases use a 80-20 train-test split and shuffle of our data, and use test data to evaluate $MSE$, $R^2$ and accuracy.
+We will in all cases except for the Franke function use a 80-20 train-test split and shuffle of our data. Train and test data generation for the Franke function is described later. For all datasets we will use test data to evaluate either the mean squared error ($MSE$), $R^2$ or accuracy.
 \subsubsection*{Simple function}
 Our simple function is implemented as:
 \begin{align*}
@@ -319,7 +325,7 @@ We continue with the Franke function defined as:
     f(x,y) & = \frac{3}{4 }\exp\left(- \frac{(9x -2 )^2}{4} - \frac{(9y-2)^2}{4}\right) +\frac{3}{4}\exp{\left(-\frac{(9x+1)^2}{49}- \frac{(9y+1)}{10}\right)} \\
            & +\frac{1}{2}\exp{\left(-\frac{(9x-7)^2}{4} - \frac{(9y-3)^2}{4}\right)} -\frac{1}{5}\exp{\left( -(9x-4)^2 - (9y-7)^2\right) }
 \end{align*}
-For this function we use $n=30$ equally spaced $x$ and $y$ both in the interval [0,1], generating a mesh grid with size $30 \times 30$ giving us the possibility to predict a three-dimensional surface. To this we also add a normally distributed noise $\epsilon\sim N(0, 0.2)$ to make use of optimal parameters found in project 1 \cite{project1}. For the case of Ridge and OLS regression we set up a design matrix matching the parameter $\beta$:
+For this function we use $n=30$ equally spaced $x$ and $y$ both in the interval [0,1], generating a mesh grid with size $30 \times 30$ giving us the possibility to predict a three-dimensional surface. To this we also add a normally distributed noise $\epsilon\sim N(0, 0.2)$ to make use of optimal parameters found in project 1 \cite{project1}. We generate our train and test data with the same function values, but with an $\epsilon$ generated with different seeds. For the case of Ridge and OLS regression we set up a design matrix matching the parameter $\beta$:
 \begin{align*}
     \boldsymbol{X} = \begin{bmatrix}
         1      & x_0    & y_0    & x_0^2  & x_0y_0 & y_0^2  & \hdots & x_0^N  & y_0^N  \\
@@ -336,8 +342,8 @@ For this function we use $n=30$ equally spaced $x$ and $y$ both in the interval 
         \beta_n
     \end{bmatrix}
 \end{align*}
-Where we for OLS use a design matrix of degree 6, and for ridge a design matrix of degree 8 together with $\lambda = 1.61 \times10^{-7}$
-for our neural network on the other hand we define the two feature input matrix on the form:
+Where we for OLS use a design matrix of degree 6, and for ridge a design matrix of degree 8 together with $\lambda = 1.61 \times10^{-7}$.
+For our neural network on the other hand we define the two feature input matrix on the form:
 \begin{align*}
     \boldsymbol{X} =
     \begin{bmatrix}
@@ -355,11 +361,13 @@ We scale the data the same way for consistency when using keras and when using R
 We perform a grid search for $MSE$ and $R^2$ for our neural network to find optimal parameters for the three activation functions. For TensorFlow, we use the default settings. We then plot the predictions for the optimal parameters found in the grid search.
 
 \subsubsection*{Breast cancer data}
-In the end we compare Logistic regression with our neural network looking at breast cancer data containing 569 data points for a total of 30 features containing attributes of the tumour, and an output value of 0 for a malignant, and 1 for a benign tumour. When using the sigmoid function as an output activation function we again gain Predictions in the interval [0,1] and perform as described in equation (\ref{eq:sigmoid_out}). For Logistic regression we use only SGD and test different tuning functions. We perform an accuracy grid search for both logistic regression and our neural network, and let scikit learn's logistic regression use it's default parameters. We then perform the same analysis again for a new shuffle of the train and test data to see if this influences the model's accuracy.
+In the end we compare Logistic regression with our neural network looking at breast cancer data containing 569 data points for a total of 30 features containing attributes of the tumour, and an output value of 0 for a malignant, and 1 for a benign tumour. When using the sigmoid function as an output activation function we again gain predictions in the interval [0,1] and perform as described in equation (\ref{eq:sigmoid_out}). For Logistic regression we use only SGD and test different tuning functions. We perform an accuracy grid search for both logistic regression and our neural network, and let scikit learn's logistic regression use it's default parameters. We then perform the same analysis again for a new shuffle of the train and test data to see if this influences the model's accuracy.
+\newline
+\newline
 
 \section{Results}
 \subsection{Gradient descent on a one dimensional function}
-We look into how the different scaling methods perform compared to standard ordinary least squares. In figure \ref{fig:compare_GD_SGD} we see the performance of the different methods at each iteration where the mean squared error has been evaluated using test data:
+We look into how the different scaling methods perform compared to standard ordinary least squares. In figure \ref{fig:compare_GD_SGD} on the next page we see the performance of the different methods at each iteration where the mean squared error has been evaluated using test data:
 \begin{figure}[H]
     \begin{subfigure}{.5\textwidth}
         \centering
@@ -457,7 +465,7 @@ An analysis of the $MSE$ for Ridge regression for different choices of $\lambda$
         \caption{GD AdaGrad}
         \label{fig:}
     \end{subfigure}
-    \caption{$MSE$ for different methods for different choices of $\eta$ and $\lambda$ for both SGD (figures on the left) and GD (figures on the right) using $n=100$ data points from a 4th order polynomial with a batch size of 16 for SGD giving 5 mini batches}
+    \caption{$MSE$ for different tuning methods for different choices of $\eta$ and $\lambda$ for both SGD (figures on the left) and GD (figures on the right) using $n=100$ data points from a 4th order polynomial with a batch size of 16 for SGD giving 5 mini batches}
     \label{fig:compare_ridge_2}
 \end{figure}
 \begin{figure}[H]
@@ -486,10 +494,10 @@ An analysis of the $MSE$ for Ridge regression for different choices of $\lambda$
         \caption{GD RMSprop}
         \label{fig:}
     \end{subfigure}
-    \caption{$MSE$ for different methods for different choices of $\eta$ and $\lambda$ for both SGD (figures on the left) and GD (figures on the right) using $n=100$ data points from a 4th order polynomial with a batch size of 16 for SGD giving 5 mini batches}
+    \caption{$MSE$ for different tuning methods for different choices of $\eta$ and $\lambda$ for both SGD (figures on the left) and GD (figures on the right) using $n=100$ data points from a 4th order polynomial with a batch size of 16 for SGD giving 5 mini batches}
     \label{fig:compare_ridge}
 \end{figure}
-In figure \ref{fig:compare_ridge} and \ref{fig:compare_ridge_2} we see that the methods vary in $MSE$ both when changing the learning rate $\eta$ and when changing the L2 norm $\lambda$. In table \ref{tab:ridge_compare_GD} and \ref{tab:ridge_compare_SGD} we see the lowest $MSE$ for each method together with the parameters used, showing ADAM and RMSprop being the best performers with lower $MSE$ than ridge.
+In figure \ref{fig:compare_ridge} and \ref{fig:compare_ridge_2} we see that the methods vary in $MSE$ both when changing the learning rate $\eta$ and when changing the L2 norm $\lambda$. In table \ref{tab:ridge_compare_GD} and \ref{tab:ridge_compare_SGD} we see the lowest $MSE$ for each method together with the parameters used, showing ADAM and RMSprop being the best performers with lower $MSE$ than ridge regression.
 
 
 \begin{table}[H]
@@ -651,7 +659,7 @@ A grid search for our own neural network on the Franke function can be seen in f
 We see in figure \ref{fig:franke_grid}, \ref{fig:franke_grid_2} and \ref{fig:franke_grid_3} a $MSE$ and $R^2$ dependence on all the parameters. We end up finding the best parameters with both the highest measured $R^2$ and lowest $MSE$ as shown in table \ref{tab:franke_best}:
 \begin{table}[H]
     \centering
-    \caption{Lowest $MSE$ and highest $R^2$ found in grid search and the optimal parameters compared to OLS, Ridge and TensorFlow keras}
+    \caption{Lowest $MSE$ and highest $R^2$ in grid search for test data and the optimal parameters compared to OLS, Ridge and TensorFlow keras}
     \label{tab:franke_best}
     \begin{tabular}{|c|c|c|c|c|c|c|}
         \hline
@@ -704,7 +712,7 @@ We see in table \ref{tab:franke_best} that we manage to perform better than OLS 
         \caption{NN keras}
         \label{fig:}
     \end{subfigure}
-    \caption{Predictions of the Franke function using $n=30\times 30$ data points, a batch size of 60 and the optimal parameters shown in table \ref{tab:franke_best}}
+    \caption{Predictions of the Franke function using $n=30\times 30$ data points for train and test data, a batch size of 60 and the optimal parameters shown in table \ref{tab:franke_best}}
     \label{fig:franke_pred}
 \end{figure}
 
@@ -796,40 +804,46 @@ Using another seed for our train-test split and shuffle we get the following res
         \caption{Logistic regression using ADAM}
         \label{fig:}
     \end{subfigure}
-    \caption{Accuracy of our own Neural Network for different choices of $\eta$, $\lambda$ and logistic regression using SGD and ADAM for a different train-test split than in figure \ref{fig:NN_cancer} and \ref{fig:logreg_comp}. Results for other methods can if of interest be found on \href{https://github.com/Fslippe/FYS-STK4155/tree/main/project2}{GitHub}.}
+    \caption{Accuracy of our own Neural Network for different choices of $\eta$, $\lambda$ and logistic regression using SGD and ADAM for a different train-test split than in figure \ref{fig:NN_cancer} and \ref{fig:logreg_comp}. Results for other tuning methods can if of interest be found on \href{https://github.com/Fslippe/FYS-STK4155/tree/main/project2}{GitHub}.}
     \label{fig:cancer_best}
 \end{figure}
 We see in figure \ref{fig:cancer_best} that a different shuffle in the train-test split gives us accuracies up to 100\% for both logistic regression and our neural network.
 \section{Discussion}
 \subsection{Gradient descent}
-When looking at figure \ref{fig:compare_GD_SGD} and \ref{fig:compare_GD_SGD_2} we saw that the SGD both performed better and converged faster than normal GD. This leaves us with SGD generally being the method of choice when performing gradient descent. Here it is still worth noticing that the $MSE$ for GD has been calculated as a minimum over all iterations and for SGD at the last iteration. We are therefore not left with a good comparison between the two methods for any given number of iteration, but rather a general indication of performance. In the case of SGD we therefore also know that there may be possible to get even better results when choosing the right number of iterations, which clearly shows the superiority of this method.
+When looking at figure \ref{fig:compare_GD_SGD} and \ref{fig:compare_GD_SGD_2} we saw that the SGD both performed better and converged faster than normal GD. This leaves us with SGD generally being the method of choice when performing gradient descent and is the reason why this is the only method implemented for our neural network. Here it is still worth noticing that the $MSE$ for GD has been calculated as a minimum over all iterations and for SGD at the last iteration. We are therefore not left with a good comparison between the two methods for any given number of iteration, but rather a general indication of performance. In the case of SGD we therefore also know that there may be possible to get even better results when choosing the right number of iterations, which clearly shows the superiority of this method.
 We also see that the different tuning methods have spikes in their $MSE$ at different iterations meaning that a direct comparison at one iteration would not give us any valuable information about the general performance of the methods. These spikes show us the importance of also choosing the right number of iterations or even stop the iterating process when the computed gradient reaches some minimal value $\epsilon$. This has not been done in both the gradient descent methods and the neural network which may have given us worse results from a never stopping oscillating behavior when reaching the global minimum.
 
-When comparing the different tuning methods in table \ref{tab:OLS_compare} it is clear that no tuning has a great cost on performance. No tuning performs in almost all cases worse than all the other tuning functions with ADAM, RMSprop and AdaGrad taking turn in performing the best. This can be explained by how these methods perform their stepping process. They all change the learning rate depending on the gradient. For SGD with AdaGrad we chose to only use an accumulative gradient over the minibatches making the algorithm closer to RMSprop. This can be a good thing which seemed to be the case for our one dimensional function in table \ref{tab:OLS_compare}, but still removes the main purpose of AdaGrad which is making the stepping size lower and lower for each iteration. If this is done it will be important to also greatly increase the learning rate $\eta$ to avoid seeing non converged results as we saw for GD with AdaGrad. In total this would more clearly show AdaGrad's strengths and help it remove the oscillating behavior we saw for SGD. RMSprop removes the problem with too fast reducing learning rates found with AdaGrad by only reducing the learning rate depending on the latest gradients. This can greatly reduce the gradient in steep regions, while keeping it high in flat regions, which gives fast convergence. A problem for RMSprop comes from the learning rate not reducing over time, giving oscillating behaviors around the global minimum which is exactly what we saw for RMSprop. This can be solved by ADAM which takes the best parts from AdaGrad and RMSprop. This means giving fast convergence and the following reduced risk being stuck in local minima, together with a gradually reduced learning rate to avoid the oscillating behavior as we saw for RMSprop. These three methods come with a minimal cost of computing time which makes them all worth implementing in gradient descent.
+When comparing the different tuning methods in table \ref{tab:OLS_compare} it is clear that no tuning has a great cost on performance. No tuning performs in almost all cases worse than all the other tuning functions with ADAM, RMSprop and AdaGrad taking turn in performing the best. This can be explained by how these methods perform their stepping process. They all change the learning rate depending on the gradient. For SGD with AdaGrad we chose to only use an accumulative gradient over the minibatches making the algorithm closer to RMSprop. This can be a good thing which seemed to be the case for our one dimensional function in table \ref{tab:OLS_compare}, but still removes the main purpose of AdaGrad which is making the stepping size lower and lower for each iteration. If this is done, it will be important to also greatly increase the learning rate $\eta$ to avoid seeing non converged results as we saw for GD with AdaGrad. In total this would more clearly show AdaGrad's strengths and help it remove the oscillating behavior we saw when using SGD. RMSprop removes the problem with too fast reducing learning rates found with AdaGrad by only reducing the learning rate depending on the latest gradients, also for normal gradient descent. This can greatly reduce the gradient in steep regions, while keeping it high in flat regions, which gives fast convergence. A problem for RMSprop comes from the learning rate not reducing over time as for AdaGrad, giving oscillating behaviors around the global minimum which is exactly what we saw for RMSprop. This can be solved by ADAM which takes the best parts from AdaGrad and RMSprop. This means giving fast convergence and the following reduced risk being stuck in local minima, together with a gradually reduced learning rate to avoid the oscillating behavior as we saw for RMSprop. If we had performed a more thorough analysis of the learning rates for the one dimensional function, we may have seen exactly as theoretically expected with ADAM outperforming the other methods. Without such an analysis we can at least in total say that all the three methods are worth implementing in gradient descent with their good performance and minimal cost of computing time.
 
 In table \ref{tab:OLS_compare} we saw that SGD with AdaGrad, RMSprop and ADAM performed better than OLS. Here it is worth noticing that we have not made any optimizations for OLS and used a design matrix of degree 6 when analyzing 4th degree data. In project 1 \cite{project1} we saw when analyzing OLS that we can have a great increase in $MSE$ from overfitting which may be the case here. Our results do therefore not tell us that SGD is generally better than OLS, but rather that it may outperform OLS when a wrong design matrix is chosen. In other words are our gradient descent methods less prone to overfitting.
 
-When we looked at our results from Ridge regression from table \ref{tab:ridge_compare_GD} and \ref{tab:ridge_compare_SGD} we saw generally better performance than what we saw for OLS, but for SGD with AdaGrad we saw worse performance. This is not what we would expect after introducing the L2-norm $\lambda$. This is a perfect example of what we discussed earlier because of the way we implemented AdaGrad. Since we for ridge regression compute the $MSE$ at the last iteration, the values can vary a lot depending on if we have an oscillation in $MSE$ or not at the last iteration where the $MSE$ is computed.
+When we looked at our results from Ridge regression from table \ref{tab:ridge_compare_GD} and \ref{tab:ridge_compare_SGD} we saw generally better performance than what we saw for OLS, but for SGD with AdaGrad we saw worse performance. This is not what we would expect after introducing the L2-norm $\lambda$. This is a perfect example of what we discussed earlier because of the way we implemented AdaGrad. Since we for ridge regression compute the $MSE$ at the last iteration, the values can vary a lot depending on if we have an oscillation in $MSE$ or not at the last iteration.
 
 
 In all earlier analysis of our one dimensional function we have used a batch size of 16 giving us 5 minibatches. This choice is made based on a balance between computation time and performance, and as we saw in figure \ref{fig:compare_batch_size} this batch size generally converges fast and performs well. We see that larger batch sizes performs worse and that smaller batch sizes only equals small performance gains. We also saw that a batch size of 40 in most cases outperforms a batch size of 20. This can be explained by the shuffle algorithm of the input and target data for each minibatch. This shuffle has been made with a seed to be able to reproduce the results, but when the size of the minibatch varies, the shuffle will too. Because of this it is hard to gain anything more than an indication of what batch size gives the best performance to compute time ratio. A more statistical analysis using for example bootstrap could on the other hand given us information helping us choose the best possible batch size fitting our needs of performance and computation time.
 
 \subsection{Franke function}
-For the Franke function we saw in figure \ref{fig:franke_grid}, \ref{fig:franke_grid_2} and \ref{fig:franke_grid_3} together with table \ref{tab:franke_best} that our own neural network using sigmoid as activation function performed best. Here all the target data was scaled to the interval [0,1] for simplicity, which may not have been beneficial for ReLU and leaky ReLU. These methods would prefer to have standard scaled input data \cite{deeplearning} to avoid the weights of the neural network growing large. So even if we have performed a grid search finding the optimal parameters for ReLU and leaky ReLU, we have not used optimal input data and have in that way compromised their performance. An indication of this can be seen in table \ref{tab:franke_best} where the two ReLU functions have optimal learning rates of $\eta=0.02$ which is 10 times lower than sigmoid. Higher learning rates may have started seeing an exploding gradient followed by too fast-growing weights. To improve performance, methods such as batch normalization can be used. This method normalizes the data of each minibatch making it possible to use much higher learning rates both improving performance and allowing for up to 14 times fewer training steps \cite{batchnormalization}. This is left as a further improvement to be implemented in our neural network.
+For the Franke function we saw in figure \ref{fig:franke_grid}, \ref{fig:franke_grid_2} and \ref{fig:franke_grid_3} together with table \ref{tab:franke_best} that our own neural network using sigmoid as activation function performed best. Here all the target data was scaled to the interval [0,1] for simplicity, which may not have been beneficial for ReLU and leaky ReLU. These methods would prefer to have standard scaled input data \cite{deeplearning} to avoid the weights of the neural network growing large. So even if we have performed a grid search finding the optimal parameters for ReLU and leaky ReLU, we have not used optimal input data and have in that way compromised their performance. An indication of this can be seen in table \ref{tab:franke_best} where the two ReLU functions have optimal learning rates of $\eta=0.02$ which is 10 times lower than sigmoid. This is expected from ReLU's larger gradient, but it may also be because it started seeing an exploding gradient followed by too fast-growing weights for larger $\eta$. To improve performance, methods such as batch normalization can be used. This method normalizes the data of each minibatch making it possible to use much higher learning rates both improving performance and allowing for up to 14 times fewer training steps \cite{batchnormalization}. This is left as a further improvement to be implemented in our neural network.
 
-When comparing figure \ref{fig:franke_grid} for sigmoid to \ref{fig:franke_grid_2} for ReLU we saw that different learning rates have been used in the grid search. This is again because of exploding gradients and thereby overflow for the ReLU functions when using learning rates higher than 0.1. In total does our results not show that the sigmoid function is superior for a regression problem, but that it for a min-max scaling between 0 and 1 would outperform the ReLU activation functions. Another way to reduce the performance issues for ReLU could be to let the model run over more iterations which would in the gradient descent process allow for lower learning rates. This may also be beneficial when using sigmoid as activation function. But the performance gains of this will always have to be balanced to the cost of computation time. An implementation of a scaling function such as ADAM, RMSprop or AdaGrad could also be of help as we saw these greatly outperform no tuning. Adding momentum which in our case was set to 0 could also as seen for the one dimensional function \ref{tab:OLS_compare} greatly improve performance. These are all left as possible improvements for our neural network.
+When comparing figure \ref{fig:franke_grid} for sigmoid to \ref{fig:franke_grid_2} for ReLU we saw that different learning rates have been used in the grid search. This is again because of exploding gradients and thereby overflow for the ReLU functions when using learning rates higher than 0.1. In total does our results not show that the sigmoid function is superior for a regression problem, but that it for a min-max scaling between 0 and 1 would outperform the ReLU activation functions. Another way to reduce the performance issues for ReLU could be to let the model run over more iterations which would in the gradient descent process allow for lower learning rates. This may also be beneficial when using sigmoid as activation function. But the performance gains of this will always have to be balanced to the cost of computation time. An implementation of a scaling function such as ADAM, RMSprop or AdaGrad could also be of help as we saw these greatly outperforming no tuning. Adding momentum which in our case was set to 0 could also as seen for the one dimensional function \ref{tab:OLS_compare} greatly improve performance. These are all left as possible improvements for our neural network.
 
-When comparing the two ReLU functions we notice that the leaky ReLU function performs worse. The leaky ReLU function removes a problem found using ReLU with neurons becoming inactive. This would indicate the leaky ReLU being the superior method. An explanation of the leaky ReLU performing worse in our case can also be connected to the scaling of our data. Another explanation may just be the initialization of our weights which in both cases are initialized using the same seed. Another seed may see the opposite results which is the case for TensorFlow keras neural network which performance will vary every time it runs from the lack of a seed. In order to properly understand the activation functions a statistical approach would be needed. We could then gain an expected value of our neural network for the different methods which would give us a way to differentiate the methods' performance.
+When comparing the two ReLU functions we notice that the leaky ReLU function performs worse. The leaky ReLU function removes a problem found using ReLU with neurons becoming inactive. This would indicate the leaky ReLU being the superior method. An explanation of the leaky ReLU performing worse in our case can also be connected to the scaling of our data by having more active neurons giving out exploding gradients. Another explanation may just be the initialization of our weights which in both cases are initialized using the same seed. Another seed may see the opposite results which is the case for TensorFlow keras neural network which performance will vary every time it runs from the lack of a seed. In order to properly understand the activation functions a statistical approach would be needed. We could then gain an expected value of our neural network for the different methods which would give us a way to differentiate the methods' performance.
 
 \subsection{Cancer data}
 In table \ref{tab:cancer_comp} we saw that both our logistic regression using gradient descent and our Neural network performed better than scikit learn's built in logistic regression functionality. Here it is worth noticing that we have used scikit's default settings which may not have been optimal. A direct performance comparison to our other methods where optimal parameters would therefor not be fair.
 
 When initializing and splitting our data in train and test sets we performed a shuffle. The same shuffle were performed every time to be able to compare the methods and reproduce the data. What we saw when using other seeds for the shuffle was that the accuracy of the methods could greatly vary, and even giving accuracies of up to 100\% on test data as we saw in figure \ref{fig:cancer_best}. This means that the contents and order of the train and test data influences our results, indicating that a single prediction can not be taken as the expected performance of both our neural network and the logistic regression methods. A bootstrap analysis could be beneficial for understanding the methods' performance when we have limited data at hand, and is left as a possibility to better understand the performance of our methods. Furthermore, would such an analysis help us to accurately choose which method that is best for breast cancer data. As of now we can only say that both a neural network and logistic regression performs well, and that the only choosing factor that is left is computation time and simplicity of implementation. From this would the logistic regression using SGD and a tuning function such as ADAM be the method of choice.
 
-When analyzing the cancer data, only the sigmoid activation was used from this function seeming to be the better choice for the other datasets.  This means that the output layer got numbers in the interval [0,1] and not only 0 and 1 which are the only possible outcomes. Even though the output data was given values of 0 or 1 after the neural network's predictions, an output activation function such as softmax already outputting 0 or 1 could help to improve performance. We could also combine softmax with the ReLU functions for activation of the hidden layers adding more possibilities to optimize the neural network depending on the problem.
+When analyzing the cancer data, only the sigmoid activation was used because of its good performance on the other datasets. This means that the output layer got numbers in the interval [0,1] and not only 0 and 1 which are the only possible outcomes. Even though the output data was given values of 0 or 1 after the neural network's predictions, an output activation  function such as softmax already outputting 0 or 1 could help to improve performance. We could also combine softmax with the ReLU functions for activation of the hidden layers adding more possibilities to optimize the neural network depending on the problem.
 
 \section{Conclusion}
-We have looked at different gradient descent methods and seen that stochastic gradient descent together with a tuning function such as ADAM, RMSprop or AdaGrad generally performs best. In the case of a one-dimensional function this was especially true. AdaGrad reached a $MSE$ of 0.00774 while no tuning had a $MSE$ of 0.01158 when using SGD and a learning rate $\eta=0.1$. For logistic regression on cancer data we found that no tuning performed just as well as the other methods. We ended up using no tuning function in the stochastic gradient descent of our neural network which ends up being a possible further improvement, especially when using ReLU and leaky ReLU which showed poor performance on predicting the Franke function compared to sigmoid with $MSE$ of 0.041 and 0.042 and 0.039 respectively. Furthermore, a scaling in form of methods such as standard scaling or batch normalization are also possibilities for performance improvement of the neural network, which especially may help the ReLU functions in performing better. When it comes to the classification case of predicting breast cancer data we saw great performance for both our neural network and our logistic regression both outperforming scikit learn's built in logistic regression functionality. For both the classification and regression case, we need a further statistical analysis to accurately be able to compare the methods used. We are on the other hand left with indications of our neural network being better than both OLS and Ridge for regression, and logistic regression being the method of choice for a classification case as a result of its simple implementation and fast computation. When using gradient descent we also found that stochastic gradient descent paired with either AdaGrad, ADAM or RMSprop gave the best results, and that ADAM as a combination of the advantages of the two other methods theoretically will be the best performer when using our datasets.
+We have looked at different gradient descent methods and seen that stochastic gradient descent together with a tuning function such as ADAM, RMSprop or AdaGrad generally performs best. In the case of a one-dimensional function this was especially true. AdaGrad reached a $MSE$ of 0.00774 while no tuning had a $MSE$ of 0.01158 when using SGD and a learning rate $\eta=0.1$. For logistic regression on cancer data we found that no tuning performed just as well as the other methods.
+
+We ended up using no tuning function in the stochastic gradient descent of our neural network which ends up being a possible further improvement, especially when using ReLU and leaky ReLU which showed poor performance on predicting the Franke function compared to sigmoid with $MSE$ of 0.041, 0.042 and 0.039 respectively. Furthermore, a scaling in form of methods such as standard scaling or batch normalization are also possibilities for performance improvement of the neural network, which especially may help the ReLU functions in performing better.
+
+When it comes to the classification case of predicting breast cancer data we saw great performance for both our neural network and our logistic regression with accuracies of 98.1\% both outperforming scikit learn's built in logistic regression functionality with an accuracy of 97.4\%. For both the classification and regression case, we have seen that a further statistical analysis is needed to accurately be able to compare the methods used.
+
+In total, we are left with indications of our neural network being better than both OLS and Ridge for regression, and logistic regression being the method of choice for a classification case as a result of its simple implementation and fast computation. When using gradient descent we also found that stochastic gradient descent paired with either AdaGrad, ADAM or RMSprop gave the best results, and that ADAM as a combination of the advantages of the two other methods theoretically will be the best performer when using our datasets. In order to gain accurate results a more statistical approach to all the datasets should be performed.
 \nocite{nielsen}
 \nocite{Mehta_2019}
 \nocite{hastie}
