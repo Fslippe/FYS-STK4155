@@ -6,11 +6,12 @@ This Project includes 3 Folders
 - src:      All python code used in this project 
 
 Following packages need to be installed before running the commands:
-- pip3 install matplotlib
-- pip3 install numpy 
-- pip3 install sklearn
-- pip3 install seaborn
-
+```
+pip3 install matplotlib
+pip3 install numpy 
+pip3 install sklearn
+pip3 install seaborn
+```
 The code is structured around two classes, one functions file including most used functions, one grid search file including grid search functions, and 3 files used to analyze 3 different datasets.
 - NN.py: Feed forward Neural Network class
 - gradient_descent.py: gradient descent class (GD or SGD)
