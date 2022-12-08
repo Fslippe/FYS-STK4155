@@ -1,7 +1,7 @@
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
-\usepackage{graphicx}
+\usepackage{ }
 \usepackage{listings}
 \usepackage{verbatim}
 \usepackage{float}
@@ -70,6 +70,7 @@ GitHub repository containing code and further instructions on how to reproduce t
 \section{Introduction}
 The human brain and how it functions is something we still not fully understand\cite{allen}. Its ability to recognize patterns, feel emotion and learn is what makes us unique and what we are. This does not mean we are perfect, which can easily be seen when we want to analyze data or do predictions based on just some numbers. This is where computers come in as a big helper to us humans to better understand the world around us. But in order to improve these computers and the algorithms they run, we can use some inspiration from our own brain. This is exactly what a neural network does. A neural network has in the same way as our brains layers by layers of neurons connected to each other. In order to test such a network we will in this report implement a Feed Forward Neural Network (FFNN) in python. We will look into both classification and regression problems and comparing our neural network's performance to logistic regression, ordinary least squares and ridge regression. To help us on the way we will implement different gradient descent algorithms to use in both our neural network and logistic regression, and we will in the end give an evaluation of which methods are superior in different cases. First in the method section of this report, we will derive the equations and algorithms used to produce the results. This includes the algorithms for gradient descent, and a derivation of both the feed forward and backpropagation processes found in a FFNN. Then we will present our results in the result section before discussing what we have found, and in the end summarizing all our findings in the conclusion section.
 \section{Method}
+
 \subsection{Gradient descent}\label{sec:GD}
 In order to perform both logistic regression and regression of a continuous function, we implement both Gradient Descent and Stochastic Gradient Descent (GD and SGD) in python. Both these methods are based on minimizing some cost function to reduce the error of predictions. This can be done by following the negative gradient of this function and thereby reaching either a global or local minimum. For Gradient Descent this can be written in terms of a step size or learning rate $\eta_k$ with the total stepping process for $k$ iterations:
 \begin{align}
