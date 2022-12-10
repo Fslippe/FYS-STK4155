@@ -12,11 +12,7 @@ from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.model_selection import KFold, ShuffleSplit
 from sklearn.preprocessing import StandardScaler, PolynomialFeatures
 from sklearn.pipeline import make_pipeline
-from sklearn.linear_model import LinearRegression
 from sklearn.utils import resample, shuffle
-from sklearn.linear_model import Lasso, Ridge
-import time
-from matplotlib.ticker import LinearLocator, FormatStrFormatter
 plt.rcParams.update({"font.size": 11})
 
 
@@ -29,6 +25,7 @@ def OLS(X, z):
 
     return beta
 
+
 def ridge_regression(X, z, lamda):
     """
     Takes in a design matrix and actual data and returning
@@ -39,6 +36,7 @@ def ridge_regression(X, z, lamda):
 
     return beta
 
+
 def MSE(data, model):
     """
     takes in actual data and modelled data to find
@@ -47,9 +45,22 @@ def MSE(data, model):
     MSE = mean_squared_error(data.ravel(), model.ravel())
     return MSE
 
+
 def accuracy(y_test, pred):
     """Accuracy score for binary prediction"""
-    return np.sum(np.where(pred==y_test.ravel(), 1, 0)) / len(y_test)
+    return np.sum(np.where(pred == y_test.ravel(), 1, 0)) / len(y_test)
+
+
+def bootstrap(X_train, X_test, y_train, y_test, model, n_B):
+    #score = np.zeros(n_B)
+
+    for i in range(n_B):
+        X_, y_ = resample(X_train, y_train)
+        model.fit(X_, y_, epochs=100, batch_size=32, verbose=0)
+        #score[i] = model.evaluate(X_test, y_test)[1]
+
+    return model  # score
+
 
 def R2(data, model):
     """
@@ -58,5 +69,3 @@ def R2(data, model):
     """
     R2 = r2_score(data.ravel(), model.ravel())
     return R2
-
-
