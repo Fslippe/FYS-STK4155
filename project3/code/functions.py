@@ -13,7 +13,36 @@ from sklearn.model_selection import KFold, ShuffleSplit
 from sklearn.preprocessing import StandardScaler, PolynomialFeatures
 from sklearn.pipeline import make_pipeline
 from sklearn.utils import resample, shuffle
-plt.rcParams.update({"font.size": 11})
+import logging
+import os
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+import seaborn as sns
+import tensorflow_decision_forests as tfdf
+import tensorflow as tf
+from tensorflow.keras.layers import Input
+# This allows appending layers to existing models
+from tensorflow.keras.models import Sequential
+# This allows defining the characteristics of a particular layer
+from tensorflow.keras.layers import Dense
+# This allows using whichever optimiser we want (sgd,adam,RMSprop)
+from tensorflow.keras import optimizers
+# This allows using whichever regularizer we want (l1,l2,l1_l2)
+from tensorflow.keras import regularizers
+# This allows using categorical cross entropy as the cost function
+from tensorflow.keras.utils import to_categorical
+from sklearn.metrics import accuracy_score
+from sklearn.neural_network import MLPClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import RandomizedSearchCV
+import time
+
+logging.disable(logging.WARNING)
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
+plt.rcParams.update({"font.size": 14})
 
 
 def OLS(X, z):
@@ -51,15 +80,16 @@ def accuracy(y_test, pred):
     return np.sum(np.where(pred == y_test.ravel(), 1, 0)) / len(y_test)
 
 
-def bootstrap(X_train, X_test, y_train, y_test, model, n_B):
-    #score = np.zeros(n_B)
-
+def bootstrap(X_train, y_train, model, n_B, epochs=None, batch_size=None):
     for i in range(n_B):
         X_, y_ = resample(X_train, y_train)
-        model.fit(X_, y_, epochs=100, batch_size=32, verbose=0)
-        #score[i] = model.evaluate(X_test, y_test)[1]
+        if epochs == None and batch_size == None:
+            model.fit(X_, y_, verbose=0)
+        else:
+            model.fit(X_, y_, epochs=100, batch_size=32, verbose=0)
 
-    return model  # score
+    return model  \
+
 
 
 def R2(data, model):
@@ -69,3 +99,26 @@ def R2(data, model):
     """
     R2 = r2_score(data.ravel(), model.ravel())
     return R2
+
+
+def create_neural_network_keras(neurons, optimizer="adam"):
+    """
+    Create a Neural network in keras
+    takes in:
+    - neurons:      list of neurons of hidden layers 
+    - xy:           Train design matrix
+    - z:            target data
+    - epochs:       iterations in training
+    returns:
+    - model object to use for predictions
+    """
+    model = Sequential()
+    model.add(Dense(neurons[0], activation='relu', input_shape=(20,)))
+    neurons = neurons[1:]
+    for layer in neurons:
+        model.add(Dense(layer, activation='relu'))
+    model.add(Dense(1, activation='sigmoid'))
+    model.compile(loss='binary_crossentropy',
+                  optimizer=optimizer,
+                  metrics=['accuracy'])
+    return model

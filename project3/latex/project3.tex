@@ -82,10 +82,19 @@ The initializing and importing of the datasets require a few steps before we can
     \item remove all rows with at least one measurement missing,
     \item Look at sized of data from the different stations - spanning from 534 to 3062 for 22 features
     \item will need package tensorflowdecisionforests
+    \item Bootstrap to reduce overfitting and improve generalization ability
     \item perform bootstrap on different weight and bias initializations
+    \item Current small scale weather stations - lots of data
+    \item Compairison between areas - assume that masked values not happen at specific times and weather conditions
 \end{itemize}
 
 The dataset comes with wind directions given in a 16-wind compass rose as seen in figure \ref{fig:compass}. This may cause some problems for neural networks or other methods not built to handle letters or words as input. To solve this problem we translate them to labels from 0 to 15 going clockwise from North (0) to North North-West (15) as seen in table \ref{tab:compass}. The location of the weather station is given in names which may cause problems for a model using all the available weather data from all the weather stations. This is solved by restricting each train and test sample to a specific weather station. We choose the weather station Cobar with 534 days of data.
+\begin{figure}
+    \centering
+    \includegraphics[width=.5\textwidth]{../figures/RF_grid_test.png}
+    \caption{16-wind compass rose used to describe wind directions. Labels are defined as N (North), S (South), W (West) and E (East).}
+    \label{fig:compass}
+\end{figure}
 \begin{figure}
     \centering
     \includegraphics[width=.5\textwidth]{../figures/Brosen_windrose.png}
