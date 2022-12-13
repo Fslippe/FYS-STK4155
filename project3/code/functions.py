@@ -1,3 +1,19 @@
+import time
+from sklearn.model_selection import RandomizedSearchCV
+from sklearn.model_selection import GridSearchCV
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
+from sklearn.neural_network import MLPClassifier
+from sklearn.metrics import accuracy_score
+from tensorflow.keras.utils import to_categorical
+from tensorflow.keras import regularizers
+from tensorflow.keras import optimizers
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Input
+import tensorflow as tf
+import tensorflow_decision_forests as tfdf
+import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import matplotlib.ticker as tkr
@@ -15,30 +31,13 @@ from sklearn.pipeline import make_pipeline
 from sklearn.utils import resample, shuffle
 import logging
 import os
-import numpy as np
-import matplotlib.pyplot as plt
-import pandas as pd
-import seaborn as sns
-import tensorflow_decision_forests as tfdf
-import tensorflow as tf
-from tensorflow.keras.layers import Input
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
 # This allows appending layers to existing models
-from tensorflow.keras.models import Sequential
 # This allows defining the characteristics of a particular layer
-from tensorflow.keras.layers import Dense
 # This allows using whichever optimiser we want (sgd,adam,RMSprop)
-from tensorflow.keras import optimizers
 # This allows using whichever regularizer we want (l1,l2,l1_l2)
-from tensorflow.keras import regularizers
 # This allows using categorical cross entropy as the cost function
-from tensorflow.keras.utils import to_categorical
-from sklearn.metrics import accuracy_score
-from sklearn.neural_network import MLPClassifier
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import GridSearchCV
-from sklearn.model_selection import RandomizedSearchCV
-import time
 
 logging.disable(logging.WARNING)
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
@@ -85,11 +84,14 @@ def bootstrap(X_train, y_train, model, n_B, epochs=None, batch_size=None):
         X_, y_ = resample(X_train, y_train)
         if epochs == None and batch_size == None:
             model.fit(X_, y_, verbose=0)
+
+        elif epochs == None and batch_size != None:
+            model.SGD(X_, y_, batch_size)
+
         else:
             model.fit(X_, y_, epochs=100, batch_size=32, verbose=0)
 
-    return model  \
-
+    return model
 
 
 def R2(data, model):
