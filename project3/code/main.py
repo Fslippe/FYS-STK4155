@@ -117,7 +117,7 @@ def grid_search_location(df, target, location):
     y = target[location_idx]  # np.ravel(target.ilo)
     X = df.iloc[location_idx, 2:-1]
     # Correlation plots
-    #correlation_plot(df, location, location_idx)
+    # correlation_plot(df, location, location_idx)
 
     # Train-Test-split and standard scale
     X_train, X_test, y_train, y_test = scale_and_split(X, y)
@@ -195,12 +195,12 @@ def main():
         average.insert(0, loca, get_averages(df, loca), True)
         n_locations += 1
 
-    #average_plots(df, average)
-    #correlation_plot(df, "full", df.index)
+    # average_plots(df, average)
+    # correlation_plot(df, "full", df.index)
 
     # Train and test data on Cobar
     print("GRIDSEARCH ")
-    #grid_search_location(df, target, location="Cobar")
+    # grid_search_location(df, target, location="Cobar")
 
     # Training on one location, test on another
     loc_1 = "Cobar"
@@ -250,6 +250,15 @@ def main():
                                  1].to_numpy(), test.iloc[:, 2:-1].to_numpy()
     y_train, y_test = train.iloc[:, -
                                  1:].to_numpy(), test.iloc[:, -1:].to_numpy()
+
+    print(np.shape(y_train))
+    print(np.where(
+        y_train == 1))
+    print(len(np.where(
+        y_train == 1)))
+
+    print("Fraction of all data with no rain tomorrow:", (len(np.where(
+        y_train == 1)[0]) + len(np.where(y_test == 1)[0]))/(len(y_train) + len(y_test)))
 
     trees_best = 500
     depth_best = 20

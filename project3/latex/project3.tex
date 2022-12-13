@@ -102,7 +102,6 @@ The dataset comes with wind directions given in a 16-wind compass rose as seen i
     \end{small}
 \end{table}
 
-
 \subsection{Choosing data to analyze} % (fold)
 \label{sub:Weather stations}
 For our testing of the models and the dataset we start by looking at one single weather station Cobar. The data from this weather station containts 534 days which makes it one of the smaller datasets, enabling fast testing of our model. For further analysis we mainly look into three different weather stations. The choices are based on geographic position in hopes of finding a trained model's location dependency as well as its flexibility. We again look at the station Cobar, the station Coffs Harbour slightly to the east, and the north most weather station Darwin. These locations are highlighted below in figure \ref{fig:earth}. We also look into the dataset as a whole combining all the weather stations marked in figure \ref{fig:earth}
@@ -114,6 +113,69 @@ For our testing of the models and the dataset we start by looking at one single 
 \end{figure}
 % subsubsection Weather stations (end)
 
+\subsection{Implementation of methods} % (fold)
+\label{sub:Implementation of methods}
+
+\subsubsection*{Activation and cost functions}
+To analyze binary data we need to define a cost function giving a way for our models to adjust their parameters in order to make better predictions. By starting with the logistic regression function for a prediction $\hat{y}_i$ taking values of either 1 or 0
+\begin{align*}
+    p(t) = \frac{e^{\hat{y}_i}}{1 + e^{\hat{y}}},
+\end{align*}
+one can as seen in appendix \ref{app:NN} derive the binary cross entropy function
+\begin{align*}
+    C(\theta) = - \sum_{i=1}^n (y_i\hat{y_i} - \log[1+ e^{\hat{y}_i}]).
+\end{align*}
+
+To implement a Neural Network we need to define an activation function. For our hidden layers we implement the ReLU function. This is defined as
+\begin{align*}
+    f(x) = max(0, x) \quad\quad \frac{d f }{dx} = \begin{cases}
+        0 & x \leq 0 \\
+        1 & x > 0
+    \end{cases}
+\end{align*}
+Since we are dealing with a classification problem we need to restrict our predictions to 0 and 1. This can be done with help from the sigmoid activation function for the output layer.
+\begin{align*}
+    f(x) = \frac{1 }{1 + e^{-x}} \quad\quad \frac{df }{dx} = f(x)(1-f(x))
+\end{align*}
+The function restricts all output $\hat{y}$ to the interval [0,1] which can easily be translated to either 0 or 1 by
+\begin{align*}
+    \hat{y} =
+    \begin{cases}
+        0 & \text{if } \hat{y} < 0.5    \\
+        1 & \text{if } \hat{y} \geq 0.5
+    \end{cases}
+\end{align*}
+\subsubsection*{Gradient Descent and Logistic Regression}
+In order to perform Logistic Regression we implement Gradient descent. We will look at Stochastic Gradient Decent (SGD) which are based on minimizing some cost function to reduce the error of predictions. This is done by first splitting up input and target data in $M$ minibatches $B_j$ denoted as $x_i$ and $y_i$. The gradient of the cost function is then computed for each minibatch which gives us $M$ different contributions to the total gradient. Each of the contributions are multiplied with the step size $\eta_j$ at the given iteration. This stepping process can be written as
+\begin{align*}
+    \theta_{j+1} = \theta_j - \eta_j \sum_{i \in B_k}^M \nabla_\theta C(x_i, \theta_j).
+\end{align*}
+There are multiple ways of optimizing the stepping process of SGD. Two of the best performers depending on the dataset are ADAM and plain SGD with momentum. By adding momentum we can help the gradient decent to gain speed in regions of small gradients at the same time as supressing oscillations in high curvature regions. This leads to a reduced risk ending up in a local minimum and can greatly speed up the training process. This is implemented for SGD in terms of the momentum $\lambda$ as
+\begin{align*}
+    v_j = \lambda v_{j-1}  - \eta_j \nabla_\theta C(\theta_j) \quad\quad \theta_{j+1} = \theta_j +  \sum_{i \in B_k}^Mv_j.
+\end{align*}
+The ADAM optimizer for makes use of momentum as well as a gradual reduction in the total stepping process as a function of the last calculated gradients. This is done by accumulating and keeping track of the squared gradient $g_{j,i}^2$. This can greatly reduce the stepping when a minimum is found, reducing oscillations giving more accurate predictions. The optimization is written for SGD with $\rho_2=0.99$ and $\rho_1=0.9$ as follows.
+\begin{align*}
+    m_j = \rho_1 m_{j-1} + (1-\rho_1)\nabla_\theta C(x_i, \theta_k) \quad\quad s_j = \rho_2 s_{j-1} + (1- \rho_2)g_{j,i}^2
+\end{align*}
+\begin{align*}
+    \hat{m}_j = \frac{m_j }{1-\rho_1^t} \quad\quad \hat{s}_j = \frac{s_j }{1- \rho_2^t}
+\end{align*}
+\begin{align*}
+    \theta_{j+1} = \theta_j - \eta_j\sum_{i \in B_k}^M \frac{\hat{m}_j}{\sqrt{\hat{s}_j} + \epsilon }
+\end{align*}
+Here we have the accumulating gradient for each iteration $j$ and minibatch $i$ defined as:
+\begin{align*}
+    g_{j, i}^2 = \sum_{i \in B_k}^M(\nabla_\theta C(x_i, \theta_j))^2
+\end{align*}
+\subsubsection*{Neural Network}
+A Neural Network makes use of SGD and ADAM as described above, and are built up by layers of neurons. These layers can be split up in one input layer, $n$ number of hidden layer, and one output layer. The input layer contains one neuron for every feature of the input data, each connected to every neuron of the first hidden layer. The hidden layers can have any chosen amount of neurons each connected to every neuron of the next layer. The output layer contains one neuron per target category which for our classification case is just 1.
+
+The connection and belonging activation of each neuron is dependent on a set of weights and biases that are optimized in order to best fit the input target data. For the TensorFlow Neural Network used, the biases are initially set to 0, and the weights randomly chosen from a normal distribution with mean 0 and standard deviation 0.05 \cite{tf}. For every iteration the Neural Network runs through a feed forward process. This process starts by scaling every neuron's input before it is sent to the next layer of neurons. This scaling is dependent by each neuron connection's belonging weight and bias, where the weight is multiplied and the bias added to the input. At the next layer the scaled input is fed to the layer's activation function (ReLU) before it is again scaled and sent to the next layer. When arriving at the output layer the input is directly sent to the output layer's activation function (sigmoid) which corresponds to a prediction. In order to make better predictions the weights and biases for all the neuron connections are adjusted through backpropagation. This is done by first calculating the error of the output layer with help from the cost function (binary cross entropy) before using the output layer's error to calculate the error for every layer before.  Through SGD with or without ADAM the weights and biases for every layer are updated in order to minimize the error of that layer. A full derivation of the backpropagation process can be found in appendix \ref{app:NN}.
+\subsubsection*{Random Forest}
+
+
+% subsection Implementation of methods (end)
 
 
 
@@ -333,4 +395,85 @@ We see in \ref{fig:rf_full} that more trees and a larger depth generally equals 
     \end{small}
 \end{table}
 
+\section{Neural Network and Cost function}
+\label{app:NN}
+The following derivations are taken from \cite{project2}
+\subsubsection*{Cross Entropy}
+To analyze binary data where possible solutions are $y_i=0$ and $y_i=1$ we define the logistic function:
+\begin{align}
+    \label{eq:logistic}
+    p(t) =  \frac{e^{\hat{y}_i}}{1+e^{\hat{y}_i}}
+\end{align}
+Where $\hat{y}_i$ is defined by:
+\begin{align*}
+    \hat{y}_i = \theta_0 + \theta_1 x_i +...+ \theta_n x_i^n
+\end{align*}
+To find a cost function and following gradient we use Maximum Likelihood Estimation from the dataset $\mathcal{D} \in \{x_i, y_i\}$:
+\begin{align*}
+    p(\mathcal{D}|\boldsymbol{\theta}) = \prod_{i=1}^n (p(y_i = 1|x_i,\boldsymbol{\theta}))^{y_i}\left( 1- p(y_i = 1 | x_i, \boldsymbol{\theta})\right)^{1-y_i}
+\end{align*}
+where we have used:
+\begin{align*}
+    p(y_i=0|x_i, \boldsymbol{\theta} ) = 1 - p(y_i=1 | x_i, \boldsymbol{\theta})
+\end{align*}
+giving us the log-likelihood and our cost function:
+\begin{align*}
+    C(\boldsymbol{\theta}) = \sum_{i=1}^n (y_i \log p(y_i =1 | x_i, \boldsymbol{\theta})) + (1- y_i) \log [1 - p(y_i \log p(y_i =1 | x_i, \boldsymbol{\theta}))]
+\end{align*}
+Recognizing the log-likelihood being a maximizing function we use the negative log-likelihood which rewritten gives us:
+\begin{align}
+    \label{eq:cross}
+    C(\boldsymbol{\theta}) = -\sum_{i=1}^n (y_i \hat{y}_i - \log [1 + e^{\hat{y}_i}])
+\end{align}
+\subsubsection*{Backpropagation}
+The error found using the Neural Network's cost function does not directly say anything on how to update the weights ($w_{ij}^{L}$) and biases ($b_{j}^{L}$) for layer $L$, neuron $j$ and connection $ij$ between neuron $i$ of the last layer and neuron $j$. To find this we can use the definition of the prediction made by the Neural Network. This prediction $\hat{y}$ is dependent on the value $a_l$ which comes from the value $z_l$ through the layer's activation function. To apply the cost function on the weight and biases we use the chain rule for layer $L$:
+\begin{align*}
+    \frac{\partial C}{\partial w^{(L)}_{ij}}  = \frac{\partial z^{(L)}_j}{\partial w^{(L)}_{ij}}  \frac{\partial a^{(L)}_{j}}{\partial z^{(L)}_j}  \frac{\partial C}{\partial a^{(L)}_j}
+\end{align*}
+rewriting in terms of the activation function for simplicity here denoted as the sigmoid $\sigma$, and using the calculation of $z$ throughout the layers:
+\begin{align*}
+    a_j^L = \sigma(z_j^{(L)}) \quad\quad z_j^{(L)} = \sum_{i=1}^{n_{L-1}}w^{(L)}_{ij}a{(L-1)}_{i} + b{(L)}_{j}
+\end{align*}
+giving us:
+\begin{align*}
+    \frac{\partial C}{\partial w^{(L)}_{ij}} = \frac{\partial C}{\partial a^{(L)}_{j}}\sigma(z_j^{(L)})a_i^{(L-1)}
+\end{align*}
+Similarly for the bias we get:
+\begin{align*}
+    \frac{\partial C}{\partial b^{(L)}_{j}} = \frac{\partial z^{(L)}_j}{\partial b^{(L)}_{j}}  \frac{\partial a^{(L)}_{j}}{\partial z^{(L)}_j}  \frac{\partial C}{\partial a^{(L)}_j} =
+    \frac{\partial C}{\partial a^{(L)}_{j}}\sigma(z_j^{(L)}).
+\end{align*}
+We define a local gradient (error $E$) as:
+\begin{align*}
+    E_j^{(L)} = \frac{\partial C }{\partial z_j^{(L)}} = \frac{\partial C }{\partial a_j^{(L)}}\frac{\partial a_j^{(L)} }{\partial z_j^{(L)}} = \frac{\partial C }{\partial a_j^{(L)}} \sigma(z_j^{(L)})
+\end{align*}
+which gives us:
+\begin{align*}
+    \frac{\partial C }{\partial w_{ij}^{(L)}} = E_j^{(L)} a_i^{(L-1)} \quad\quad
+    \frac{\partial C }{\partial b_{j}^{(L)}} = E_j^{(L)}
+\end{align*}
+and in terms of matrices:
+\begin{align*}
+    E^{(L)} = \nabla_a C \odot \frac{\partial \sigma }{\partial z^{(L)}} \quad \text{for} \quad \nabla_a C = \left(\frac{\partial C }{\partial a_1^{(L)}}, \frac{\partial C }{\partial a_2^{(L)}},..., \frac{\partial C }{\partial a_{n_L}^{(L)}}\right).
+\end{align*}
+By using the chain rule we arrive at an expression for the error of one node at one layer dependent on a sum of all the errors of the next layer with neurons denoted $k$:
+\begin{align*}
+    E^{(l-1)}_j = \sum_k E^{(l)}_k w_{jk}^{(l)}\sigma(z_j^{(l-1)})
+\end{align*}
+This means that we can calculate the error and following bias and weight gradients of one layer if we know the error at the last layer. This gives us a way of updating all the weights and biases in order to reduce the error of the Neural Network's predictions. This is given by:
+\begin{enumerate}
+    \item calculating the error at the last layer $L$:
+          \begin{align*}
+              \boldsymbol{E}^{(L)} = \frac{\partial C }{\partial \boldsymbol{a}^{(L)}} \sigma(\boldsymbol{z}^{(L)})
+          \end{align*}
+    \item Using this to calculate the error of the other layers starting at $l=L-1$:
+          \begin{align*}
+              \text{for}\quad  l=L-1, L-2,...,1 \quad\quad
+              E_j^{(l)} = \sum_k E^{(l+1)}_k w_{jk}^{(l+1)} \sigma(z_j^{(l)})
+          \end{align*}
+\end{enumerate}
+We then update the weights and biases for a chosen learning rate $\eta$ and L2 norm $\lambda$:
+\begin{align*}
+    w^{(l)}_{ij} = w^{(l)}_{ij} - \eta(E_j^{(l-1)}  + \lambda w_{ij}^{(l)}) \quad\quad b_j^{(l)} = b_j^{(l)} - \eta(E_j^{(l)} + \lambda b_j^{(l)})
+\end{align*}
 \end{document}
