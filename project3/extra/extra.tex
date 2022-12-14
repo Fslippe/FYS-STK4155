@@ -181,8 +181,85 @@ Here we choose the feature $j$ and the cutpoint $s$ for the two regions based on
 \begin{align*}
     \sum_{i:x_i \in R_1} (y_i - \overline{y}_{R_1})^2  + \sum_{i:x_i \in R_2} (y_i - \overline{y}_{R_2})^2.
 \end{align*}
-This is done for every feature $p$ and every one of the $N$ data points, giving a total of $p \times N $ splits performed. The splitting process continues until all data has been classified, or until some stopping criteria such as a maximum depth of the tree or a minimum number of samples left in a leaf node. We will use the maximum depth of the tree as an adjustable parameter when we study the bias-variance trade off. To generate the decision tree for our regression problem we use the DecisionTreeRegressor method from scikit learn.
+This is done for every feature $p$ and every one of the $N$ data points, giving a total of $p \times N $ splits performed. The splitting process continues until all data has been classified, or until some stopping criteria such as a maximum depth of the tree or a minimum number of samples left in a leaf node. We will use the maximum depth of the tree as an adjustable parameter when we study the bias-variance trade-off. To generate the decision tree for our regression problem we use the DecisionTreeRegressor method from scikit learn.
 
 \subsubsection*{Random Forest}
-A big problem often found with a single decision tree is overfitting. This can be explained by how the tree can have almost an infinite number of branches, perfectly splitting up the training data to classify all the training samples. This can of course be solved by restricting the tree with for example a maximum depth, but also be solved by initializing several trees. We now have a forest of trees where each of them are trained on different subsets of data. These data subsets are made through bootstrapping of the training data. The branch splitting is done differently in a random forest. Here we select $m \leq p$ random variables from the $p$ predictors to consider for each split. This leaves us with trees that may look quite different from each other, because of the strongest predictors not always being among the $m$ variables, leaving us with these predictors not always being in the upper branches. The average of every tree's prediction is what leaves us with the final prediction.
+A big problem often found with a single decision tree is overfitting. This can be explained by how the tree can have almost an infinite number of branches, perfectly splitting up the training data to classify all the training samples. This can of course be solved by restricting the tree with for example a maximum depth, but also be solved by initializing several trees. We now have a forest of trees where each of them are trained on different subsets of data. These data subsets are made through bootstrapping of the training data. The branch splitting is done differently in a random forest. Here we select $m \leq p$ random variables from the $p$ predictors to consider for each split. This leaves us with trees that may look quite different from each other, because of the strongest predictors not always being among the $m$ variables, leaving us with these predictors not always being in the upper branches. The average of every tree's prediction is what leaves us with the final prediction. The random forest we will also be implemented through scikit learn with the method RandomForestRegressor, and we will look at how the tree depth and the number of trees influence the bias-variance trade-off.
+
+\subsubsection*{Feed forward Neural Network}
+A full description of a Feed Forward Neural Network (FFNN) can be found in \href{https://github.com/Fslippe/FYS-STK4155/blob/main/project2/latex/project2.pdf}{project 2}.
+
+
+A FFNN is built up by layers of neurons each connected to every neuron of the neighbouring layers. Each neuron have its corresponding bias, and each connection have its own corresponding weight. These are respectively added and multiplied to the neurons input, and through backpropagation they are optimized to minimize some cost function to make better predictions. We will implement the FFNN with tensorflow sequential and look at both how different number of layers and neurons influence the bias-variance trade-off.
+
+\section{Results and discussion}
+\subsection*{Decision Tree}
+For the decission tree we perform the bias-variance trade-off for 100 bootstrap samples and different number of tree depths up to a max depth of 20 as seen in figure \ref{fig:DT}.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{figures/tradeoff_DT.png}
+    \caption{Bias-variance trade-off as a function of maximum tree depth for a decision tree using 100 bootstrap samples.}
+    \label{fig:DT}
+\end{figure}
+In figure \ref{fig:DT} we see that an increasing tree depth results in a decrease in the bias at the same time as an increase in the variance. Both of these contributions r results in the lowest mean squared error for a tree depth of 5 of 0.3. We see that also the bias starts increasing after this depth, indicating that we will not find a better prediction for a larger tree depth.
+\subsection*{Random Forest}
+Below in figure \ref{fig:RF} we see the bias-variance trade-off as a function of tree depth. We see 4 plots corresponding to different number of trees. We have again used 100 bootstrap samples.
+
+There are small variations in the trade-off, and we mainly see a big drop in the MSE and bias when increasing the tree depth from 1 to 3. We notice that the bias is the main contributor to the MSE, also for larger tree depths. The variance stays small with only a small decrease by increasing the tree depth. We generally find the lower values of MSE from a decrease in bias for tree depths of 35 and above. This indicates that we may find even lower MSE by increasing the tree depth further. We notice almost no difference between different number of trees, but the overall lowest MSE is found by using 10 trees and a tree depth of 35. Compared to a single decision tree we see a much lower MSE of 0.15, which mainly comes from the much lower variance (0.05) since the biases have similar values (0.15).
+\begin{figure}[H]
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=.9\textwidth]{figures/tradeoff_RF_trees_5.png}
+        \label{fig:}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=.9\textwidth]{figures/tradeoff_RF_trees_10.png}
+        \label{fig:}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=.9\textwidth]{figures/tradeoff_RF_trees_20.png}
+        \label{fig:}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=.9\textwidth]{figures/tradeoff_RF_trees_30.png}
+        \label{fig:}
+    \end{subfigure}
+    \caption{The bias-variance trade-off using 100 bootstrap samples as a function of tree depth up to a depth of 40 where every second tree depth is skipped. We see 4 plots corresponding to different number of trees in the forest. }
+    \label{fig:RF}
+\end{figure}
+
+\subsection*{Feed Forward Neural Network}
+In figure \ref{fig:NN} we see the bias-variance trade-off using 100 bootstrap samples for different number of neurons per layer. We see 4 plots corresponding to 1, 2, 3 and 4 layers in the neural network.
+
+The 4 plots in figure \ref{fig:NN} all show quite varying results for different number of neurons, but we still notice a general trend. For all plots we see small variances between 0 and 1. We also see an increasing variance until around 10 neurons where a further increase generally equals a lower variance going towards 0. This shows that the bias is the main contributor to the MSE especially for a higher number of neurons. For 4 layers we see an indication of overfitting with a slight increase in the variance and MSE for higher number of neurons. In the other cases we see decreasing MSE for more neurons indicating that a further neuron increase could equal an even lower MSE. We see that the Neural Network have smaller MSE for certain number of neurons than both the decision tree and the random forest. We see MSE at or below 0.15 for all the tested number of layers, and even MSE below 0.1 for 2 layers and 58 neurons, and 4 layers and 21 neurons.
+\begin{figure}[H]
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=.9\textwidth]{figures/tradeoff_NN_neurons_1.png}
+        \label{fig:}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=.9\textwidth]{figures/tradeoff_NN_neurons_2.png}
+        \label{fig:}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=.9\textwidth]{figures/tradeoff_NN_neurons_3.png}
+        \label{fig:}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=.9\textwidth]{figures/tradeoff_NN_neurons_4.png}
+        \label{fig:}
+    \end{subfigure}
+    \caption{The bias-variance trade-off using 100 bootstrap samples as a function of neurons in each layer up to a total of 58 neurons where every third neuron is skipped. We see 4 plots corresponding to different number of layers in the neural network.}
+    \label{fig:NN}
+\end{figure}
+
+\section{Conclusion}
+We have found that different methods and their different parameters equals very different bias-variance trade-offs. A single decision tree has shown the worst overall performance with a minimum MSE of 0.3. It had a more typical trade-off than the other methods with an increasing variance and decreasing bias for higher complexities. The random forest gave us very stable trade-offs with a small to no dependency on the number of trees. We saw no indication of overfitting. The bias was the main contributor to the MSE and its minimum of 0.15, and the variance stayed generally low. For the neural network we saw a quite varying trade-off with the bias being the main contributor to the MSE. We saw again no sign of overfitting except by using 4 layers with a slight increase in variance for higher number of neurons.
 \end{document}

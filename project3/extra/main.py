@@ -14,15 +14,17 @@ from sklearn.utils import resample, shuffle
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestRegressor
 from matplotlib.ticker import MaxNLocator
+import time
 warnings.simplefilter(action='ignore', category=FutureWarning)
 sns.set_style("darkgrid")
+plt.rcParams.update({"font.size": 14})
 
 
 def decision_tree(tmp, depth):
     return DecisionTreeRegressor(max_depth=depth)
 
 
-def random_forest(trees, depth):
+def random_forest(depth, trees):
     model = RandomForestRegressor(max_depth=depth, n_estimators=100)
 
     return model
@@ -62,7 +64,7 @@ def NN(layers, neurons, optimizer="adam"):
     return model
 
 
-def tradeoff(X_train, X_test, y_train, y_test, model_in, complexity_1, complexity_2, n_B=100):
+def tradeoff(X_train, X_test, y_train, y_test, model_in, complexity_1, complexity_2, n_B=100, skip=1):
     bias = np.zeros(complexity_1-1)
     variance = np.zeros(complexity_1-1)
     mse = np.zeros(complexity_1-1)
@@ -71,12 +73,10 @@ def tradeoff(X_train, X_test, y_train, y_test, model_in, complexity_1, complexit
     else:
         NN_model = False
 
-    for comp in range(1, complexity_1):
+    for comp in range(1, complexity_1, skip):
         model = model_in(complexity_2, comp)
         y_pred = bootstrap(
             X_train, y_train, X_test, model, n_B, NN_model)
-
-        print(np.shape(np.mean(y_pred, axis=1, keepdims=True)))
 
         bias[comp-1] = np.mean(
             (y_test - np.mean(y_pred, axis=1, keepdims=True).T)**2)
@@ -90,9 +90,13 @@ def tradeoff(X_train, X_test, y_train, y_test, model_in, complexity_1, complexit
 def plot_tradeoff(bias, variance, mse):
     fig = plt.figure()
     complexity = np.linspace(1, len(bias), len(bias))
-    plt.plot(complexity, bias, linestyle="-", marker="o", label=r"Bias$^2$")
-    plt.plot(complexity, variance, linestyle="-", marker="o", label="Variance")
-    plt.plot(complexity, mse, linestyle="-", marker="o", label="MSE test")
+    mask = np.where(mse != 0)
+    plt.plot(complexity[mask], bias[mask], linestyle="-",
+             marker="o", label=r"Bias$^2$")
+    plt.plot(complexity[mask], variance[mask],
+             linestyle="-", marker="o", label="Variance")
+    plt.plot(complexity[mask], mse[mask], linestyle="-",
+             marker="o", label="MSE test")
     fig.gca().xaxis.set_major_locator(MaxNLocator(integer=True))
     plt.legend()
 
@@ -127,15 +131,19 @@ def main():
     # Neural Network
     if run_NN:
         for layer in [1, 2, 3, 4]:
+            print(layer)
+            start = time.time()
             bias, variance, mse = tradeoff(X_train,
                                            X_test,
                                            y_train,
                                            y_test,
                                            model_in=NN,
-                                           complexity_1=20,
+                                           complexity_1=60,
                                            complexity_2=layer,
-                                           n_B=50)
+                                           n_B=100,
+                                           skip=3)
             plot_tradeoff(bias, variance, mse)
+
             plt.title("Number of layers: %i" % (layer))
             #plt.title("Tree depth: %i" % (depth))
 
@@ -144,27 +152,34 @@ def main():
 
             plt.savefig("figures/tradeoff_NN_neurons_%s.png" %
                         (layer), dpi=300, bbox_inches="tight")
+            print(time.time() - start)
 
     # Random Forest
     if run_RF:
-        for trees in [5, 10, 20, 30]:
+        for trees in [1, 2, 3, 4]:  # [5, 10, 20, 30]:
+            print(trees)
+            start = time.time()
             bias, variance, mse = tradeoff(X_train,
                                            X_test,
                                            y_train,
                                            y_test,
                                            model_in=random_forest,
-                                           complexity_1=20,
+                                           complexity_1=40,
                                            complexity_2=trees,
-                                           n_B=50)
+                                           n_B=100,
+                                           skip=2)
             plot_tradeoff(bias, variance, mse)
-            plt.title("Number of trees: %i" % (trees))
-            #plt.title("Tree depth: %i" % (depth))
+            #plt.title("Number of trees: %i" % (trees))
+            plt.title("Tree depth: %i" % (depth))
 
-            #plt.xlabel("Number of trees")
-            plt.xlabel("Tree depth")
+            plt.xlabel("Number of trees")
+            #plt.xlabel("Tree depth")
 
-            plt.savefig("figures/tradeoff_RF_trees_%s.png" %
+            # plt.savefig("figures/tradeoff_RF_trees_%s.png" %
+            #            (trees), dpi=300, bbox_inches="tight")
+            plt.savefig("figures/tradeoff_RF_%s.png" %
                         (trees), dpi=300, bbox_inches="tight")
+            print(time.time() - start)
 
     if run_DT:
         # Decision Tree
@@ -175,7 +190,7 @@ def main():
                                        model_in=decision_tree,
                                        complexity_1=20,
                                        complexity_2=0,
-                                       n_B=50)
+                                       n_B=100)
         plot_tradeoff(bias, variance, mse)
         plt.xlabel("Tree depth")
         plt.savefig("figures/tradeoff_DT.png", dpi=300, bbox_inches="tight")
