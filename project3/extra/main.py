@@ -107,13 +107,11 @@ def main():
 
     boston, tmp1, target, tmp2 = train_test_split(
         boston, target, train_size=0.4, random_state=1)
-    a = np.array([[0, 1], [1, 2]], dtype=object)
-    print("LEN", len(a[0]))
-
+    print("Shape data split", len(target))
     # Train test split
     X_train, X_test, y_train, y_test = train_test_split(
         boston, target, test_size=0.2, random_state=2)
-
+    print("Shape train split", len(y_train))
     # Standar scale
     scaler = StandardScaler().fit(X_train)
     X_train = scaler.transform(X_train)
@@ -122,11 +120,6 @@ def main():
     y_std = np.std(y_train)
     y_train = (y_train - y_mean)/y_std
     y_test = (y_test - y_mean)/y_std
-
-    model = random_forest(5, 50)
-    print(y_train)
-    model.fit(X_train, y_train)
-    print(model.predict(X_test))
 
     run_NN = False
     run_RF = True
