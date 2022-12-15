@@ -1,5 +1,4 @@
 from functions import *
-from grid_search import *
 sns.set_style("darkgrid")
 tf.keras.utils.set_random_seed(1)
 
@@ -72,26 +71,6 @@ def scale_and_split(X, y):
     return X_train, X_test, y_train, y_test
 
 
-def train_loc_test_loc(df, model, idx_1, idx_2, randomforest=False):
-
-    # Training and test set of locations
-    X_train, y_train = shuffle(
-        df.iloc[idx_1, 2:-1],  df["RainTomorrow"].iloc[idx_1], random_state=1)
-    X_test, y_test = shuffle(
-        df.iloc[idx_2, 2:-1], df["RainTomorrow"].iloc[idx_2], random_state=1)
-    scaler = StandardScaler().fit(X_train)
-    X_train = scaler.transform(X_train)
-    X_test = scaler.transform(X_test)
-
-    if randomforest:
-        model.fit(X_train, y_train, verbose=0)
-    else:
-        model.fit(X_train, y_train, epochs=100, batch_size=32, verbose=0)
-
-    scores = model.evaluate(X_test, y_test)
-    return scores
-
-
 def split_each_loc(df, test_size):
     train = pd.DataFrame()
     test = pd.DataFrame()
@@ -100,8 +79,8 @@ def split_each_loc(df, test_size):
     for loca in df["Location"].unique():
         train_loc, test_loc = train_test_split(
             df.loc[df["Location"] == loca], test_size=test_size, random_state=1)
-        train = train.append(train_loc)  # (train.iloc[:, 2:-1])
-        test = test.append(test_loc)  # (test.iloc[:, 2:-1])
+        train = train.append(train_loc)
+        test = test.append(test_loc)
 
     train = shuffle(train, random_state=1)
     test = shuffle(test, random_state=1)
@@ -140,7 +119,7 @@ def grid_search_location(df, target, location):
                            batch_size=32,
                            mom=0.3,
                            savename="logreg_%s_%s" % (m, location),
-                           n_B=None)
+                           n_B=10)
     plt.show()
     # Perform grid search for NN
 
@@ -181,6 +160,56 @@ def average_plots(df, average):
     plt.show()
 
 
+def train_loc_test_loc(df, loc_1, loc_2):
+    idx_1 = df.index[df["Location"] == loc_1]
+    idx_2 = df.index[df["Location"] == loc_2]
+
+    print("\n\n\nFraction of all %s with no rain tomorrow:" % (loc_1), len(np.where(
+        df["RainTomorrow"].iloc[idx_1] != 1)[0]) / len(df["RainTomorrow"].iloc[idx_1]))
+    print("\nFraction of all %s with no rain tomorrow:" % (loc_2), len(np.where(
+        df["RainTomorrow"].iloc[idx_2] != 1)[0]) / len(df["RainTomorrow"].iloc[idx_2]))
+    print("\nFraction of all data with no rain tomorrow:", len(np.where(
+        df["RainTomorrow"] != 1)[0]) / len(df["RainTomorrow"]))
+
+    # Run Neural Network
+    print("\n\n\nNeural Network")
+    model = create_neural_network_keras([20, 20])
+
+    X_train, y_train = shuffle(
+        df.iloc[idx_1, 2:-1],  df["RainTomorrow"].iloc[idx_1], random_state=1)
+    X_test, y_test = shuffle(
+        df.iloc[idx_2, 2:-1], df["RainTomorrow"].iloc[idx_2], random_state=1)
+    scaler = StandardScaler().fit(X_train)
+    X_train = scaler.transform(X_train)
+    X_test = scaler.transform(X_test)
+
+    model.fit(X_train, y_train, verbose=0)
+    model.fit(X_train, y_train, epochs=100, batch_size=32, verbose=0)
+
+    scores = model.evaluate(X_test, y_test)
+
+    print("\n", loc_1, "trained Neural Network accuracy on predicting", loc_2)
+    print(scores[1])
+
+    # Run Random forest
+    print("\n\n\nRandom Forest")
+    model_rf = tfdf.keras.RandomForestModel(
+        num_trees=100, max_depth=10, verbose=0)
+    model_rf. compile(
+        metrics=["accuracy"])
+
+    model_rf.fit(X_train, y_train, verbose=0)
+    print("\n", loc_1, "trained Random Forest accuracy on predicting", loc_2)
+    print(scores[1])
+
+
+def standard_scale(train, test):
+    scaler = StandardScaler().fit(train)
+    train = scaler.transform(train)
+    test = scaler.transform(test)
+    return train, test, scaler
+
+
 def main():
     run_gridsearch = False
     # Import Dataset
@@ -200,75 +229,48 @@ def main():
 
     # Train and test data on Cobar
     print("GRIDSEARCH ")
-    # grid_search_location(df, target, location="Cobar")
+    #grid_search_location(df, target, location="Cobar")
 
     # Training on one location, test on another
     loc_1 = "Cobar"
     loc_2 = "CoffsHarbour"
     loc_3 = "Darwin"
-    idx_1 = df.index[df["Location"] == loc_1]
-    idx_2 = df.index[df["Location"] == loc_2]
-    idx_3 = df.index[df["Location"] == loc_3]
-
-    # Run Neural Network
-    print("\n\n\nNeural Network")
-    model = create_neural_network_keras([20, 20])
-    scores = train_loc_test_loc(df, model, idx_1, idx_2)
-    print("\n", loc_1, "trained Neural Network accuracy on predicting", loc_2)
-    print(scores[1])
-
-    scores = train_loc_test_loc(df, model, idx_1, idx_3)
-    print("\n", loc_1, "trained Neural Network accuracy on predicting", loc_3)
-    print(scores[1])
-
-    # Run Random forest
-    print("\n\n\nRandom Forest")
-    model_rf = tfdf.keras.RandomForestModel(
-        num_trees=100, max_depth=10, verbose=0)
-    model_rf. compile(
-        metrics=["accuracy"])
-    scores = train_loc_test_loc(df, model_rf, idx_1, idx_2, randomforest=True)
-    print("\n", loc_1, "trained Random Forest accuracy on predicting", loc_2)
-    print(scores[1])
-
-    scores = train_loc_test_loc(df, model_rf, idx_1, idx_3, randomforest=True)
-    print("\n", loc_1, "trained Random Forest accuracy on predicting", loc_3)
-    print(scores[1])
-
-    # Grid search random forest
-    if run_gridsearch:
-        trees = [10, 50, 100, 200, 500]
-        depth = [5, 10, 15, 20, 25, 30]
-        grid_search_trees_depth(
-            trees, depth, X_train, X_test, y_train, y_test, n_B=10, savename="RF_grid_all")
+    train_loc_test_loc(df, loc_1, loc_2)
+    train_loc_test_loc(df, loc_1, loc_3)
 
     # Run whole dataset
     print("\n\n\nRUNNING WHOLE DATASET")
 
+    # Initialize all data
     train, test = split_each_loc(df, test_size=0.2)
     X_train, X_test = train.iloc[:, 2:-
                                  1].to_numpy(), test.iloc[:, 2:-1].to_numpy()
     y_train, y_test = train.iloc[:, -
                                  1:].to_numpy(), test.iloc[:, -1:].to_numpy()
+    X_train, X_test, scaler = standard_scale(X_train, X_test)
 
-    print(np.shape(y_train))
-    print(np.where(
-        y_train == 1))
-    print(len(np.where(
-        y_train == 1)))
-
-    print("Fraction of all data with no rain tomorrow:", (len(np.where(
-        y_train == 1)[0]) + len(np.where(y_test == 1)[0]))/(len(y_train) + len(y_test)))
+    print("\n\nFraction of all data with no rain tomorrow:", (len(np.where(
+        y_train != 1)[0]) + len(np.where(y_test != 1)[0]))/(len(y_train) + len(y_test)))
 
     trees_best = 500
-    depth_best = 20
+    depth_best = 30
     train_cobar = train.loc[train["Location"] == "Cobar"]
     test_cobar = test.loc[test["Location"] == "Cobar"]
+    train_coffs = train.loc[train["Location"] == "CoffsHarbour"]
+    test_coffs = test.loc[test["Location"] == "CoffsHarbour"]
     train_darwin = train.loc[train["Location"] == "Darwin"]
     test_darwin = test.loc[test["Location"] == "Darwin"]
+
     X_test_cobar = test_cobar.iloc[:, 2:-1].to_numpy()
+    X_test_cobar = scaler.transform(X_test_cobar)
     y_test_cobar = test_cobar.iloc[:, -1:].to_numpy()
+
+    X_test_coffs = test_coffs.iloc[:, 2:-1].to_numpy()
+    X_test_coffs = scaler.transform(X_test_coffs)
+    y_test_coffs = test_coffs.iloc[:, -1:].to_numpy()
+
     X_test_darwin = test_darwin.iloc[:, 2:-1].to_numpy()
+    X_test_darwin = scaler.transform(X_test_darwin)
     y_test_darwin = test_darwin.iloc[:, -1:].to_numpy()
 
     model_rf = tfdf.keras.RandomForestModel(
@@ -277,30 +279,39 @@ def main():
         metrics=["accuracy"])
     model_rf.fit(X_train, y_train)
     scores_cobar = model_rf.evaluate(X_test_cobar, y_test_cobar)
+    scores_coffs = model_rf.evaluate(X_test_coffs, y_test_coffs)
+
     scores_darwin = model_rf.evaluate(X_test_darwin, y_test_darwin)
 
     print("\n\nFull data accuracy score on Cobar test data:", scores_cobar[1])
     print("Full data accuracy score on Darwin test data:", scores_darwin[1])
+    print("Full data accuracy score on CoffsHarbour test data:",
+          scores_coffs[1])
+
     print("\n")
 
     model = create_neural_network_keras([20, 20])
     model.fit(X_train, y_train)
     scores_cobar = model.evaluate(X_test_cobar, y_test_cobar)
     scores_darwin = model.evaluate(X_test_darwin, y_test_darwin)
+    scores_coffs = model.evaluate(X_test_coffs, y_test_coffs)
 
     print("\n\nFull data accuracy score on Cobar test data:", scores_cobar[1])
     print("Full data accuracy score on Darwin test data:", scores_darwin[1])
-    # Grid search on all data
-    trees = [10, 50, 100, 200, 500]
-    depth = [5, 10, 15, 20, 25, 30]
+    print("Full data accuracy score on Darwin test data:", scores_coffs[1])
 
+    # Grid search on all data
+
+    trees = [10, 50, 100, 200, 500, 1000]
+    depth = [5, 15, 20, 30, 40, 50]
+    #print("\n\n\nGRID SEARCH RANDOM FOREST")
     # grid_search_trees_depth(
     #    trees, depth, X_train, X_test, y_train, y_test, n_B=None, savename="RF_grid_all")
 
-    print("STARTING GRID SEARCH FOR FULL DATASET")
-    grid_search_layers([10, 20, 30, 40, 50], [1, 2, 3, 4, 5], X_train,
-                       X_test, y_train, y_test, optimizer="ADAM", n_B=None, epochs=100, batch_size=320, savename="NN_grid_ADAM_all")
-    print("FINISHED")
+    #print("STARTING GRID SEARCH FOR FULL DATASET")
+    # grid_search_layers([10, 20, 30, 50, 70, 100], [1, 2, 3, 4, 5, 6], X_train,
+    #                   X_test, y_train, y_test, optimizer="ADAM", n_B=None, epochs=100, batch_size=320, savename="NN_grid_ADAM_all")
+    # print("FINISHED")
 
 
 if __name__ == "__main__":

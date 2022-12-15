@@ -180,7 +180,36 @@ The connection and belonging activation of each neuron is dependent on a set of 
 
 
 \section{Results}
-To get a better understanding of the dataset we plot the correlation matrix as seen in figure \ref{fig:corr}
+\subsection{Data correlation} % (fold)
+\label{sub:Data correlation}
+
+% subsection Data correlation (end)
+% subsection  (end)
+To get a better understanding of the dataset we find the fraction of days with, and with no rain tomorrow for the different datasets as seen in table \ref{tab:frac}.
+\begin{table}[H]
+    \begin{small}
+        \caption{Fraction of days with rain tomorrow and no rain tomorrow for different weather stations.}
+        \label{tab:frac}
+        \begin{center}
+            \begin{tabular}{|l|l|l|}
+                \hline
+                \textbf{Weather station(s)} & \textbf{Days with rain tomorrow} & \textbf{Days with no rain tomorrow} \\
+                \hline
+                Cobar                       & 11.8\%                           & 88.2\%                              \\
+                \hline
+                Coffs Harbour               & 31.2\%                           & 68.8\%                              \\
+                \hline
+                Darwin                      & 25.8\%                           & 74.2\%                              \\
+                \hline
+                All stations                & 22.0\%                           & 78.0\%                              \\
+                \hline
+            \end{tabular}
+        \end{center}
+    \end{small}
+\end{table}
+We see different fractions of rain tomorrow for the three different weather station with Cobar only having rain 11.8\% of the days. We notice that the average fraction of rain days for all weather stations is at 22\% with Darwin being close to this average at 25.8\%. Coffs Harbour show similar to Cobar a large deviation from the mean, but with a higher fraction than the average arriving at 31.2\%.
+
+We continue gaining more insight of the dataset by plotting the correlation matrix as seen in figure \ref{fig:corr}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{../figures/correlation_heatmap_full.png}
@@ -188,29 +217,30 @@ To get a better understanding of the dataset we plot the correlation matrix as s
     \label{fig:corr}
 \end{figure}
 
-In our case of mainly looking at how today's weather influences tomorrow's weather is the bottom row or the rightmost column in figure \ref{fig:corr} what interests us. We see that the different features influences the feature "RainTomorrow" to different degrees. Number of sunshine hours is the feature with the most negative correlation while the humidity at 3pm is the feature with the most positive correlation.
+In our case of mainly looking at how today's weather influences tomorrow's weather is the bottom row or the rightmost column in figure \ref{fig:corr} what interests us. We see that the different features influences the feature \textit{RainTomorrow} to different degrees. Number of sunshine hours is the feature with the most negative correlation while the humidity at 3pm is the feature with the most positive correlation.
 
-In figure \ref{fig:features} we see how different weather stations deviate from the mean. We see sunshine hours in \ref{fig:sunshine} and humidity in \ref{fig:humidity}
-\begin{figure}
+In figure \ref{fig:features} we see how different weather stations deviate from the mean for the two most \textit{RainTomorrow} correlated features. We see sunshine hours in \ref{fig:sunshine} and humidity in \ref{fig:humidity}. In the sunshine plot we notice the stations Cobar, Coffs Harbour and Darwin having more sunshine than the mean with Coffs Harbour deviating the most with close to 2 extra sunshine hours more than the mean each day. In the humidity plot we see Cobar having close to the mean humidity and that both Coffs Harbour and Darwin deviate from the mean with close to -25 and -15 percent respectively.
+\begin{figure}[H]
     \begin{subfigure}{\textwidth}
         \centering
         \includegraphics[width=.8\textwidth]{../figures/Sunshine.png}
-        \caption{}
+        \caption{Deviation in daily sunshine hours from the mean.}
         \label{fig:sunshine}
     \end{subfigure}
     \begin{subfigure}{\textwidth}
         \centering
         \includegraphics[width=.8\textwidth]{../figures/Relative_humidity3pm.png}
-        \caption{}
+        \caption{Deviation in relative humidity at 3pm from the mean.}
         \label{fig:humidity}
     \end{subfigure}
-    \caption{}
+    \caption{Deviations from the mean for the different weather stations. We see deviation in daily sunshine hours in \ref{fig:sunshine} and deviations in relative humidity at 3pm in \ref{fig:humidity}.}
     \label{fig:features}
 \end{figure}
+\newpage
 
 
-
-Our first tests include a layer-neurons grid search for the Neural Network and a trees-depth grid search for the Random Forest. For the Neural Network and the logistic regression we perform the grid search using both ADAM and Stochastic Gradient Decent as optimizers for the gradient decent as seen in figure \ref{fig:cobar_grid}. Similarly, we see a Random Forest grid search in figure \ref{fig:cobar_grid_rf}.
+\subsection{Predictions using a single station}
+Our first tests include a layer-neurons grid search for the Neural Network, a learning rate L2-norm grid search for logistic regression, and a trees-depth grid search for Random Forest. For the Neural Network and the logistic regression we perform the grid search using both ADAM and Stochastic Gradient Decent as optimizers for the gradient decent as seen in figure \ref{fig:cobar_grid} and \ref{fig:cobar_grid_logreg}. Similarly, we see a Random Forest grid search in figure \ref{fig:cobar_grid_rf}.
 \begin{figure}[H]
     \begin{subfigure}{.5\textwidth}
         \centering
@@ -224,7 +254,7 @@ Our first tests include a layer-neurons grid search for the Neural Network and a
         \caption{ADAM}
         \label{fig:}
     \end{subfigure}
-    \caption{Grid search for different learning rates ($\eta$) and L-2 norm ($\lambda$) for logistic regression. Momentum of 0.3, a batch size of 32 together with 100 epochs has been used.}
+    \caption{Grid search using 10 bootstrap iterations for different number of neurons and hidden layers in a tensorflow sequential Neural Network. ReLU has been used as activation for the hidden layers, and sigmoid for the output layer. Binary crossentropy has been used as loss function. A batch size of 32 together with 100 epochs has been used. All other parameters have been automatically chosen by tensorflow.}
     \label{fig:cobar_grid}
 \end{figure}
 \begin{figure}[H]
@@ -240,8 +270,8 @@ Our first tests include a layer-neurons grid search for the Neural Network and a
         \caption{ADAM}
         \label{fig:}
     \end{subfigure}
-    \caption{Grid search using 10 bootstrap iterations for different number of neurons and hidden layers in a tensorflow sequential Neural Network. ReLU has been used as activation for the hidden layers, and sigmoid for the output layer. Binary crossentropy has been used as loss function. A batch size of 32 together with 100 epochs has been used. All other parameters have been automatically chosen by tensorflow.}
-    \label{fig:cobar_grid}
+    \caption{Grid search for different learning rates ($\eta$) and L-2 norm ($\lambda$) for logistic regression. Momentum of 0.3, a batch size of 32 together with 100 epochs has been used.}
+    \label{fig:cobar_grid_logreg}
 \end{figure}
 \begin{figure}[H]
     \centering
@@ -250,33 +280,9 @@ Our first tests include a layer-neurons grid search for the Neural Network and a
     \label{fig:cobar_grid_rf}
 \end{figure}
 
-We see that the performance in both figure \ref{fig:cobar_grid} and \ref{fig:cobar_grid_rf} vary depending on the parameters tested. The Neural Network performs slightly better than the Random Forest. The optimal parameters for the two models can be found below in table \ref{tab:grid_NN} and \ref{tab:grid_RF}.
-\begin{table}[H]
-    \caption{Optimal parameters found in grid search for Neural Network. 100 epochs and as batch size of 32 has been used. Other parameters are automatically chosen by tensorflow}
-    \label{tab:grid_NN}
-    \centering
-    \begin{tabular}{|l|l|l|l|l|}
-        \hline
-        \textbf{Train Data}      & \textbf{Test Data}         & \textbf{Neurons} & \textbf{Layers} & \textbf{Accuracy} \\
-        \hline
-        80\% split of Cobar data & 20\% split of Cobar data   & 20               & 2               & 97.2\%            \\
-        \hline
-        100\% of Cobar data      & 100\% of CoffsHarbour data & 20               & 2               & 74.5\%            \\
-        \hline
-        100\% of Cobar data      & 100\% of Darwin data       & 20               & 2               & 75.5\%            \\
-        \hline
-        80\% split of all data   & 20\% split of all data     & 50               & 4               & 85.7\%            \\
-        \hline
-        80\% of full data        & 20\% of Cobar data         & 50               & 4               & 92.5\%            \\
-        \hline
-        80\% of full data        & 20\% of Darwin data        & 50               & 4               & 85.3\%            \\
-        \hline
-    \end{tabular}
-\end{table}
-
-\subsection{Full data analysis} % (fold)
-\label{sub:Full data analysis}
-We look at a dataset containing all weather stations and perform a grid search for the random forest as shown in figure \ref{fig:grid_full}.
+We see that the performance in both figure \ref{fig:cobar_grid}, \ref{fig:cobar_grid_logreg} and \ref{fig:cobar_grid_rf} vary depending on the parameters tested. The Neural Network performs slightly better than the Random Forest, and they both perform a lot better than the logistic regression. When comparing the results to table \ref{tab:frac} we see that the logistic regression performes worse than if it would predict no rain every day. In total, the grid search shows that only the neural network and the Random Forest are reliable, and ready for further analysis.  The optimal parameters for the two models can be found below in table \ref{tab:grid_NN} and \ref{tab:grid_RF}.
+\subsection{Predictions using all data}
+We look at a dataset containing all weather stations and perform a grid search for the Random Forest and neural network as shown in figure \ref{fig:grid_full}.
 \begin{figure}[H]
     \begin{subfigure}{.5\textwidth}
         \centering
@@ -286,39 +292,83 @@ We look at a dataset containing all weather stations and perform a grid search f
     \end{subfigure}
     \begin{subfigure}{.5\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{../figures/NN_grid_ADAM_bootstrap_all.png}
+        \includegraphics[width=\textwidth]{../figures/NN_grid_ADAM_all.png}
         \caption{Neural Network with ADAM}
         \label{fig:NN_full}
     \end{subfigure}
-    \caption{Grid search using 10 bootstrap iterations for a Neural Network and a Random Forest. For the Neural Network has ReLU been used as activation for the hidden layers, and sigmoid for the output layer. Binary crossentropy has been used as loss function. A batch size of 320 together with 100 epochs has been used. All other parameters for both the Neural Network and the Random Forest have been automatically chosen by tensorflow.}
+    \caption{Grid search using 10 bootstrap iterations for a Neural Network and a Random Forest. For the Neural Network, ReLU has been used as activation for the hidden layers, and sigmoid for the output layer. Binary crossentropy has been used as loss function. A batch size of 320 together with 100 epochs has been used. All other parameters for both the Neural Network and the Random Forest have been automatically chosen by tensorflow.}
     \label{fig:grid_full}
 \end{figure}
 
-We see in \ref{fig:rf_full} that more trees and a larger depth generally equals a more accurate model. For the Neural Network wee see more variation and not a clear tendency with more neurons and layers equalling a more accurate model. The parameters used, and the highest accuracy is shown in table \ref{tab:grid_RF}.
+We see in \ref{fig:rf_full} that more trees and a larger depth generally equals a more accurate model. For the Neural Network wee see more variation and not a clear tendency with more neurons and layers equalling a more accurate model. The parameters used, and the highest accuracy found is shown in table \ref{tab:grid_RF}.
+
+For our final analysis we use the optimal Neural Network and Random Forest models trained on all data to evaluate their predictions on specific weather stations. This can be seen for Cobar, Coffs Harbour and Darwin in table \ref{tab:grid_RF} for Random Forest, and in table \ref{tab:grid_NN} for the Neural Network.
 
 \begin{table}[H]
-    \caption{Optimal parameters found in grid search for Random Forest. Other parameters are chosen automatically by tensorflow.}
+    \caption{Accuracy on different datasets as train and test data using a Neural Network. 100 epochs has been used for both Cobar and full data. Batch size of 32 has been used for Cobar, and a batch size of 320 has been used for the full data as training dataset.  The optimal parameters used have been found using grid search in figure \ref{fig:cobar_grid} for Cobar, and in figure \ref{fig:NN_full} for full data as training data. Other parameters have been automatically chosen by tensorflow}
+    \label{tab:grid_NN}
+    \centering
+    \begin{tabular}{|l|l|l|l|l|}
+        \hline
+        \textbf{Train Data}      & \textbf{Test Data}          & \textbf{Neurons} & \textbf{Layers} & \textbf{Accuracy} \\
+        \hline
+        80\% split of Cobar data & 20\% split of Cobar data    & 20               & 2               & 97.2\%            \\
+        \hline
+        100\% of Cobar data      & 100\% of Coffs Harbour data & 20               & 2               & 74.5\%            \\
+        \hline
+        100\% of Cobar data      & 100\% of Darwin data        & 20               & 2               & 75.5\%            \\
+        \hline
+        80\% split of all data   & 20\% split of all data      & 50               & 4               & 85.7\%            \\
+        \hline
+        80\% of full data        & 20\% of Cobar data          & 50               & 4               & 93.5\%            \\
+        \hline
+        80\% of full data        & 20\% of Darwin data         & 50               & 4               & 86.1\%            \\
+        \hline
+        80\% of full data        & 20\% of Coffs Harbour data  & 50               & 4               & 80.4\%            \\
+        \hline
+    \end{tabular}
+\end{table}
+\begin{table}[H]
+    \caption{Accuracy on different datasets as train and test data using Random Forest. The optimal parameters used have been found using grid search using Cobar as train data in figure \ref{fig:cobar_grid_rf}, and 80\% of the full data in figure \ref{fig:rf_full}. Other parameters than trees and tree depth have been chosen automatically by tensorflow.}
     \label{tab:grid_RF}
     \centering
     \begin{tabular}{|l|l|l|l|l|}
         \hline
-        \textbf{Train Data}      & \textbf{Test Data}         & \textbf{Trees} & \textbf{Depth} & \textbf{Accuracy} \\
+        \textbf{Train Data}      & \textbf{Test Data}          & \textbf{Trees} & \textbf{Depth} & \textbf{Accuracy} \\
         \hline
-        80\% split of Cobar data & 20\% split of Cobar data   & 100            & 10             & 96.3\%            \\
+        80\% split of Cobar data & 20\% split of Cobar data    & 100            & 10             & 96.3\%            \\
         \hline
-        80\% split of all data   & 20\% split of all data     & 500            & 20             & 86.6\%            \\
+        100\% of Cobar data      & 100\% of Coffs Harbour data & 100            & 10             & 77.9\%            \\
         \hline
-        100\% of Cobar data      & 100\% of CoffsHarbour data & 100            & 10             & 77.9\%            \\
+        100\% of Cobar data      & 100\% of Darwin data        & 100            & 10             & 82.4\%            \\
         \hline
-        100\% of Cobar data      & 100\% of Darwin data       & 100            & 10             & 82.4\%            \\
+        80\% split of all data   & 20\% split of all data      & 500            & 20             & 86.6\%            \\
         \hline
-        80\% of full data        & 20\% of Cobar data         & 500            & 20             & 94.4\%            \\
+        80\% of full data        & 20\% of Cobar data          & 500            & 30             & 94.4\%            \\
         \hline
-        80\% of full data        & 20\% of Darwin data        & 500            & 20             & 87.4\%            \\
+        80\% of full data        & 20\% of Darwin data         & 500            & 30             & 87.4\%            \\
+        \hline
+        80\% of full data        & 20\% of Coffs Harbour data  & 500            & 30             & 79.3\%            \\
         \hline
     \end{tabular}
 \end{table}
+In table \ref{tab:grid_NN} and \ref{tab:grid_RF} we see quite similar results. The neural network performs slightly better than the random forest when predicting Cobar for a Cobar trained model, and when predicting Coffs Harbour data for a full data trained model. In all the other cases we see the Random Forest model performing better, generally reaching a 1\% higher accuracy than the Neural Network.
 % subsection Full data analysis (end)
+
+\section{Discussion}
+We have seen that our weather stations have a quite varying climate with large deviations in the fraction of days with no rain tomorrow as we saw in table \ref{tab:frac}. This is something we have to consider when interpreting all the results from our models. This is because any model with an accuracy lower than this fraction would be a worse model than one always predicting no rain tomorrow. Together with this varying fraction we have seen that different features have different strength of correlation with no rain tomorrow. We looked more closely at the two most correlated features \textit{Sunshine} and \textit{Humidity3pm}, which showed great deviations from the mean for some weather stations. This may be something to consider when both choosing a training dataset and training a model, because one model trained at one location may interpret input test data from another location as some extreme values compared to the training data meaning the model would always predict for example rain tomorrow. An example of this would be a Cobar trained model tested on Coffs Harbour data. The test data's almost 25\% lower average relative humidity could for Example mostly be interpreted by the model as very dry weather and therefore a low probability of rain. This is based on higher humidity being in strong correlation to rain the day after as seen in figure \ref{fig:corr}.
+\subsection{Data correlation} % (fold)
+\label{sub:Data correlation}
+
+% subsection Data correlation (end)
+\subsection{Data correlation} % (fold)
+\label{sub:Data correlation}
+
+% subsection Data correlation (end)
+\subsection{Data correlation} % (fold)
+\label{sub:Data correlation}
+
+% subsection Data correlation (end)
 \begin{itemize}
     \item initializing a pandas dataframe,
     \item remove all rows with at least one measurement missing,
@@ -338,7 +388,7 @@ We see in \ref{fig:rf_full} that more trees and a larger depth generally equals 
 \label{app:dataset}
 \begin{table}[H]
     \begin{small}
-        \caption{Description of dataset features to predict the last feature "RainTomorrow" if it is going to rain tomorrow or not }
+        \caption{Description of dataset features to predict the last feature \textit{RainTomorrow} if it is going to rain tomorrow or not }
         \label{tab:features}
         \begin{center}
             \begin{tabular}{|l|l|l|}
