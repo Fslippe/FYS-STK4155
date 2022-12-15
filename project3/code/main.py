@@ -118,7 +118,7 @@ def grid_search_location(df, target, location):
                            iterations=100,
                            batch_size=32,
                            mom=0.3,
-                           savename="logreg_%s_%s" % (m, location),
+                           savename="logreg_%s_%s_test" % (m, location),
                            n_B=10)
     plt.show()
     # Perform grid search for NN
@@ -229,7 +229,7 @@ def main():
 
     # Train and test data on Cobar
     print("GRIDSEARCH ")
-    #grid_search_location(df, target, location="Cobar")
+    grid_search_location(df, target, location="Cobar")
 
     # Training on one location, test on another
     loc_1 = "Cobar"
