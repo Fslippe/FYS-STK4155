@@ -1,5 +1,6 @@
 from functions import *
 from autograd import grad
+import numpy as np
 
 
 class GradientDescent:
@@ -13,7 +14,7 @@ class GradientDescent:
     - lamda=0               L2 norm lambda 
     - iterations=1000       iterations
     - rho_1=0.9             rho_1 used in RMSprop and ADAM
-    - rho_2=0.99            rho_" used in ADAM
+    - rho_2=0.99            rho_2 used in ADAM
     - eps=1e-8              value to avoid divide by 0
     - seed=None             Seed for initialization of random values
     """

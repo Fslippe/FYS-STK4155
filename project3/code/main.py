@@ -229,7 +229,7 @@ def main():
 
     # Train and test data on Cobar
     print("GRIDSEARCH ")
-    grid_search_location(df, target, location="Cobar")
+    #grid_search_location(df, target, location="Cobar")
 
     # Training on one location, test on another
     loc_1 = "Cobar"
@@ -254,6 +254,7 @@ def main():
 
     trees_best = 500
     depth_best = 30
+    NN_best = [20, 20, 20, 20, 20, 20]
     train_cobar = train.loc[train["Location"] == "Cobar"]
     test_cobar = test.loc[test["Location"] == "Cobar"]
     train_coffs = train.loc[train["Location"] == "CoffsHarbour"]
@@ -290,7 +291,7 @@ def main():
 
     print("\n")
 
-    model = create_neural_network_keras([20, 20])
+    model = create_neural_network_keras(NN_best)
     model.fit(X_train, y_train)
     scores_cobar = model.evaluate(X_test_cobar, y_test_cobar)
     scores_darwin = model.evaluate(X_test_darwin, y_test_darwin)
@@ -298,7 +299,8 @@ def main():
 
     print("\n\nFull data accuracy score on Cobar test data:", scores_cobar[1])
     print("Full data accuracy score on Darwin test data:", scores_darwin[1])
-    print("Full data accuracy score on Darwin test data:", scores_coffs[1])
+    print("Full data accuracy score on CoffsHarbour test data:",
+          scores_coffs[1])
 
     # Grid search on all data
 
