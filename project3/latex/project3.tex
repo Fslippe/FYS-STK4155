@@ -114,12 +114,53 @@ For our testing of the models and the dataset we start by looking at one single 
 % subsubsection Weather stations (end)
 
 \subsection{Implementation of methods} % (fold)
+
+\begin{table}
+    \begin{small}
+        \caption{Notation used with descriptions and dimensions. }
+        \label{tab:}
+        \begin{center}
+            \begin{tabular}{|l|l|l|}
+                \hline
+                Notation       & Description                                               & size                                \\
+                \hline
+                $C$            & Cost function                                             & -                                   \\
+                \hline
+                $\sigma$       & Activation function                                       & -                                   \\
+                \hline
+                $w_{ij}^{(L)}$ & The weight for the connection                             &                                     \\                     & between neuron $i$ in layer $L-1$   and $j$ in layer $L$ & - \\
+                \hline
+                $b_j^{(L)}$    & Bias added for neuron $j$ in layer $L$                    & -                                   \\
+                \hline
+                $z_j^{(L)}$    & Output before activation for neuron $j$ in layer $L$      & -                                   \\
+                \hline
+                $a_j^{(L)}$    & Output of activation function for neuron $j$ in layer $L$ & -                                   \\
+                \hline
+                $\lambda$      & L2-norm                                                   & -                                   \\
+                \hline
+                $\eta_j$       & Step size (learning rate) at step $j$                     & $n$ iterations                      \\
+                \hline
+                $\theta$       & Value to optimize in our models                           & $n$ features                        \\
+                \hline
+                ${E}^{(L)}$    & Error for every neuron in layer $L$                       & $n_{L}$ neurons                     \\
+                \hline
+                $X$            & Input data containing data for every feature              & $n$ features $\times$ datalength    \\
+                \hline
+                $\hat{y}$      & Our predictions                                           & target features $\times$ datalength \\
+                \hline
+                $y$            & Target data                                               & target features $\times$ datalength \\
+                \hline
+            \end{tabular}
+        \end{center}
+    \end{small}
+\end{table}
+
 \label{sub:Implementation of methods}
 
 \subsubsection*{Activation and cost functions}
 To analyze binary data we need to define a cost function giving a way for our models to adjust their parameters in order to make better predictions. By starting with the logistic regression function for a prediction $\hat{y}_i$ taking values of either 1 or 0
 \begin{align*}
-    p(t) = \frac{e^{\hat{y}_i}}{1 + e^{\hat{y}}},
+    p(\hat{y}) = \frac{e^{\hat{y}_i}}{1 + e^{\hat{y}}},
 \end{align*}
 one can as seen in appendix \ref{app:NN} derive the binary cross entropy function
 \begin{align*}
@@ -173,7 +214,27 @@ A Neural Network makes use of SGD and ADAM as described above, and are built up 
 
 The connection and belonging activation of each neuron is dependent on a set of weights and biases that are optimized in order to best fit the input target data. For the TensorFlow Neural Network used, the biases are initially set to 0, and the weights randomly chosen from a normal distribution with mean 0 and standard deviation 0.05 \cite{tf}. For every iteration the Neural Network runs through a feed forward process. This process starts by scaling every neuron's input before it is sent to the next layer of neurons. This scaling is dependent by each neuron connection's belonging weight and bias, where the weight is multiplied and the bias added to the input. At the next layer the scaled input is fed to the layer's activation function (ReLU) before it is again scaled and sent to the next layer. When arriving at the output layer the input is directly sent to the output layer's activation function (sigmoid) which corresponds to a prediction. In order to make better predictions the weights and biases for all the neuron connections are adjusted through backpropagation. This is done by first calculating the error of the output layer with help from the cost function (binary cross entropy) before using the output layer's error to calculate the error for every layer before.  Through SGD with or without ADAM the weights and biases for every layer are updated in order to minimize the error of that layer. A full derivation of the backpropagation process can be found in appendix \ref{app:NN}.
 \subsubsection*{Random Forest}
+A Random Forest is built up by several decision trees. Such a tree can be used for either regression or as in our case a classification problem. It is built up around asking questions which depending on the answer will direct to either one of two leaf nodes. This process is repeated, giving two new branches for every classification until the tree has no more ways of classifying the data, or until some stopping criteria is reached. This can be in form of a maximum depth limiting how many questions can be asked before the data is classified, or by stopping the branching process when a minimum number of samples are left in a leaf node.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{../figures/Decision_tree.png}
+    \caption{Correlation between the different features of the dataset.}
+    \label{fig:tree}
+\end{figure}
+
+
+For a regression case a decision tree starts by looking at all possible values $x_1,x_2,...,x_p$ and making $J$ non overlapping regions around these. This means that we for new input data falling into a region $R_j$ will predict the value that initially made that region. The construction of the $J$ different regions are often not made exactly as described above, but made with a top-down approach. This means that we begin at the top of the tree and add to new branches corresponding to two new regions. We describe this in terms of a cutpoint $s$ splitting two regions $R_1$ and $R_2$ by
+\begin{align*}
+    \{X|x_j < s\} \quad\text{and}\quad \{X|x_j \geq s\}.
+\end{align*}
+Here we choose the feature $j$ and the cutpoint $s$ for the two regions based on the minimization of the $MSE$ for the input design matrix $X$ given by
+\begin{align*}
+    \sum_{i:x_i \in R_1} (y_i - \overline{y}_{R_1})^2  + \sum_{i:x_i \in R_2} (y_i - \overline{y}_{R_2})^2.
+\end{align*}
+This is done for every feature $p$ and every one of the $N$ data points, giving a total of $p \times N $ splits performed. The splitting process continues until all data has been classified, or until some stopping criteria such as a maximum depth of the tree or a minimum number of samples left in a leaf node. We will use the maximum depth of the tree as an adjustable parameter when we study the bias-variance trade-off. To generate the decision tree for our regression problem we use the DecisionTreeRegressor method from scikit learn.
+
+A big problem often found with a single decision tree is overfitting. This can be explained by how the tree can have almost an infinite number of branches, perfectly splitting up the training data to classify all the training samples. This can of course be solved by restricting the tree with for example a maximum depth, but also be solved by initializing several trees. We now have a forest of trees where each of them are trained on different subsets of data. These data subsets are made through bootstrapping of the training data. The branch splitting is done differently in a random forest. Here we select $m \leq p$ random variables from the $p$ predictors to consider for each split. This leaves us with trees that may look quite different from each other, because of the strongest predictors not always being among the $m$ variables, leaving us with these predictors not always being in the upper branches. The average of every tree's prediction is what leaves us with the final prediction. The random forest we will also be implemented through scikit learn with the method RandomForestRegressor, and we will look at how the tree depth and the number of trees influence the bias-variance trade-off.
 
 % subsection Implementation of methods (end)
 
@@ -375,7 +436,7 @@ When we trained our model for the full dataset we also tested more parameters in
 Compared to the other weather predictions on Cobar test data showed great performance. This may have been as discussed earlier a result of Cobar mostly having rain-free days, or because of this station having small deviations from the mean when it comes to highly \textit{RainTomorrow} correlated features such as sunshine and humidity. We can in the same way explain the bad predictions we saw for Coffs Harbour data. This shows the importance of location and following local climate when predicting next day's weather.
 At the same time, we have seen that a Cobar trained model has better performance predicting Darwin than Coffs Harbour data, which as we have seen in figure \ref{fig:earth} showing that the distance between two weather stations is not the most important factor. In other words could a model trained on data from the other side of the world perform better on predicting the weather of one city than a model trained on its neighbouring city. From this, one can help weather predictions in areas with little weather forecast cover by using a model trained in a similar climate with more abundance of data. Similarly, have European weather forecast models been shown to outperform Australian models in the southern hemisphere\url{https://www.researchgate.net/publication/249621626_Performance_of_the_ECMWF_and_the_BoM_Ensemble_Prediction_Systems_in_the_Southern_Hemisphere}, showing the Earth's weather systems similarities. Here it is worth noticing that such weather forecast models uses differential equations when predicting the weather making them completely different types of model. Nevertheless, this gives us an understanding of the potential of how worldwide data can be used to improve weather predictions all over the world.
 
-In total, our results have not been perfect. In comparison to the Norwegian meteorological institute with an accuracy of up to 92\% \url{https://www.nettavisen.no/nyheter/meteorologisk-institutt-sjekker-treffsikkerheten-pa-varsel-av-regndrapene/s/12-95-3423819484}\url{https://www.met.no/om-oss/_/attachment/inline/ad252bad-ad4a-466f-9456-1b35496ba225:af8c5e5bfa70eabe20267df4c976c742c036f86a/MET%20Aarsrapport%202021%20med%20regnskap.pdf} on predicting hourly rain on a station with only 67\% of the year without precipitation \url{https://no.climate-data.org/europa/norge/west-agder/kristiansand-706/}, our results end up being not so impressive. Therefore, it looks like machine learning methods will not take over for traditional weather forecast models, but would rather be a helper in order to make predictions even more accurate. This can for example be done by using private weather stations to predict more local weather. This has already been done with great success, which leaves room for how  machine learning can best possible be used on the abundance of private weather stations. 
+In total, our results have not been perfect. In comparison to the Norwegian meteorological institute with an accuracy of up to 92\% \url{https://www.nettavisen.no/nyheter/meteorologisk-institutt-sjekker-treffsikkerheten-pa-varsel-av-regndrapene/s/12-95-3423819484}\url{https://www.met.no/om-oss/_/attachment/inline/ad252bad-ad4a-466f-9456-1b35496ba225:af8c5e5bfa70eabe20267df4c976c742c036f86a/MET%20Aarsrapport%202021%20med%20regnskap.pdf} on predicting hourly rain on a station with only 67\% of the year without precipitation \url{https://no.climate-data.org/europa/norge/west-agder/kristiansand-706/}, our results end up being not so impressive. Therefore, it looks like machine learning methods will not take over for traditional weather forecast models, but would rather be a helper in order to make predictions even more accurate. This can for example be done by using private weather stations to predict more local weather. This has already been done with great success \url{https://www.met.no/om-oss/_/attachment/inline/ad252bad-ad4a-466f-9456-1b35496ba225:af8c5e5bfa70eabe20267df4c976c742c036f86a/MET%20Aarsrapport%202021%20med%20regnskap.pdf}, which leaves room for how  machine learning can best possible be used on the abundance of private weather stations. 
 
 
 % subsubsection Training on a single station (end)
@@ -390,7 +451,7 @@ In total, our results have not been perfect. In comparison to the Norwegian mete
 \subsection{Data correlation} % (fold)
 \label{sub:Data correlation}
 
-% subsection Data correlation (end) 
+% subsection Data correlation (end) 0
 \begin{itemize}
     \item initializing a pandas dataframe,
     \item remove all rows with at least one measurement missing,
@@ -482,20 +543,20 @@ Where $\hat{y}_i$ is defined by:
 \end{align*}
 To find a cost function and following gradient we use Maximum Likelihood Estimation from the dataset $\mathcal{D} \in \{x_i, y_i\}$:
 \begin{align*}
-    p(\mathcal{D}|\boldsymbol{\theta}) = \prod_{i=1}^n (p(y_i = 1|x_i,\boldsymbol{\theta}))^{y_i}\left( 1- p(y_i = 1 | x_i, \boldsymbol{\theta})\right)^{1-y_i}
+    p(\mathcal{D}|\theta) = \prod_{i=1}^n (p(y_i = 1|x_i,\theta))^{y_i}\left( 1- p(y_i = 1 | x_i, \theta)\right)^{1-y_i}
 \end{align*}
 where we have used:
 \begin{align*}
-    p(y_i=0|x_i, \boldsymbol{\theta} ) = 1 - p(y_i=1 | x_i, \boldsymbol{\theta})
+    p(y_i=0|x_i, \theta ) = 1 - p(y_i=1 | x_i, \theta)
 \end{align*}
 giving us the log-likelihood and our cost function:
 \begin{align*}
-    C(\boldsymbol{\theta}) = \sum_{i=1}^n (y_i \log p(y_i =1 | x_i, \boldsymbol{\theta})) + (1- y_i) \log [1 - p(y_i \log p(y_i =1 | x_i, \boldsymbol{\theta}))]
+    C(\theta) = \sum_{i=1}^n (y_i \log p(y_i =1 | x_i, \theta)) + (1- y_i) \log [1 - p(y_i \log p(y_i =1 | x_i, \theta))]
 \end{align*}
 Recognizing the log-likelihood being a maximizing function we use the negative log-likelihood which rewritten gives us:
 \begin{align}
     \label{eq:cross}
-    C(\boldsymbol{\theta}) = -\sum_{i=1}^n (y_i \hat{y}_i - \log [1 + e^{\hat{y}_i}])
+    C(\theta) = -\sum_{i=1}^n (y_i \hat{y}_i - \log [1 + e^{\hat{y}_i}])
 \end{align}
 \subsubsection*{Backpropagation}
 The error found using the Neural Network's cost function does not directly say anything on how to update the weights ($w_{ij}^{L}$) and biases ($b_{j}^{L}$) for layer $L$, neuron $j$ and connection $ij$ between neuron $i$ of the last layer and neuron $j$. To find this we can use the definition of the prediction made by the Neural Network. This prediction $\hat{y}$ is dependent on the value $a_l$ which comes from the value $z_l$ through the layer's activation function. To apply the cost function on the weight and biases we use the chain rule for layer $L$:
@@ -536,7 +597,7 @@ This means that we can calculate the error and following bias and weight gradien
 \begin{enumerate}
     \item calculating the error at the last layer $L$:
           \begin{align*}
-              \boldsymbol{E}^{(L)} = \frac{\partial C }{\partial \boldsymbol{a}^{(L)}} \sigma(\boldsymbol{z}^{(L)})
+              E^{(L)} = \frac{\partial C }{\partial a^{(L)}} \sigma(z^{(L)})
           \end{align*}
     \item Using this to calculate the error of the other layers starting at $l=L-1$:
           \begin{align*}
