@@ -68,8 +68,8 @@ In this report we will perform a bias-variance trade-off analysis of different m
 \section{Method}
 \subsection*{Bootstrap}
 
-To study the bias-variance trade-off we first implement the bootstrap resampling technique. This is done by resampling our train data $n_B$ times with replacement. That means we gain $n_B$ new samples that may be unique but still only contain values from the original sample. This means that we can draw a sample from the original [1,2,3] to be for example [2,1,2]. For significant large amounts of training data, we are left with a minimal chance of drawing the same sample multiple times.
-
+To study the bias-variance trade-off we first implement the bootstrap resampling technique. This is done by resampling our train data $n_B$ times with replacement. That means we gain $n_B$ new samples that may be unique but still only contain values from the original sample. This means that we can draw a sample from the original [1,2,3] to be for example [2,1,2]. For significant large amounts of training data, we are left with a minimal chance of drawing the same sample multiple times. From this we get by following the central limit theorem under the assumption that all our $n_B$ subsets are drawn from the same distribution, a normal distribution describing our data with original length $n$ with mean $\frac{1}{n}\sum_i y_i$
+and standard deviation $\sigma/ \sqrt{m-1}$ for $m$ new data subsets and the original standard deviation of the distribution $\sigma$.
 \subsection*{Bias-variance tradeoff}
 We define a cost function given by the mean squared error for a prediction vector $\tilde{\boldsymbol{y}}= \boldsymbol{X} \boldsymbol{\beta}$ and the true data vector $\boldsymbol{y}$.
 \begin{align*}
