@@ -11,7 +11,7 @@
 \usepackage{caption}
 \usepackage{hyperref}
 \usepackage{biblatex}
-%\addbibresource{project2.bib}
+\addbibresource{project3.bib}
 \usepackage{setspace}
 \usepackage{wrapfig}
 \usepackage{lipsum}
@@ -59,7 +59,7 @@
 \date{\today}
 \begin{document}
 \maketitle
-GitHub repository containing code and further instructions on how to reproduce the results of this report: \url{https://github.com/Fslippe/FYS-STK4155/tree/main/project3}
+GitHub repository containing code and further instructions on how to reproduce the results of this article: \url{https://github.com/Fslippe/FYS-STK4155/tree/main/project3}
 \url{https://openarchive.usn.no/usn-xmlui/handle/11250/2581934}
 \url{https://www.kaggle.com/datasets/jsphyg/weather-dataset-rattle-package}
 \begin{abstract}
@@ -68,11 +68,15 @@ GitHub repository containing code and further instructions on how to reproduce t
 \tableofcontents
 \newpage
 \section{Introduction}
-\section{Method}
-\subsection{Structure of dataset} % (fold)
-\label{sub:Structure of dataset}
+The weather is a big part of our lives. It is something we all have a relationship with and have to consider in the planning of our daily lives. Precipitation is maybe what is most important for us to know about. It may make a day at the beach either a joyful or a not so enjoyable experience. This makes weather forecasts and their quality of importance in our daily planning. A possibility to improve the weather forecasts is by using machine learning methods. To test the use of such methods we will in this article use daily weather data from numerous Australian weather station from the time frame 2007 to 2017, to predict rain the next day. We will implement and compare logistic regression, a Feed Forward Neural Network and Random Forest and look at their performance when training on different data subsets. We will look into the methods' abilities of predicting rain at other locations than they have been trained at, and try finding the usefulness of the models in weather forecasting.
 
-The dataset found at \url{https://www.kaggle.com/datasets/jsphyg/weather-dataset-rattle-package} includes about 10 years of weather observations from numerous Australian weather stations. The observations include features such as temperature, wind, rainfall, and sunshine hours. A full overview of the dataset and its features can be found in table \ref{tab:features} in appendix \ref{app:dataset}. The main purpose of the dataset is to make a prediction based on today's weather if it is going to rain or not tomorrow. This prediction is either Yes or No, and we are therefore looking at a binary classification problem.
+The article is structured in four main parts and an appendix. First we will introduce the data structure and the implementation of the methods in section \ref{sec:Method}, before presenting the results in section \ref{sec:results}. We will discuss the results, and look at weaknesses and possibilities for improvements in the discussion section \ref{sec:discussion}, before summarizing our findings in the conclusion in section \ref{sec:conclusion}.
+\section{Method}
+\label{sec:Method}
+
+\subsection{Structure of dataset} % (fold)
+
+The dataset found on \href{https://www.kaggle.com/datasets/jsphyg/weather-dataset-rattle-package}{kaggle} includes about 10 years of weather observations from numerous Australian weather stations. The observations include features such as temperature, wind, rainfall, and sunshine hours. A full overview of the dataset and its features can be found in table \ref{tab:features} in appendix \ref{app:dataset}. The main purpose of the dataset is to make a prediction based on today's weather if it is going to rain or not tomorrow. This prediction is either Yes or No, and we are therefore looking at a binary classification problem.
 
 
 
@@ -234,39 +238,14 @@ To maximize the information gain we define a cost function in terms of the avera
 \end{align*}
 The best split is then chosen for the threshold $t_k$ which minimizes the cost function and maximizes the information gain $E_{parent} - C(k, t_k)$.
 
-
-For this we need the Gini index measuring the inequality in a distribution or in our case a node
-\begin{align*}
-    G = \sum_{k=1}^K p_{mk}(1 - p_{mk}).
-\end{align*}
-Here we have summed over all possible target values, $k=1,2,..,K$, and used the likelihood function
-\begin{align*}
-    p_{mk} = \frac{1 }{N_m }\sum_{x_i \in R_m} I (y_i = k),
-\end{align*}
-by using the proportion of observations of the class $k$ in region $R_M$ $I(y_i = k)$.
-We define a cost function using the Gini index $G$ defining the impurity of left/right subset, feature $k$, threshold $t_k$, and number of instances in the left/right subset $m$:
-\begin{align*}
-    C(k, t_k ) = \frac{m_{\text{left}}}{m} G_{\text{left}} + \frac{m_{\text{right}}}{m}G_{\text{right}}.
-\end{align*}
-In order to perform the best split for each node, we minimize the cost function, giving us the threshold to use for a feature.
-
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{../figures/Decision_tree.png}
-    \caption{\url{https://towardsdatascience.com/how-do-random-forests-decision-trees-decide-simply-explained-with-an-example-in-python-6737eb183604}}
+    \caption{A simple ilustration of a Random Forest with n trees and a max depth of 3. \href{https://towardsdatascience.com/how-do-random-forests-decision-trees-decide-simply-explained-with-an-example-in-python-6737eb183604}{Refference} (Visited on 16. Dec 2022) }
     \label{fig:tree}
 \end{figure}
+A problem one may face when using a single decision tree is overfitting. This can be explained by how a tree can have so many nodes that every sample in the training set will be perfectly classified. This can be solved by introducing stopping criteria such as restricting the maximum depth referring to the maximum number of splits one branch is allowed to make. We can also introduce more trees trained on different data subsets, making a forest. This is done in a Random Forest, where each subset includes bootstrapped data from the original dataset. What is special about a Random Forest is how the branch splitting is done. Instead of using all $p$ predictors when performing each split, we randomly select $m \leq p$. This makes it possible for the trees to look very different from each other, because of the strongest predictor not always being among the $m$ randomly chosen predictors, leaving us with these predictors not always being in the upper branches. Therefore, we can get different predictions from each tree, which averaged will give the whole forest's final prediction. This way of averaging over many now uncorrelated trees makes a great reduction in variance compared to a single decision tree.
 
-
-For a regression case a decision tree starts by looking at all possible values $x_1,x_2,...,x_p$ and making $J$ non overlapping regions around these. This means that we for new input data falling into a region $R_j$ will predict the value that initially made that region. The construction of the $J$ different regions are often not made exactly as described above, but made with a top-down approach. This means that we begin at the top of the tree and add to new branches corresponding to two new regions. We describe this in terms of a cutpoint $s$ splitting two regions $R_1$ and $R_2$ by
-\begin{align*}
-    \{X|x_j < s\} \quad\text{and}\quad \{X|x_j \geq s\}.
-\end{align*}
-Here we choose the feature $j$ and the cutpoint $s$ for the two regions based on the minimization of the $MSE$ for the input design matrix $X$ given by
-\begin{align*}
-    \sum_{i:x_i \in R_1} (y_i - \overline{y}_{R_1})^2  + \sum_{i:x_i \in R_2} (y_i - \overline{y}_{R_2})^2.
-\end{align*}
-This is done for every feature $p$ and every one of the $N$ data points, giving a total of $p \times N $ splits performed. The splitting process continues until all data has been classified, or until some stopping criteria such as a maximum depth of the tree or a minimum number of samples left in a leaf node. We will use the maximum depth of the tree as an adjustable parameter when we study the bias-variance trade-off. To generate the decision tree for our regression problem we use the DecisionTreeRegressor method from scikit learn.
 
 A big problem often found with a single decision tree is overfitting. This can be explained by how the tree can have almost an infinite number of branches, perfectly splitting up the training data to classify all the training samples. This can of course be solved by restricting the tree with for example a maximum depth, but also be solved by initializing several trees. We now have a forest of trees where each of them are trained on different subsets of data. These data subsets are made through bootstrapping of the training data. The branch splitting is done differently in a random forest. Here we select $m \leq p$ random variables from the $p$ predictors to consider for each split. This leaves us with trees that may look quite different from each other, because of the strongest predictors not always being among the $m$ variables, leaving us with these predictors not always being in the upper branches. The average of every tree's prediction is what leaves us with the final prediction. The random forest we will also be implemented through scikit learn with the method RandomForestRegressor, and we will look at how the tree depth and the number of trees influence the bias-variance trade-off.
 
@@ -275,8 +254,9 @@ A big problem often found with a single decision tree is overfitting. This can b
 
 
 \section{Results}
+\label{sec:Results}
+
 \subsection{Data correlation} % (fold)
-\label{sub:Data correlation}
 
 % subsection Data correlation (end)
 % subsection  (end)
@@ -451,27 +431,30 @@ In table \ref{tab:grid_NN} and \ref{tab:grid_RF} we see quite similar results. T
 % subsection Full data analysis (end)
 
 \section{Discussion}
+\label{sec:Discussion}
 We have seen that our weather stations have a quite varying climate with large deviations in the fraction of days with no rain tomorrow as we saw in table \ref{tab:frac}. This is something we have to consider when interpreting all the results from our models. This is because any model with an accuracy lower than this fraction would be a worse model than one always predicting no rain tomorrow. Together with this varying fraction we have seen that different features have different strength of correlation with no rain tomorrow. We looked more closely at the two most correlated features \textit{Sunshine} and \textit{Humidity3pm}, which showed great deviations from the mean for some weather stations. This may be something to consider when both choosing a training dataset and training a model, because one model trained at one location may interpret input test data from another location as some extreme values compared to the training data meaning the model would always predict for example rain tomorrow. An example of this would be a Cobar trained model tested on Coffs Harbour data. The test data's almost 25\% lower average relative humidity could for Example mostly be interpreted by the model as very dry weather and therefore a low probability of rain. This is based on higher humidity being in strong correlation to rain the day after as seen in figure \ref{fig:corr}.
 
 \subsection{Training on a single station} % (fold)
 \label{sub:Training on a single station}
-Based on the results we have seen in the grid search using logistic regression in figure \ref{fig:cobar_grid_logreg}, we can conclude this method not being the optimal choice for our weather data. Both optimizers performed worse than a model only predicting no rain (88.2\%) with accuracies of 78.5 and 77.6 percent for momentum and ADAM respectively. These bad results are to our surprise since logistic regression have been shown to reach accuracies of 98\% on other classification data \cite{project2}. It can on the other hand be explained by possible non-linear relationships between the target and input data of our methods. We did also not test the method's performance by changing parameters such as the batch size and number of iterations performed in the gradient decent. Based on earlier research showing that neural network in almost every case will outperform logistic regression \url{https://doi.org/10.1016/S1532-0464(03)00034-0}, we can justify our choice of not including this model in further research of our full data analysis.
+Based on the results we have seen in the grid search using logistic regression in figure \ref{fig:cobar_grid_logreg}, we can conclude this method not being the optimal choice for our weather data. Both optimizers performed worse than a model only predicting no rain (88.2\%) with accuracies of 78.5 and 77.6 percent for momentum and ADAM respectively. These bad results are to our surprise since logistic regression have been shown to reach accuracies of 98\% on other classification data \cite{project2}. It can on the other hand be explained by possible non-linear relationships between the target and input data of our methods. We did also not test the method's performance by changing parameters such as the batch size and number of iterations performed in the gradient decent. Based on earlier research showing that neural network in almost every case will outperform logistic regression \cite{logreg}, we can justify our choice of not including this model in further research of our full data analysis.
 
-Compared to logistic regression, both the Neural Network and the Random Forest performed exceptionally well when trained on and predicting Cobar data. Both the Neural Network using SGD with momentum and the random forest got accuracies of 96.3\%, but the Neural Network using ADAM topped the performance chart with an accuracy of 97.2\%. This gives us an indication of ADAM being our optimization method of choice when using the Neural Network. This comes as no surprise based on the method being suitable for large datasets, as well as datasets with noisy or sparse gradients \url{https://arxiv.org/pdf/1412.6980.pdf}. The ADAM method has on the other hand also been shown to have bad generalization and perform worse than SGD with momentum \url{https://arxiv.org/abs/2108.11371}, but this is at the same time only valid for certain types of data. We therefore continue our analysis only using ADAM as our gradient decent optimizer.
+Compared to logistic regression, both the Neural Network and the Random Forest performed exceptionally well when trained on and predicting Cobar data. Both the Neural Network using SGD with momentum and the random forest got accuracies of 96.3\%, but the Neural Network using ADAM topped the performance chart with an accuracy of 97.2\%. This gives us an indication of ADAM being our optimization method of choice when using the Neural Network. This comes as no surprise based on the method being suitable for large datasets, as well as datasets with noisy or sparse gradients \cite{kingma2014adam}. The ADAM method has on the other hand also been shown to have bad generalization and perform worse than SGD with momentum \cite{SGD}, but this is at the same time only valid for certain types of data. We therefore continue our analysis only using ADAM as our gradient decent optimizer.
 
 \subsection{Training on all stations} % (fold)
 \label{sub:Training on all stations}
 
 % subsection Training on all stations (end)
-When we trained our model for the full dataset we also tested more parameters in our grid search for both the Neural Network and the Random Forest. From this we saw a general trend for the Random Forest with more trees and a larger tree depth giving higher accuracies, while the Neural Network showed no such tendency. The Neural Network got good results for most choices of neurons and layers, indicating the method not being as dependent on higher value parameters as Random Forest, but rather the right combination. Furthermore, we have shown that the Random Forest generally is the best performer, only being beaten when by the Neural Network when using Coffs Harbour test data. This accuracy difference is on the other hand very small but could be an indication of the Neural Network performing better on outliers from the mean train data, as Coffs Harbour data has shown itself to be with highly deviating humidity and sunshine. The random forest is looked at as an easily tunable method where more trees generally would equal a more accurate model \url{https://www.jmlr.org/papers/volume18/17-269/17-269.pdf}, which is not always the case for a Neural Network. A Neural Network can also be highly dependent on other parameters such as the batch size and the number of iterations performed. In our case we have not studied such a dependence which may have influenced our results in favor of Random Forest being the most accurate model. The step size, and an added L2-norm has also been shown to highly influence a Neural Network's performance \cite{project2}. This means that our results do not show that a Random Forest being the better model when predicting weather data, but that it rather would be the most efficient when one has a lack of time and resources to fully optimize a Neural Network.
+When we trained our model for the full dataset we also tested more parameters in our grid search for both the Neural Network and the Random Forest. From this we saw a general trend for the Random Forest with more trees and a larger tree depth giving higher accuracies, while the Neural Network showed no such tendency. The Neural Network got good results for most choices of neurons and layers, indicating the method not being as dependent on higher value parameters as Random Forest, but rather the right combination. Furthermore, we have shown that the Random Forest generally is the best performer, only being beaten when by the Neural Network when using Coffs Harbour test data. This accuracy difference is on the other hand very small but could be an indication of the Neural Network performing better on outliers from the mean train data, as Coffs Harbour data has shown itself to be with highly deviating humidity and sunshine. The random forest is looked at as an easily tunable method where more trees generally would equal a more accurate model \cite{probst2017tune}, which is not always the case for a Neural Network. A Neural Network can also be highly dependent on other parameters such as the batch size and the number of iterations performed. In our case we have not studied such a dependence which may have influenced our results in favor of Random Forest being the most accurate model. The step size, and an added L2-norm has also been shown to highly influence a Neural Network's performance \cite{project2}. This means that our results do not show that a Random Forest being the better model when predicting weather data, but that it rather would be the most efficient when one has a lack of time and resources to fully optimize a Neural Network.
 
 
 \subsection{Further use of predicting weather data}
 Compared to the other weather predictions on Cobar test data showed great performance. This may have been as discussed earlier a result of Cobar mostly having rain-free days, or because of this station having small deviations from the mean when it comes to highly \textit{RainTomorrow} correlated features such as sunshine and humidity. We can in the same way explain the bad predictions we saw for Coffs Harbour data. This shows the importance of location and following local climate when predicting next day's weather.
-At the same time, we have seen that a Cobar trained model has better performance predicting Darwin than Coffs Harbour data, which as we have seen in figure \ref{fig:earth} showing that the distance between two weather stations is not the most important factor. In other words could a model trained on data from the other side of the world perform better on predicting the weather of one city than a model trained on its neighbouring city. From this, one can help weather predictions in areas with little weather forecast cover by using a model trained in a similar climate with more abundance of data. Similarly, have European weather forecast models been shown to outperform Australian models in the southern hemisphere\url{https://www.researchgate.net/publication/249621626_Performance_of_the_ECMWF_and_the_BoM_Ensemble_Prediction_Systems_in_the_Southern_Hemisphere}, showing the Earth's weather systems similarities. Here it is worth noticing that such weather forecast models uses differential equations when predicting the weather making them completely different types of model. Nevertheless, this gives us an understanding of the potential of how worldwide data can be used to improve weather predictions all over the world.
+At the same time, we have seen that a Cobar trained model has better performance predicting Darwin than Coffs Harbour data, which as we have seen in figure \ref{fig:earth} showing that the distance between two weather stations is not the most important factor. In other words could a model trained on data from the other side of the world perform better on predicting the weather of one city than a model trained on its neighbouring city. From this, one can help weather predictions in areas with little weather forecast cover by using a model trained in a similar climate with more abundance of data. Similarly, have European weather forecast models been shown to outperform Australian models in the southern hemisphere\cite{australian_model}, showing the Earth's weather systems similarities. Here it is worth noticing that such weather forecast models uses differential equations when predicting the weather making them completely different types of model. Nevertheless, this gives us an understanding of the potential of how worldwide data can be used to improve weather predictions all over the world.
 
-In total, our results have not been perfect. In comparison to the Norwegian meteorological institute with an accuracy of up to 92\% \url{https://www.nettavisen.no/nyheter/meteorologisk-institutt-sjekker-treffsikkerheten-pa-varsel-av-regndrapene/s/12-95-3423819484}\url{https://www.met.no/om-oss/_/attachment/inline/ad252bad-ad4a-466f-9456-1b35496ba225:af8c5e5bfa70eabe20267df4c976c742c036f86a/MET%20Aarsrapport%202021%20med%20regnskap.pdf} on predicting hourly rain on a station with only 67\% of the year without precipitation \url{https://no.climate-data.org/europa/norge/west-agder/kristiansand-706/}, our results end up being not so impressive. Therefore, it looks like machine learning methods will not take over for traditional weather forecast models, but would rather be a helper in order to make predictions even more accurate. This can for example be done by using private weather stations to predict more local weather. This has already been done with great success \url{https://www.met.no/om-oss/_/attachment/inline/ad252bad-ad4a-466f-9456-1b35496ba225:af8c5e5bfa70eabe20267df4c976c742c036f86a/MET%20Aarsrapport%202021%20med%20regnskap.pdf}, which leaves room for how  machine learning can best possible be used on the abundance of private weather stations. 
+In total, our results have not been perfect. In comparison to the Norwegian meteorological institute with an accuracy of up to 92\% \cite{nettavisen}\cite{yr} on predicting hourly rain on a station with only 67\% of the year without precipitation\cite{klima}, our results end up being not so impressive. Therefore, it looks like machine learning methods will not take over for traditional weather forecast models, but would rather be a helper in order to make predictions even more accurate. This can for example be done by using private weather stations to predict more local weather. This has already been done with great success \cite{yr}, which leaves room for how  machine learning can best possible be used on the abundance of private weather stations.
 
+\section{Conclusion}
+\label{sec:Conclusion}
 
 % subsubsection Training on a single station (end)
 \subsection{Data correlation} % (fold)
@@ -498,6 +481,7 @@ In total, our results have not been perfect. In comparison to the Norwegian mete
     \item Relative high accuracy on Cobar test data - Climate maybe largest factor not weather station.  - train model on data on the other side of the world - help weather predictions here?
 \end{itemize}
 
+\printbibliography
 
 \newpage
 \appendix
@@ -564,13 +548,12 @@ In total, our results have not been perfect. In comparison to the Norwegian mete
 
 \section{Neural Network and Cost function}
 \label{app:NN}
-The following derivations are taken from \cite{project2}
+The following derivations are taken from \cite{project2}.
 \subsubsection*{Cross Entropy}
 To analyze binary data where possible solutions are $y_i=0$ and $y_i=1$ we define the logistic function:
-\begin{align}
-    \label{eq:logistic}
+\begin{align*}
     p(t) =  \frac{e^{\hat{y}_i}}{1+e^{\hat{y}_i}}
-\end{align}
+\end{align*}
 Where $\hat{y}_i$ is defined by:
 \begin{align*}
     \hat{y}_i = \theta_0 + \theta_1 x_i +...+ \theta_n x_i^n
@@ -588,10 +571,9 @@ giving us the log-likelihood and our cost function:
     C(\theta) = \sum_{i=1}^n (y_i \log p(y_i =1 | x_i, \theta)) + (1- y_i) \log [1 - p(y_i \log p(y_i =1 | x_i, \theta))]
 \end{align*}
 Recognizing the log-likelihood being a maximizing function we use the negative log-likelihood which rewritten gives us:
-\begin{align}
-    \label{eq:cross}
+\begin{align*}
     C(\theta) = -\sum_{i=1}^n (y_i \hat{y}_i - \log [1 + e^{\hat{y}_i}])
-\end{align}
+\end{align*}
 \subsubsection*{Backpropagation}
 The error found using the Neural Network's cost function does not directly say anything on how to update the weights ($w_{ij}^{L}$) and biases ($b_{j}^{L}$) for layer $L$, neuron $j$ and connection $ij$ between neuron $i$ of the last layer and neuron $j$. To find this we can use the definition of the prediction made by the Neural Network. This prediction $\hat{y}$ is dependent on the value $a_l$ which comes from the value $z_l$ through the layer's activation function. To apply the cost function on the weight and biases we use the chain rule for layer $L$:
 \begin{align*}
