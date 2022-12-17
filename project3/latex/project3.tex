@@ -72,7 +72,7 @@ GitHub repository containing code and further instructions on how to reproduce t
 \subsection{Structure of dataset} % (fold)
 \label{sub:Structure of dataset}
 
-The dataset found at \url{https://www.kaggle.com/datasets/jsphyg/weather-dataset-rattle-package} includes about 10 years of weather observations from numerous Australian weather stations. The observations include features such as temperature, wind, rainfall, and sunshine hours. A full overview of the dataset and its features can be found in table \ref{tab:features} in appendix \ref{app:dataset}. The main purpose of the dataset is to make a prediction based on today's weather if it is going to rain or not tomorrow. This prediction is either Yes or No, and we are therefore looking at a classification problem.
+The dataset found at \url{https://www.kaggle.com/datasets/jsphyg/weather-dataset-rattle-package} includes about 10 years of weather observations from numerous Australian weather stations. The observations include features such as temperature, wind, rainfall, and sunshine hours. A full overview of the dataset and its features can be found in table \ref{tab:features} in appendix \ref{app:dataset}. The main purpose of the dataset is to make a prediction based on today's weather if it is going to rain or not tomorrow. This prediction is either Yes or No, and we are therefore looking at a binary classification problem.
 
 
 
@@ -137,6 +137,10 @@ For our testing of the models and the dataset we start by looking at one single 
                 $a_j^{(L)}$    & Output of activation function for neuron $j$ in layer $L$ & -                                   \\
                 \hline
                 $\lambda$      & L2-norm                                                   & -                                   \\
+                \hline
+                $B_k$          & Containing samples of minibatch $k$                       & -                                   \\
+                \hline
+                $M$            & The number of minibatches                                 & -                                   \\
                 \hline
                 $\eta_j$       & Step size (learning rate) at step $j$                     & $n$ iterations                      \\
                 \hline
@@ -214,12 +218,42 @@ A Neural Network makes use of SGD and ADAM as described above, and are built up 
 
 The connection and belonging activation of each neuron is dependent on a set of weights and biases that are optimized in order to best fit the input target data. For the TensorFlow Neural Network used, the biases are initially set to 0, and the weights randomly chosen from a normal distribution with mean 0 and standard deviation 0.05 \cite{tf}. For every iteration the Neural Network runs through a feed forward process. This process starts by scaling every neuron's input before it is sent to the next layer of neurons. This scaling is dependent by each neuron connection's belonging weight and bias, where the weight is multiplied and the bias added to the input. At the next layer the scaled input is fed to the layer's activation function (ReLU) before it is again scaled and sent to the next layer. When arriving at the output layer the input is directly sent to the output layer's activation function (sigmoid) which corresponds to a prediction. In order to make better predictions the weights and biases for all the neuron connections are adjusted through backpropagation. This is done by first calculating the error of the output layer with help from the cost function (binary cross entropy) before using the output layer's error to calculate the error for every layer before.  Through SGD with or without ADAM the weights and biases for every layer are updated in order to minimize the error of that layer. A full derivation of the backpropagation process can be found in appendix \ref{app:NN}.
 \subsubsection*{Random Forest}
-A Random Forest is built up by several decision trees. Such a tree can be used for either regression or as in our case a classification problem. It is built up around asking questions which depending on the answer will direct to either one of two leaf nodes. This process is repeated, giving two new branches for every classification until the tree has no more ways of classifying the data, or until some stopping criteria is reached. This can be in form of a maximum depth limiting how many questions can be asked before the data is classified, or by stopping the branching process when a minimum number of samples are left in a leaf node.
+A Random Forest is built up by several decision trees. Such a tree can be used for either regression or as in our case a classification problem. It is built up around asking questions which depending on the answer will direct to either one of two nodes. This process is repeated, giving two new branches for every classification until the tree has no more ways of classifying the data, or until some stopping criteria is reached. This can be in form of a maximum depth limiting how many questions can be asked before the data is classified, or by stopping the branching process when a minimum number of samples are left in a node, which then becomes a leaf node.
+
+When building a tree, we use a greedy top-down approach where the branching process is determined by maximizing the information gain at every split. This means will start at the top of the tree and see lower and lower information gain for every following splits. To maximize the information gain we use the CART algorithm. For this we need the to calculate either the Gini index or the entropy. We measure the entropy as
+\begin{align*}
+    E = - \sum_{k=1}^K p_{mk}\log p_{mk}.
+\end{align*}
+Here we have used the misclassification error $p_{mk}$ defined in terms of the proportion of observation of class $k$ in region $R_m$
+\begin{align*}
+    p_{mk} = \frac{1 }{N_m }\sum_{x_i \in R_m} I (y_i = k).
+\end{align*}
+To maximize the information gain we define a cost function in terms of the average entropy of the child nodes (the new nodes after the split is performed)
+\begin{align*}
+    C(k, t_k ) = \frac{m_{\text{left}}}{m} E_{child,\text{left}} + \frac{m_{\text{right}}}{m}E_{child,\text{right}}.
+\end{align*}
+The best split is then chosen for the threshold $t_k$ which minimizes the cost function and maximizes the information gain $E_{parent} - C(k, t_k)$.
+
+
+For this we need the Gini index measuring the inequality in a distribution or in our case a node
+\begin{align*}
+    G = \sum_{k=1}^K p_{mk}(1 - p_{mk}).
+\end{align*}
+Here we have summed over all possible target values, $k=1,2,..,K$, and used the likelihood function
+\begin{align*}
+    p_{mk} = \frac{1 }{N_m }\sum_{x_i \in R_m} I (y_i = k),
+\end{align*}
+by using the proportion of observations of the class $k$ in region $R_M$ $I(y_i = k)$.
+We define a cost function using the Gini index $G$ defining the impurity of left/right subset, feature $k$, threshold $t_k$, and number of instances in the left/right subset $m$:
+\begin{align*}
+    C(k, t_k ) = \frac{m_{\text{left}}}{m} G_{\text{left}} + \frac{m_{\text{right}}}{m}G_{\text{right}}.
+\end{align*}
+In order to perform the best split for each node, we minimize the cost function, giving us the threshold to use for a feature.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{../figures/Decision_tree.png}
-    \caption{Correlation between the different features of the dataset.}
+    \caption{\url{https://towardsdatascience.com/how-do-random-forests-decision-trees-decide-simply-explained-with-an-example-in-python-6737eb183604}}
     \label{fig:tree}
 \end{figure}
 
