@@ -294,7 +294,7 @@ def main():
     5. Trains and tests models on the full dataset, divided into train and test sets by location, and evaluates their performance on predicting rain tomorrow in three specific locations (Cobar, CoffsHarbour, Darwin).
     """
 
-    run_gridsearch = False
+    run_gridsearch = True
 
     # Import Dataset
     df_full = pd.read_csv("data/weatherAUS.csv")
