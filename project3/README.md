@@ -1,5 +1,4 @@
-# Project 3 - Predicting rainfall tomorrow based on today’s weather using
-machine learning methods.
+# Project 3 - Predicting rainfall tomorrow based on today’s weather using machine learning methods.
 
 This Project includes 4 Folders
 - code:      All python code used in this project 
