@@ -1,10 +1,10 @@
 # Project 2
 
 This Project includes 4 Folders
+- code:      All python code used in this project 
 - extra:    Code and pdf for extra task 
 - figures:  Figures used in report and generated using the included python files
 - latex:    Report Pdf, .tex and project description 
-- src:      All python code used in this project 
 
 Following packages need to be installed before running the commands:
 ```
