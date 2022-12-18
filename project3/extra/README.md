@@ -12,6 +12,7 @@ pip3 install numpy
 pip3 install sklearn
 pip3 install seaborn
 pip3 install tensorflow
+pip3 install keras
 pip3 install tensorflow_decision_forests
 pip3 install pandas
 ```
