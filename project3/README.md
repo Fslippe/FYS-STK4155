@@ -1,15 +1,17 @@
 # Project 3 - Predicting rainfall tomorrow based on today’s weather using machine learning methods.
 
 This Project includes 4 Folders
-- code:      All python code used in this project 
-- extra:    Code and pdf for extra task. See folder README for more information
-- figures:  Figures used in report and generated using the included python files
-- latex:    Report Pdf, .tex and project description 
+
+- code: All python code used in this project
+- extra: Code and pdf for extra task. See folder README for more information
+- figures: Figures used in report and generated using the included python files
+- latex: Report Pdf, .tex and project description
 
 Following packages need to be installed before running the commands:
+
 ```
 pip3 install matplotlib
-pip3 install numpy 
+pip3 install numpy
 pip3 install sklearn
 pip3 install seaborn
 pip3 install tensorflow
@@ -17,12 +19,15 @@ pip3 install keras
 pip3 install tensorflow_decision_forests
 pip3 install pandas
 ```
+
 The code is structured around one main function which imports general functions from functions.py and a gradient decent class from gradient_decent.py
 
 To reproduce the results run the main file with
-- python3 main.py  
 
-# Abstract 
+- python3 main.py
+
+# Abstract
+
 In this article we will look into machine learning methods on predicting rain tomorrow from
 freely available weather data from Australian weather stations. We will compare our results to
 already established weather forecasts and look into how machine learning methods best can be
