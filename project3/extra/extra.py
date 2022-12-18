@@ -21,16 +21,68 @@ plt.rcParams.update({"font.size": 14})
 
 
 def decision_tree(tmp, depth):
+    """
+    Returns a DecisionTreeRegressor model with a specified maximum depth.
+
+    Parameters
+    ----------
+    tmp: can be anything 
+    depth: int
+        The maximum depth of the decision tree.
+
+    Returns
+    -------
+    model: DecisionTreeRegressor
+        A decision tree model with the specified maximum depth.
+    """
     return DecisionTreeRegressor(max_depth=depth)
 
 
-def random_forest(depth, trees):
-    model = RandomForestRegressor(max_depth=depth, n_estimators=100)
+def random_forest(trees, depth):
+    """
+    Returns a RandomForestRegressor model with a specified maximum depth and number of trees.
 
+    Parameters
+    ----------
+    depth: int
+        The maximum depth of the decision tree.
+    trees: int
+        The number of trees in the random forest.
+
+    Returns
+    -------
+    model: RandomForestRegressor
+        A random forest model with the specified maximum depth and number of trees.
+    """
+    model = RandomForestRegressor(max_depth=depth, n_estimators=trees)
     return model
 
 
 def bootstrap(X_train, y_train, X_test, model, n_B, NN_model=False):
+    """
+    Perform bootstrapping on a given model and return the predictions for a test set.
+
+    Parameters
+    ----------
+    X_train: array-like
+        The training data input.
+    y_train: array-like
+        The training data output.
+    X_test: array-like
+        The test data input.
+    model: model
+        The model to be bootstrapped.
+    n_B: int
+        The number of bootstrap samples.
+    NN_model: bool, optional
+        Indicates whether the model is a neural network model. Default is False.
+
+    Returns
+    -------
+    y_pred: array-like
+        The predictions for the test data.
+    """
+
     y_pred = np.zeros((X_test.shape[0], n_B))
     mod_boots = model
     for i in range(n_B):
@@ -65,6 +117,39 @@ def NN(layers, neurons, optimizer="adam"):
 
 
 def tradeoff(X_train, X_test, y_train, y_test, model_in, complexity_1, complexity_2, n_B=100, skip=1):
+    """
+    Calculate the bias, variance, and mean squared error for a range of model complexities.
+
+    Parameters
+    ----------
+    X_train: array-like
+        The training data input.
+    X_test: array-like
+        The test data input.
+    y_train: array-like
+        The training data output.
+    y_test: array-like
+        The test data output.
+    model_in: function
+        The model to be evaluated.
+    complexity_1: int
+        The range of model complexities to be evaluated.
+    complexity_2: int
+        The second parameter for the model function.
+    n_B: int, optional
+        The number of bootstrap samples. Default is 100.
+    skip: int, optional
+        The step size for the model complexity range. Default is 1.
+
+    Returns
+    -------
+    bias: array-like
+        The bias of the model at each complexity.
+    variance: array-like
+        The variance of the model at each complexity.
+    mse: array-like
+        The mean squared error of the model at each complexity.
+    """
     bias = np.zeros(complexity_1-1)
     variance = np.zeros(complexity_1-1)
     mse = np.zeros(complexity_1-1)
@@ -88,6 +173,22 @@ def tradeoff(X_train, X_test, y_train, y_test, model_in, complexity_1, complexit
 
 
 def plot_tradeoff(bias, variance, mse):
+    """
+    Plot the bias, variance, and mean squared error for a range of model complexities.
+
+    Parameters
+    ----------
+    bias: array-like
+        The bias of the model at each complexity.
+    variance: array-like
+        The variance of the model at each complexity.
+    mse: array-like
+        The mean squared error of the model at each complexity.
+
+    Returns
+    -------
+    None
+    """
     fig = plt.figure()
     complexity = np.linspace(1, len(bias), len(bias))
     mask = np.where(mse != 0)
@@ -109,13 +210,16 @@ def main():
                           columns=boston_dataset.feature_names)
     target = boston_dataset.target
 
+    # Split data into smaller portion including 40% of initial dataset
     boston, tmp1, target, tmp2 = train_test_split(
         boston, target, train_size=0.4, random_state=1)
     print("Shape data split", len(target))
+
     # Train test split
     X_train, X_test, y_train, y_test = train_test_split(
         boston, target, test_size=0.2, random_state=2)
     print("Shape train split", len(y_train))
+
     # Standar scale
     scaler = StandardScaler().fit(X_train)
     X_train = scaler.transform(X_train)
@@ -125,9 +229,11 @@ def main():
     y_train = (y_train - y_mean)/y_std
     y_test = (y_test - y_mean)/y_std
 
-    run_NN = False
+    # Run tradeoff if True
+    run_NN = True
     run_RF = True
-    run_DT = False
+    run_DT = True
+
     # Neural Network
     if run_NN:
         for layer in [1, 2, 3, 4]:
@@ -145,9 +251,6 @@ def main():
             plot_tradeoff(bias, variance, mse)
 
             plt.title("Number of layers: %i" % (layer))
-            #plt.title("Tree depth: %i" % (depth))
-
-            #plt.xlabel("Number of trees")
             plt.xlabel("Number of neurons")
 
             plt.savefig("figures/tradeoff_NN_neurons_%s.png" %
@@ -156,7 +259,7 @@ def main():
 
     # Random Forest
     if run_RF:
-        for trees in [1, 2, 3, 4]:  # [5, 10, 20, 30]:
+        for trees in [5, 10, 20, 30]:  # [5, 10, 20, 30]:
             print(trees)
             start = time.time()
             bias, variance, mse = tradeoff(X_train,
@@ -169,20 +272,15 @@ def main():
                                            n_B=100,
                                            skip=2)
             plot_tradeoff(bias, variance, mse)
-            #plt.title("Number of trees: %i" % (trees))
-            plt.title("Tree depth: %i" % (depth))
+            plt.title("Number of trees: %i" % (trees))
+            plt.xlabel("Tree depth")
 
-            plt.xlabel("Number of trees")
-            #plt.xlabel("Tree depth")
-
-            # plt.savefig("figures/tradeoff_RF_trees_%s.png" %
-            #            (trees), dpi=300, bbox_inches="tight")
-            plt.savefig("figures/tradeoff_RF_%s.png" %
+            plt.savefig("figures/tradeoff_RF_trees_%s.png" %
                         (trees), dpi=300, bbox_inches="tight")
             print(time.time() - start)
 
+    # Decision Tree
     if run_DT:
-        # Decision Tree
         bias, variance, mse = tradeoff(X_train,
                                        X_test,
                                        y_train,
