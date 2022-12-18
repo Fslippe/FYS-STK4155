@@ -203,6 +203,17 @@ def plot_tradeoff(bias, variance, mse):
 
 
 def main():
+    """
+    Load and preprocess a dataset,
+    then evaluate the tradeoff between bias, variance, and mean squared error
+    for three types of models (neural network, random forest, decision tree) 
+    at different model complexities.
+
+    Returns
+    -------
+    None
+    """
+    # Load
     # Load Dataset
     boston_dataset = load_boston()
     boston_dataset.keys()

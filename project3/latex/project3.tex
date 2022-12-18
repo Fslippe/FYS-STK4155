@@ -171,7 +171,7 @@ To reduce overfitting we perform a train-test split of our data. This is done by
     \end{small}
 \end{table}
 \subsubsection*{Correlation}
-In order to look into the correlation between our target $Y$ and input data $X$ of length $n$ we need to define a correlation coefficient where a positive number defines an increase in target  while the input  decreases. We have the opposite for negative correlation. We define this coefficient for the mean $\mu$ and standard deviations $\sigma$ for the input and target data as
+In order to look into the correlation between our target $Y$ and input data $X$ of length $n$ we need to define a correlation coefficient where a positive number defines an increase in target value when the value of the input feature increases. We have the opposite for negative correlation. We define this coefficient for the mean $\mu$ and standard deviations $\sigma$ for the input and target data as
 \begin{align*}
     \text{corr}(X, Y) = \frac{E[(X- \mu_X)(Y-\mu_Y)]}{\sigma_X\sigma_Y}.
 \end{align*}
@@ -185,13 +185,13 @@ giving an expression for the correlation:
 \end{align*}
 \subsubsection*{Bootstrap}
 
-In order to implement a Random Forest and reduce overfitting when testing the accuracy of our models we implement the bootstrap resampling technique. This is done by resampling our train data $n_B$ times with replacement, which gives $n_B$ new samples that may be unique but still only contain values from the original dataset. This can be described by drawing a sample from the original [1,2,3] to be for example [2,1,2]. For significant large amounts of training data, there is a minimal chance of drawing the same sample multiple times. From this we get by following the central limit theorem under the assumption that all our $n_B$ subsets are drawn from the same distribution, our new data to follow a normal distribution with the mean of the initial dataset $\overline{y}$ and standard deviation $\sigma/\sqrt{n_b}$ for the initial distribution standard deviation $\sigma$ and $n_b \rightarrow \infty$.
+In order to implement a Random Forest and reduce overfitting when testing the accuracy of our models we implement the bootstrap resampling technique. This is done by resampling our train data $n_B$ times with replacement, which gives $n_B$ new samples that may be unique but still only contain values from the original dataset. This can be described by drawing a sample from the original [1,2,3] to be for example [2,1,2]. For significant large amounts of training data, there is a minimal chance of drawing the same sample multiple times. From this we get by following the central limit theorem \cite{limit} under the assumption that all our $n_B$ subsets are drawn from the same distribution, our new data to follow a normal distribution with the mean of the initial dataset $\overline{y}$ and standard deviation $\sigma/\sqrt{n_b}$ for the initial distribution standard deviation $\sigma$ and $n_b \rightarrow \infty$.
 \subsubsection*{Activation and cost functions}
-To analyze binary data we need to define a cost function giving a way for our models to adjust their parameters in order to make better predictions. By starting with the logistic regression function for a prediction $\hat{y}_i$ taking values of either 1 or 0
+To analyze binary data we need to define a cost function giving a way for our models to adjust their parameters in order to make better predictions. By starting with the logistic regression function for a prediction $\hat{y}_i = \theta \cdot X_i$ and input data $X_i$ for all features taking values of either 1 or 0
 \begin{align*}
     p(\hat{y}) = \frac{e^{\hat{y}_i}}{1 + e^{\hat{y}}},
 \end{align*}
-one can as seen in appendix \ref{app:NN} derive the binary cross entropy function
+one can as seen in appendix \ref{app:NN} derive the binary cross entropy function for the target data $y$ showing us how to adjust $\theta$ in order to make better predictions
 \begin{align*}
     C(\theta) = - \sum_{i=1}^n (y_i\hat{y_i} - \log[1+ e^{\hat{y}_i}]).
 \end{align*}
