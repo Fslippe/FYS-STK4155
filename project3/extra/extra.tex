@@ -55,7 +55,7 @@
 }
 
 \lstset{style=mystyle}
-\title{The Bias-variance-tradeoff}
+\title{The Bias-variance-trade-off}
 \author{Filip Severin von der Lippe}
 \date{\today}
 \begin{document}
@@ -63,14 +63,14 @@
 GitHub repository containing code and further instructions on how to reproduce the results of this report: \url{https://github.com/Fslippe/FYS-STK4155/tree/main/project3/extra}
 
 \section{Introduction}
-In this report we will perform a bias-variance trade-off analysis of different methods. We will look at a regression problem using the well known Boston housing dataset which contains various parameters of the neighbourhood influencing the median value of owner-occupied homes. We will look into decision trees, starting with a single tree and move over to a random forest. A Feed forward Neural Network will also be studided. We will start off by introducing the theory behind the bias-variance tradeoff and the methods used in the analysis before presenting and discuss the results of the different methods. In the end we will summarize our findings and propose possible further analysis.
+In this report we will perform a bias-variance trade-off analysis of different methods. We will look at a regression problem using the well known Boston housing dataset which contains various parameters of the neighbourhood influencing the median value of owner-occupied homes. We will look into decision trees, starting with a single tree and move over to a random forest. A Feed forward Neural Network will also be studied. We will start off by introducing the theory behind the bias-variance trade-off and the methods used in the analysis before presenting and discuss the results of the different methods. In the end we will summarize our findings and propose possible further analysis.
 
 \section{Method}
 \subsection*{Bootstrap}
 
 To study the bias-variance trade-off we first implement the bootstrap resampling technique. This is done by resampling our train data $n_B$ times with replacement. That means we gain $n_B$ new samples that may be unique but still only contain values from the original sample. This means that we can draw a sample from the original [1,2,3] to be for example [2,1,2]. For significant large amounts of training data, we are left with a minimal chance of drawing the same sample multiple times. From this we get by following the central limit theorem under the assumption that all our $n_B$ subsets are drawn from the same distribution, a normal distribution describing our data with original length $n$ with mean $\frac{1}{n}\sum_i y_i$
 and standard deviation $\sigma/ \sqrt{m-1}$ for $m$ new data subsets and the original standard deviation of the distribution $\sigma$.
-\subsection*{Bias-variance tradeoff}
+\subsection*{Bias-variance trade-off}
 We define a cost function given by the mean squared error for a prediction vector $\tilde{\boldsymbol{y}}= \boldsymbol{X} \boldsymbol{\beta}$ and the true data vector $\boldsymbol{y}$.
 \begin{align*}
     C(\boldsymbol{X}, \boldsymbol{\beta}) = \frac{1 }{n }\sum_ {i=0}^{n-1}(y_i - \tilde{y}_i)^2 = \E[(\boldsymbol{y}- \boldsymbol{\tilde{y}})^2]

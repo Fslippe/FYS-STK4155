@@ -104,7 +104,7 @@ def grid_search_location(df, target, location):
     # Logistic Regression
     print(np.shape(X_train), np.shape(y_train))
     eta = np.logspace(-4, 0, 5)
-    lamda = np.logspace(-6, 0, 7)
+    lamda = np.logspace(-5, 0, 6)
     method = ["momentum", "ADAM"]
     for m in method:
         grid_search_logreg(X_train,
@@ -225,11 +225,11 @@ def main():
         n_locations += 1
 
     # average_plots(df, average)
-    # correlation_plot(df, "full", df.index)
+    correlation_plot(df, "full", df.index)
 
     # Train and test data on Cobar
     print("GRIDSEARCH ")
-    #grid_search_location(df, target, location="Cobar")
+    grid_search_location(df, target, location="Cobar")
 
     # Training on one location, test on another
     loc_1 = "Cobar"

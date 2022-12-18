@@ -186,7 +186,6 @@ def grid_search_logreg(X_train, y_train, X_test, y_test, gradient, lamda, eta, m
     - n_B               Bootstrap iterations default None
 
     """
-    plt.rcParams.update({'font.size': 10})
     acc = np.zeros((len(eta), len(lamda)))
     for i in range(len(eta)):
         for j in range(len(lamda)):
