@@ -394,11 +394,11 @@ def main():
 
         #print("\n\n\nGRID SEARCH RANDOM FOREST")
         grid_search_trees_depth(
-            trees, depth, X_train, X_test, y_train, y_test, n_B=None, savename="RF_grid_all")
+            trees, depth, X_train, X_test, y_train, y_test, n_B=10, savename="RF_grid_all")
 
         print("STARTING GRID SEARCH FOR FULL DATASET")
         grid_search_layers([10, 20, 30, 50, 70, 100], [1, 2, 3, 4, 5, 6], X_train,
-                           X_test, y_train, y_test, optimizer="ADAM", n_B=None, epochs=100, batch_size=320, savename="NN_grid_ADAM_all")
+                           X_test, y_train, y_test, optimizer="ADAM", n_B=10, epochs=100, batch_size=320, savename="NN_grid_ADAM_all")
         print("FINISHED")
 
 
