@@ -69,42 +69,42 @@ In this report we will perform a bias-variance trade-off analysis of different m
 \subsection*{Bootstrap}
 
 To study the bias-variance trade-off we first implement the bootstrap resampling technique. This is done by resampling our train data $n_B$ times with replacement. That means we gain $n_B$ new samples that may be unique but still only contain values from the original sample. This means that we can draw a sample from the original [1,2,3] to be for example [2,1,2]. For significant large amounts of training data, we are left with a minimal chance of drawing the same sample multiple times. From this we get by following the central limit theorem under the assumption that all our $n_B$ subsets are drawn from the same distribution, a normal distribution describing our data with original length $n$ with mean $\frac{1}{n}\sum_i y_i$
-and standard deviation $\sigma/ \sqrt{m-1}$ for $m$ new data subsets and the original standard deviation of the distribution $\sigma$.
+and standard deviation $\sigma/ \sqrt{n_b-1}$ for $n_b$ new data subsets and the original standard deviation of the distribution $\sigma$.
 \subsection*{Bias-variance trade-off}
 We define a cost function given by the mean squared error for a prediction vector $\tilde{\boldsymbol{y}}= \boldsymbol{X} \boldsymbol{\beta}$ and the true data vector $\boldsymbol{y}$.
 \begin{align*}
     C(\boldsymbol{X}, \boldsymbol{\beta}) = \frac{1 }{n }\sum_ {i=0}^{n-1}(y_i - \tilde{y}_i)^2 = \E[(\boldsymbol{y}- \boldsymbol{\tilde{y}})^2]
 \end{align*}
-Here we have defined our dataset on the form $\boldsymbol{X} = (\boldsymbol{X}_j, y_j)$ for $j= 0, 1, ..., n-1$.
+Here we have defined our dataset on the form $\mathcal{D}_j = (\boldsymbol{x}_j, y_j)$ for $j= 0, 1, ..., n-1$.
 We continue by defining the input target data to be given by some function and noise $\epsilon\sim N(0, \sigma^2)$
 \begin{align*}
     \boldsymbol{y} = f(\boldsymbol{x}) + \boldsymbol{\epsilon}.
 \end{align*}
 
-By the definition of our data $\boldsymbol{y} = f +\epsilon$ we rewrite the costfunction:
+By the definition of our data $\boldsymbol{y} = f +\boldsymbol{\epsilon}$ we rewrite the costfunction:
 \begin{align*}
-    \E[(\boldsymbol{y}- \boldsymbol{\tilde{y}})^2] & = \E[(f + \epsilon - \tilde{y} + \E[\tilde{y}]- \E[\tilde{y}])^2]                \\                                             &= \E[f^2 + \epsilon^2 + \tilde{y}^2 + 2\E[\tilde{y}]^2 \\
-                                                   & + 2f\epsilon + 2f\tilde{y} + 2f\E[\tilde{y}] - 2f\E[\tilde{y}]                   \\
-                                                   & + 2\epsilon\tilde{y} + 2\epsilon \E[\tilde{y}] - 2\epsilon \E[\tilde{y}]         \\
-                                                   & + 2\tilde{y}\E[\tilde{y}] - 2\tilde{y}\E[\tilde{y}] -2\E[\tilde{y}]^2]           \\
-                                                   & = \E[(f-\E[\Tilde{y}])^2] + \E[\epsilon^2] + \E[( \E[\Tilde{y}] - \Tilde{y} )^2] \\
-                                                   & + 2(f-\E[\tilde{y}])\E[\epsilon]+2\E[\epsilon]\E[(\E[\tilde{y}]-\tilde{y} )]     \\
-                                                   & + 2(f-\E[\tilde{y}])\E[( \E[\tilde{y}] - \tilde{y} )].
+    \E[(\boldsymbol{y}- \boldsymbol{\tilde{y}})^2] & = \E[(f + \boldsymbol{\epsilon} - \boldsymbol{\tilde{y}} + \E[\boldsymbol{\tilde{y}}]- \E[\boldsymbol{\tilde{y}}])^2]                                  \\                                             &= \E[f^2 + \boldsymbol{\epsilon}^2 + \boldsymbol{\tilde{y}}^2 + 2\E[\boldsymbol{\tilde{y}}]^2 \\
+                                                   & + 2f\boldsymbol{\epsilon} + 2f\boldsymbol{\tilde{y}} + 2f\E[\boldsymbol{\tilde{y}}] - 2f\E[\boldsymbol{\tilde{y}}]                                     \\
+                                                   & + 2\boldsymbol{\epsilon}\boldsymbol{\tilde{y}} + 2\boldsymbol{\epsilon} \E[\boldsymbol{\tilde{y}}] - 2\boldsymbol{\epsilon} \E[\boldsymbol{\tilde{y}}] \\
+                                                   & + 2\boldsymbol{\tilde{y}}\E[\boldsymbol{\tilde{y}}] - 2\boldsymbol{\tilde{y}}\E[\boldsymbol{\tilde{y}}] -2\E[\boldsymbol{\tilde{y}}]^2]                \\
+                                                   & = \E[(f-\E[\boldsymbol{\Tilde{y}}])^2] + \E[\boldsymbol{\epsilon}^2] + \E[( \E[\boldsymbol{\Tilde{y}}] - \boldsymbol{\Tilde{y}} )^2]                   \\
+                                                   & + 2(f-\E[\boldsymbol{\tilde{y}}])\E[\boldsymbol{\epsilon}]+2\E[\boldsymbol{\epsilon}]\E[(\E[\boldsymbol{\tilde{y}}]-\boldsymbol{\tilde{y}} )]          \\
+                                                   & + 2(f-\E[\boldsymbol{\tilde{y}}])\E[( \E[\boldsymbol{\tilde{y}}] - \boldsymbol{\tilde{y}} )].
 \end{align*}
-By using that $\epsilon \sim N(0,1)$ we have $\E[\epsilon] = 0$ and Var$[\epsilon] = \E[\epsilon^2]- \E[\epsilon]^2 = \E[\epsilon^2]=\sigma^2$ from this we get:
+By using that $\boldsymbol{\epsilon} \sim N(0,1)$ we have $\E[\boldsymbol{\epsilon}] = 0$ and Var$[\boldsymbol{\epsilon}] = \E[\boldsymbol{\epsilon}^2]- \E[\boldsymbol{\epsilon}]^2 = \E[\boldsymbol{\epsilon}^2]=\sigma^2$ from this we get:
 \begin{align*}
-    \E[(\boldsymbol{y}- \boldsymbol{\tilde{y}})^2] & =\E[(f -\E[\tilde{y}])^2] +\E[( \tilde{y} -\E[\tilde{y}])^2]  + \sigma^2+ 2(f-\E[\tilde{y}])\E[\E[\tilde{y}] -\tilde{y}] \\
-                                                   & =\E[(f -\E[\tilde{y}])^2]  + \E[( \tilde{y} -\E[\tilde{y}])^2]+\sigma^2.
+    \E[(\boldsymbol{y}- \boldsymbol{\boldsymbol{\tilde{y}}})^2] & =\E[(f -\E[\boldsymbol{\tilde{y}}])^2] +\E[( \boldsymbol{\tilde{y}} -\E[\boldsymbol{\tilde{y}}])^2]  + \sigma^2+ 2(f-\E[\boldsymbol{\tilde{y}}])\E[\E[\boldsymbol{\tilde{y}}] -\boldsymbol{\tilde{y}}] \\
+                                                                & =\E[(f -\E[\boldsymbol{\tilde{y}}])^2]  + \E[( \boldsymbol{\tilde{y}} -\E[\boldsymbol{\tilde{y}}])^2]+\sigma^2.
 \end{align*}
 Writing the expectation values in terms of the mean function $\E(\boldsymbol{x}) = \frac{1}{n}\sum_{i} x_i$, we get:
 \begin{align*}
-    \E[(\boldsymbol{y}- \boldsymbol{\tilde{y}})^2] & = \frac{1}{n}\sum_i (f_i - \E[\tilde{y}])^2 + \frac{1}{n} \sum_i ( \tilde{y}_i - \E[\tilde{y}])^2 + \sigma^2 \\ &= \quad\quad \text{Bias}^2 \quad\quad\quad + \quad \text{ Variance} \quad\quad + \quad \text{Noise}.
+    \E[(\boldsymbol{y}- \boldsymbol{\boldsymbol{\tilde{y}}})^2] & = \frac{1}{n}\sum_i (f_i - \E[\boldsymbol{\tilde{y}}])^2 + \frac{1}{n} \sum_i ( \boldsymbol{\tilde{y}}_i - \E[\boldsymbol{\tilde{y}}])^2 + \sigma^2 \\ &= \quad\quad \text{Bias}^2 \quad\quad\quad + \quad \text{ Variance} \quad\quad + \quad \text{Noise}.
 \end{align*}
 We face a problem in the calculation of the bias because of the unknown $f_i$. To get around this we rewrite the bias term with help from the definition $\boldsymbol{y} = f + \boldsymbol{\epsilon}$.
 \begin{align*}
-    \E[y - \E[\tilde{y}]^2] & = \E[(f+\epsilon - \E[\tilde{y}])^2] = \E[\epsilon^2] + \E[(f - \E[\tilde{y}])^2] + \E[-2\epsilon(f- \E[\hat{y}])]        \\
-                            & = \sigma^2 + \E[(f - \E[\tilde{y}])^2] + \E[-2\epsilon]\E[f-\E[\tilde{y}]] + \text{Cov}(-2\epsilon, (f- \E[\tilde{y}])^2) \\
-                            & = \sigma^2 + \text{Bias}^2.
+    \E[y - \E[\boldsymbol{\tilde{y}}]^2] & = \E[(f+\boldsymbol{\epsilon} - \E[\boldsymbol{\tilde{y}}])^2] = \E[\boldsymbol{\epsilon}^2] + \E[(f - \E[\boldsymbol{\tilde{y}}])^2] + \E[-2\boldsymbol{\epsilon}(f- \E[\tilde{y}])]      \\
+                                         & = \sigma^2 + \E[(f - \E[\boldsymbol{\tilde{y}}])^2] + \E[-2\boldsymbol{\epsilon}]\E[f-\E[\boldsymbol{\tilde{y}}]] + \text{Cov}(-2\boldsymbol{\epsilon}, (f- \E[\boldsymbol{\tilde{y}}])^2) \\
+                                         & = \sigma^2 + \text{Bias}^2.
 \end{align*}
 In practice, this means that our calculated bias using $\boldsymbol{y}$ instead of $\epsilon$ has an error of $\sigma^2$. By assuming this error is very small will the new way of calculating the bias be very accurate.
 
@@ -201,7 +201,7 @@ For the decission tree we perform the bias-variance trade-off for 100 bootstrap 
     \caption{Bias-variance trade-off as a function of maximum tree depth for a decision tree using 100 bootstrap samples.}
     \label{fig:DT}
 \end{figure}
-In figure \ref{fig:DT} we see that an increasing tree depth results in a decrease in the bias at the same time as an increase in the variance. Both of these contributions r results in the lowest mean squared error for a tree depth of 5 of 0.3. We see that also the bias starts increasing after this depth, indicating that we will not find a better prediction for a larger tree depth.
+In figure \ref{fig:DT} we see that an increasing tree depth results in a decrease in the bias at the same time as an increase in the variance. Both of these contributions results in the lowest mean squared error for a tree depth of 5 of 0.3. We see that also the bias starts increasing after this depth, indicating that we will not find a better prediction for a larger tree depth. This can be explained by overfitting as discussed earlier. If not the training is restricted it will perfectly classify the training data, removing the model's generalization and possibility to predict other data from the same source.
 \subsection*{Random Forest}
 Below in figure \ref{fig:RF} we see the bias-variance trade-off as a function of tree depth. We see 4 plots corresponding to different number of trees. We have again used 100 bootstrap samples.
 
@@ -262,4 +262,6 @@ The 4 plots in figure \ref{fig:NN} all show quite varying results for different 
 
 \section{Conclusion}
 We have found that different methods and their different parameters equals very different bias-variance trade-offs. A single decision tree has shown the worst overall performance with a minimum MSE of 0.3. It had a more typical trade-off than the other methods with an increasing variance and decreasing bias for higher complexities. The random forest gave us very stable trade-offs with a small to no dependency on the number of trees. We saw no indication of overfitting. The bias was the main contributor to the MSE and its minimum of 0.15, and the variance stayed generally low. For the neural network we saw a quite varying trade-off with the bias being the main contributor to the MSE. We saw again no sign of overfitting except by using 4 layers with a slight increase in variance for higher number of neurons.
+
+Our results may have been influenced by our dataset, which makes it together with the lower optimal complexities of our models interesting to make a further analysis of the trade-off for a larger and more advanced dataset.
 \end{document}
