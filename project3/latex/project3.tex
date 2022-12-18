@@ -54,7 +54,8 @@
 }
 
 \lstset{style=mystyle}
-\title{Project 3\\ }
+\title{Project 3\\
+Predicting rainfall tomorrow based on today's weather using machine learning methods.}
 \author{Filip Severin von der Lippe}
 \date{\today}
 \begin{document}
@@ -239,9 +240,17 @@ Here we have the accumulating gradient for each iteration $j$ and minibatch $i$ 
 \end{align*}
 We will implement the Gradient Decent together with the binary cross entropy by writing a Gradient Decent class in python. The code for this can be found on \href{https://github.com/Fslippe/FYS-STK4155/tree/main/project3}{GitHub}. When we later restrict the number of iterations $j$ to 100, we refer to one iteration as one stepping process excluding the summation for every minibatch.
 \subsubsection*{Feed Forward Neural Network}
-A Feed Forward Neural Network makes use of SGD and ADAM as described above, and are built up by layers of neurons. These layers can be split up in one input layer, $n$ number of hidden layer, and one output layer. The input layer contains one neuron for every feature of the input data, each connected to every neuron of the first hidden layer. The hidden layers can have any chosen amount of neurons each connected to every neuron of the next layer. The output layer contains one neuron per target category which for our classification case is just 1.
-
+A Feed Forward Neural Network makes use of SGD and ADAM as described above, and are built up by layers of neurons. These layers can be split up in one input layer, $n$ number of hidden layer, and one output layer. The input layer contains one neuron for every feature of the input data, each connected to every neuron of the first hidden layer. The hidden layers can have any chosen amount of neurons each connected to every neuron of the next layer. The output layer contains one neuron per target category which for our classification case is just 1. An illustration of a Feed Forward Neural Network can be seen below in figure \ref{fig:NN_layers}.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{../figures/NN_layers.png}
+    \caption{Illustration of the connection between layers of a Neural network. Here with 3 input features, 4 neurons in 2 hidden layers, and one output neuron. \href{https://towardsdatascience.com/applied-deep-learning-part-1-artificial-neural-networks-d7834f67a4f6}{Refference}
+        (visited on 11/18/2022)}
+    \label{fig:NN_layers}
+\end{figure}
 The connection and belonging activation of each neuron is dependent on a set of weights and biases that are optimized in order to best fit the input target data. For the TensorFlow Neural Network used, the biases are initially set to 0, and the weights randomly chosen from a normal distribution with mean 0 and standard deviation 0.05 \cite{tf}. For every iteration the Neural Network runs through a feed forward process. This process starts by scaling every neuron's input before it is sent to the next layer of neurons. This scaling is dependent by each neuron connection's belonging weight and the neuron's bias, where the weight is multiplied and the bias added to the input. At the next layer the scaled input is fed to the layer's activation function (ReLU) before it is again scaled and sent to the next layer. When arriving at the output layer the input is directly sent to the output layer's activation function (sigmoid) which corresponds to a prediction. In order to make better predictions the weights and biases for all the neuron connections are adjusted through backpropagation. This is done by first calculating the error of the output layer with help from the cost function (binary cross entropy) before using the output layer's error to calculate the error for every layer before.  Through SGD with or without ADAM the weights and biases for every layer are updated in order to minimize the error of that layer. A full derivation of the backpropagation process and how the error can be translated to the update of the weights and biases can be found in appendix \ref{app:NN}. We will implement the Neural Network by using TensorFlow. The code for this can be found on \href{https://github.com/Fslippe/FYS-STK4155/tree/main/project3}{GitHub}.
+
+
 \subsubsection*{Random Forest}
 A Random Forest is built up by several decision trees. Such a tree can be used for either regression or as in our case a classification problem. It is built up around asking questions which depending on the answer will direct to either one of two nodes. This process is repeated, giving two new branches for every classification until the tree has no more ways of classifying the data, or until some stopping criteria is reached. This can be in form of a maximum depth limiting how many questions can be asked before the data is classified, or by stopping the branching process when a minimum number of samples are left in a node, which then becomes a leaf node.
 
@@ -607,7 +616,7 @@ We have tested three different methods on predicting if it is going to rain tomo
 
 \section{Neural Network and Cost function}
 \label{app:NN}
-The following derivations are taken from \cite{project2}.
+The following derivations take inspiration from \cite{project2}.
 \subsubsection*{Cross Entropy}
 To analyze binary data where possible solutions are $y_i=0$ and $y_i=1$ we define the logistic function:
 \begin{align*}

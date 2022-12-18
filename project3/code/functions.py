@@ -86,6 +86,23 @@ def neuron_array(layers, neurons):
 
 
 def grid_search_layers(neurons, n_layer, X_train, X_test, y_train, y_test, optimizer="adam", n_B=None, epochs=100, batch_size=32, savename=None):
+    """
+    This function performs grid search over the number of neurons per layer and number of layers in a neural network. It trains the network on the input training data and tests the accuracy on the input test data. 
+
+    Parameters:
+    neurons (list):             List of integers representing the number of neurons per layer to try in the grid search
+    n_layer (list):             List of integers representing the number of layers to try in the grid search
+    X_train (ndarray):          Training data input
+    X_test (ndarray):           Test data input
+    y_train (ndarray):          Training data target labels
+    y_test (ndarray):           Test data target labels
+    optimizer (str):            Optimization algorithm to use in the neural network. Default is 'adam'
+    n_B (int):                  If specified, the model will be trained using bootstrapping with this number of samples. Default is None
+    epochs (int):               Number of epochs to train the model for. Default is 100
+    batch_size (int):           Size of the batches to use when training the model. Default is 32
+    savename (str):             If specified, the heatmap of the results will be saved with this file name
+    """
+
     scores = np.zeros((len(neurons), len(n_layer)))
     print("Total runs: ", len(neurons)*len(n_layer))
     for i in range(len(neurons)):
@@ -140,6 +157,22 @@ def grid_search_epochs(epochs, batch_size, X_train, X_test, y_train, y_test, sav
 
 
 def grid_search_trees_depth(trees, depth, X_train, X_test, y_train, y_test, n_B=None, savename=None):
+    """
+    Perform grid search over the hyperparameters of a random forest model, specifically the number of trees and their maximum depth.
+
+    Parameters:
+    trees (list):                    A list of integers representing the number of trees to test in the random forest.
+    depth (list):                    A list of integers representing the maximum depth of each tree to test in the random forest.
+    X_train (array-like):            The training input data.
+    X_test (array-like):             The test input data.
+    y_train (array-like):            The training output data.
+    y_test (array-like):             The test output data.
+    n_B (int, optional):             The number of bootstrapped models to train and evaluate. If not provided, the model will not be bootstrapped.
+    savename (str, optional):        If provided, the resulting heatmap plot will be saved to a file with the given name.
+
+    Returns:
+    DataFrame: A Pandas DataFrame containing the accuracy scores for each combination of number of trees and maximum depth. If savename was provided, returns None.
+    """
     scores = np.zeros((len(trees), len(depth)))
     for i in range(len(trees)):
         print("Running ", i*len(depth) + 1)

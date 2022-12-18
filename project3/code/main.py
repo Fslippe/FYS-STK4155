@@ -4,22 +4,30 @@ tf.keras.utils.set_random_seed(1)
 
 
 def assign_labels(data, words):
+    """Replace words in the data with corresponding labels.
+
+    Args:
+        data (pandas.DataFrame): DataFrame containing the text data.
+        words (List[str]): List of words to be replaced with labels.
+
+    Returns:
+        pandas.DataFrame: DataFrame with the words replaced by labels.
+    """
+
     for i in range(len(words)):
         data.replace(words[i], i, inplace=True)
     return data
 
 
-def split_grid(X, y):
-
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42)
-
-    scaler = StandardScaler().fit(X_train)
-    X_train = scaler.transform(X_train)
-    X_test = scaler.transform(X_test)
-
-
 def import_dataset(df):
+    """Clean and preprocess the dataset.
+
+    Args:
+        df (pandas.DataFrame): DataFrame containing the raw dataset.
+
+    Returns:
+        tuple: Tuple containing the processed DataFrame and the target DataFrame.
+    """
     df.dropna(inplace=True)
     df.reset_index(drop=True, inplace=True)
     wind_directions = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE",
@@ -37,6 +45,16 @@ def import_dataset(df):
 
 
 def correlation_plot(df, savename, idx):
+    """Generate a heatmap and scatterplot of the correlations between features and the target label.
+
+    Args:
+        df (pandas.DataFrame): DataFrame containing the features and labels.
+        savename (str): Name to use when saving the plots.
+        idx (int): Index of the data slice to use when calculating correlations.
+
+    Returns:
+        None
+    """
     corr = (df.iloc[idx, 2:]).corr()
     plt.figure(figsize=(10, 10))
     sns.heatmap(corr, cmap="coolwarm")
@@ -55,10 +73,28 @@ def correlation_plot(df, savename, idx):
 
 
 def get_averages(df, location):
+    """Calculate the average value for each feature in the specified location.
+
+    Args:
+        df (pandas.DataFrame): DataFrame containing the data.
+        location (str): Location to filter the data by.
+
+    Returns:
+        pandas.Series: Series containing the average values of each feature.
+    """
     return df.loc[df["Location"] == location].mean()
 
 
 def scale_and_split(X, y):
+    """Split the dataset into training and test sets and scale the features.
+
+    Args:
+        X (numpy.ndarray): Array of features.
+        y (numpy.ndarray): Array of labels.
+
+    Returns:
+        tuple: 4 arrays containing the training and test sets for the features and labels.
+    """
     # Split data
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42)
@@ -72,6 +108,15 @@ def scale_and_split(X, y):
 
 
 def split_each_loc(df, test_size):
+    """Split the dataset into training and test sets for each location.
+
+    Args:
+        df (pandas.DataFrame): DataFrame containing the data.
+        test_size (float): Proportion of the data to use for the test set.
+
+    Returns:
+        tuple: Tuple containing the training and test sets as DataFrames.
+    """
     train = pd.DataFrame()
     test = pd.DataFrame()
 
@@ -90,7 +135,16 @@ def split_each_loc(df, test_size):
 
 
 def grid_search_location(df, target, location):
+    """Perform a grid search on different models for the specified location.
 
+    Args:
+        df (pandas.DataFrame): DataFrame containing the data.
+        target (numpy.ndarray): Array of target data.
+        location (str): Location to filter the data by.
+
+    Returns:
+        None
+    """
     # Set up data for chosen location
     location_idx = df.index[df["Location"] == location]
     y = target[location_idx]  # np.ravel(target.ilo)
@@ -136,6 +190,15 @@ def grid_search_location(df, target, location):
 
 
 def average_plots(df, average):
+    """Generate scatterplots comparing the average values of 'Humidity3pm' and 'Sunshine' for each location to the overall mean.
+
+    Args:
+        df (pandas.DataFrame): DataFrame containing the data.
+        average (pandas.DataFrame): DataFrame containing the average values of 'Humidity3pm' and 'Sunshine' for each location.
+
+    Returns:
+        None
+    """
     loc_df = pd.DataFrame({"Location": df["Location"].unique()}).T
     loc_df.columns = average.columns
     total_average = average.mean(axis=1)
@@ -161,6 +224,16 @@ def average_plots(df, average):
 
 
 def train_loc_test_loc(df, loc_1, loc_2):
+    """Train models on data from one location and test them on data from another location.
+
+    Args:
+        df (pandas.DataFrame): DataFrame containing the data.
+        loc_1 (str): Location to use for training the models.
+        loc_2 (str): Location to use for testing the models.
+
+    Returns:
+        None
+    """
     idx_1 = df.index[df["Location"] == loc_1]
     idx_2 = df.index[df["Location"] == loc_2]
 
@@ -211,7 +284,18 @@ def standard_scale(train, test):
 
 
 def main():
+    """
+    This is the main function for running experiments on the weather dataset. It does the following:
+
+    1. Imports the dataset and preprocesses it by assigning numerical labels to categorical features and dropping missing values.
+    2. Prints the number of measurements at each station and generates plots showing the relative humidity and sunshine averages at each location.
+    3. Optionally runs a grid search for finding the best hyperparameters for logistic regression, neural networks, and random forests for a single location (Cobar).
+    4. Trains and tests models on one location and evaluates their performance on predicting rain tomorrow in another location.
+    5. Trains and tests models on the full dataset, divided into train and test sets by location, and evaluates their performance on predicting rain tomorrow in three specific locations (Cobar, CoffsHarbour, Darwin).
+    """
+
     run_gridsearch = False
+
     # Import Dataset
     df_full = pd.read_csv("data/weatherAUS.csv")
     df, target = import_dataset(df_full)
@@ -224,12 +308,13 @@ def main():
         average.insert(0, loca, get_averages(df, loca), True)
         n_locations += 1
 
-    # average_plots(df, average)
+    average_plots(df, average)
     correlation_plot(df, "full", df.index)
 
     # Train and test data on Cobar
-    print("GRIDSEARCH ")
-    grid_search_location(df, target, location="Cobar")
+    if run_gridsearch:
+        print("GRIDSEARCH ")
+        grid_search_location(df, target, location="Cobar")
 
     # Training on one location, test on another
     loc_1 = "Cobar"
@@ -303,17 +388,18 @@ def main():
           scores_coffs[1])
 
     # Grid search on all data
+    if run_gridsearch:
+        trees = [10, 50, 100, 200, 500, 1000]
+        depth = [5, 15, 20, 30, 40, 50]
 
-    trees = [10, 50, 100, 200, 500, 1000]
-    depth = [5, 15, 20, 30, 40, 50]
-    #print("\n\n\nGRID SEARCH RANDOM FOREST")
-    # grid_search_trees_depth(
-    #    trees, depth, X_train, X_test, y_train, y_test, n_B=None, savename="RF_grid_all")
+        #print("\n\n\nGRID SEARCH RANDOM FOREST")
+        grid_search_trees_depth(
+            trees, depth, X_train, X_test, y_train, y_test, n_B=None, savename="RF_grid_all")
 
-    #print("STARTING GRID SEARCH FOR FULL DATASET")
-    # grid_search_layers([10, 20, 30, 50, 70, 100], [1, 2, 3, 4, 5, 6], X_train,
-    #                   X_test, y_train, y_test, optimizer="ADAM", n_B=None, epochs=100, batch_size=320, savename="NN_grid_ADAM_all")
-    # print("FINISHED")
+        print("STARTING GRID SEARCH FOR FULL DATASET")
+        grid_search_layers([10, 20, 30, 50, 70, 100], [1, 2, 3, 4, 5, 6], X_train,
+                           X_test, y_train, y_test, optimizer="ADAM", n_B=None, epochs=100, batch_size=320, savename="NN_grid_ADAM_all")
+        print("FINISHED")
 
 
 if __name__ == "__main__":
