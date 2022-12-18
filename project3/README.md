@@ -2,7 +2,7 @@
 
 This Project includes 4 Folders
 - code:      All python code used in this project 
-- extra:    Code and pdf for extra task 
+- extra:    Code and pdf for extra task. See folder README for more information
 - figures:  Figures used in report and generated using the included python files
 - latex:    Report Pdf, .tex and project description 
 
@@ -13,6 +13,7 @@ pip3 install numpy
 pip3 install sklearn
 pip3 install seaborn
 pip3 install tensorflow
+pip3 install keras
 pip3 install tensorflow_decision_forests
 pip3 install pandas
 ```
